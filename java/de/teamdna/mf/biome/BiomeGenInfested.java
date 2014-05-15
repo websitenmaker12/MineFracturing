@@ -35,5 +35,11 @@ public class BiomeGenInfested extends BiomeGenBase{
     public int getSkyColorByTemp(float par1) {
     	return 0x3f3f3f;
     }
+    
+    @Override
+    public int getWaterColorMultiplier() {
+    	// TODO Auto-generated method stub
+    	return 0x005500;
+    }
 
 }
