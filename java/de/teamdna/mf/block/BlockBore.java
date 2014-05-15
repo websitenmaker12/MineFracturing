@@ -22,7 +22,7 @@ public class BlockBore extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		// TODO Auto-generated method stub
-		WorldUtil.setBiomeForCoords(world, x, z, 1);
+		WorldUtil.setBiomeForCoords(world, x, z, 2);
 		return super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
 	}
 
