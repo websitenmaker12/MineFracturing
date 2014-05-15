@@ -34,7 +34,7 @@ public class TileEntityBore extends TileEntity {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(12);
+				this.addChunksToQueue(64);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -85,7 +85,7 @@ public class TileEntityBore extends TileEntity {
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
-				System.out.println(this.oreBlocks.size());
+				System.out.println("> " + this.oreBlocks.size());
 				int r = this.radius;
 				int rSq = r * r;
 				
@@ -106,7 +106,6 @@ public class TileEntityBore extends TileEntity {
 	public void addChunksToQueue(int radius) {
 		this.radius = radius;
 		int r = (int)(radius / 16) + 1;
-		System.out.println(r);
 		for(int x = -r; x <= r; x++) {
 			for(int z = -r; z <= r; z++) {
 				ChunkCoordIntPair coord = new ChunkCoordIntPair(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
