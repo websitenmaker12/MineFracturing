@@ -13,6 +13,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.block.BlockBore;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
@@ -54,6 +55,7 @@ public class MineFracturing {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		CoreRegistry.scanForOres();
 	}
 	
 }
