@@ -10,12 +10,14 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
+import de.teamdna.mf.api.IPipeConnectable;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldUtil;
 
-public class TileEntityBore extends TileEntity {
+public class TileEntityBore extends TileEntity implements IPipeConnectable {
 
 	public final int maxBoreY = 8;
+	public final int structureHeight = 7;
 	
 	public int state = -1; // Inactive: -1 ; Boring: 0 ; Scanning Chunks: 1; Infesting: 2
 	public int boreY;
@@ -28,11 +30,11 @@ public class TileEntityBore extends TileEntity {
 	
 	@Override
 	public void updateEntity() {
-		if(true) { // TODO: insert check for multiblock
+		if(this.isMultiblockComplete()) {
 			// Setups the bore
 			if(this.state == -1) {
 				this.state = 0;
-				this.boreY = this.yCoord;
+				this.boreY = this.yCoord - this.structureHeight + 1;
 				this.addChunksToQueue(0); // TODO: calc by range upgrades
 			}
 			
@@ -98,6 +100,16 @@ public class TileEntityBore extends TileEntity {
 				}
 			}
 		}
+	}
+	
+	public boolean isMultiblockComplete() {
+		int i;
+		for(i = 1; i <= this.structureHeight; i++) {
+			int y = this.yCoord - i;
+			if(y <= 0) break;
+			if(this.worldObj.getBlock(this.xCoord, y, this.zCoord) != MineFracturing.INSTANCE.traverse) break;
+		}
+		return i == structureHeight;
 	}
 	
 }

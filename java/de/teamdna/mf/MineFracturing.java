@@ -19,6 +19,7 @@ import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
 import de.teamdna.mf.block.BlockPressureTube;
+import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityPressureTube;
@@ -45,6 +46,7 @@ public class MineFracturing {
 	
 	public Block bore;
 	public Block pressureTube;
+	public Block traverse;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -53,9 +55,11 @@ public class MineFracturing {
 		
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
 		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(tab);
+		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(tab);
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
+		proxy.registerBlock(this.traverse);
 		
 		proxy.registerTile(TileEntityBore.class, "bore");
 		proxy.registerTile(TileEntityPressureTube.class, "pressureTube");
