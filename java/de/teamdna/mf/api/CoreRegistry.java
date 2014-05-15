@@ -38,7 +38,7 @@ public class CoreRegistry {
 	}
 	
 	/**
-	 * Checks if a block is a registed ore
+	 * Checks if a block is a registered ore
 	 */
 	public static boolean isOre(Block block) {
 		return oreBlocks.contains(Block.getIdFromBlock(block));
