@@ -10,10 +10,10 @@ public class BiomeGenInfested extends BiomeGenBase{
 
 	public BiomeGenInfested(int par1) {
 		super(par1);
-		this.spawnableMonsterList.clear();
+		/*this.spawnableMonsterList.clear();
 		this.spawnableMonsterList.add(EntityZombie.class);
 		this.spawnableMonsterList.add(EntityCaveSpider.class);
-		this.spawnableCreatureList.clear();
+		this.spawnableCreatureList.clear();*/
 		
 		this.setTemperatureRainfall(12, 12);
 		this.flowers.clear();
@@ -29,6 +29,11 @@ public class BiomeGenInfested extends BiomeGenBase{
     @SideOnly(Side.CLIENT)
     public int getBiomeFoliageColor(int p_150571_1_, int p_150571_2_, int p_150571_3_) {
         return 0x3f3f3f;
+    }
+    
+    @Override
+    public int getSkyColorByTemp(float par1) {
+    	return 0x3f3f3f;
     }
 
 }
