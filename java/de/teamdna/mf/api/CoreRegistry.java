@@ -31,4 +31,8 @@ public class CoreRegistry {
 		}
 	}
 	
+	public static boolean isOre(Block block) {
+		return oreBlocks.contains(Block.getIdFromBlock(block));
+	}
+	
 }

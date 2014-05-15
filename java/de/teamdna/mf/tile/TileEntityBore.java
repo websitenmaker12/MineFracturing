@@ -3,9 +3,13 @@ package de.teamdna.mf.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.teamdna.mf.api.CoreRegistry;
+import de.teamdna.mf.util.Util;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.chunk.Chunk;
 
 public class TileEntityBore extends TileEntity {
 
@@ -17,7 +21,8 @@ public class TileEntityBore extends TileEntity {
 	
 	public List<String> oreBlocks = new ArrayList<String>();
 	public List<ChunkCoordIntPair> chunkQueue = new ArrayList<ChunkCoordIntPair>();
-	public ChunkCoordIntPair currentScanningChunk;
+	public Chunk currentScanningChunk;
+	private int scanX = 0, scanY = 0, scanZ = 0;
 	
 	@Override
 	public void updateEntity() {
@@ -26,11 +31,12 @@ public class TileEntityBore extends TileEntity {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord;
+				this.scanY = this.yCoord - 1;
 				this.changeChunkRadius(4);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
-			if(this.state == 0 && this.worldObj.getWorldTime() % 40L == 0L) {
+			if(this.state == 0 && this.worldObj.getWorldTime() % 10L == 0L) {
 				if(--this.boreY < this.maxBoreY) {
 					this.state = 1;
 					return;
@@ -44,12 +50,38 @@ public class TileEntityBore extends TileEntity {
 			
 			// Scanning Chunks
 			if(this.state == 1 && (this.chunkQueue.size() > 0 || this.currentScanningChunk != null)) {
-				if(this.currentScanningChunk == null) this.currentScanningChunk = this.chunkQueue.get(0);
+				if(this.currentScanningChunk == null) {
+					ChunkCoordIntPair coord = this.chunkQueue.get(0);
+					this.currentScanningChunk = this.worldObj.getChunkFromChunkCoords(coord.chunkXPos, coord.chunkZPos);
+					if(this.currentScanningChunk == null) return;
+				}
+				
+				if(this.scanX == 15 && this.scanZ == 15) this.scanY--;
+				if(this.scanY <= 0) {
+					this.scanX = 0;
+					this.scanZ = 0;
+					this.chunkQueue.remove(0);
+					this.currentScanningChunk = null;
+				} else {
+					Block block = this.currentScanningChunk.getBlock(this.scanX, this.scanY, this.scanZ);
+					if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
+						String uid = Util.createUID(this.worldObj.provider.dimensionId, this.scanX, this.scanY, this.scanZ);
+						if(!this.oreBlocks.contains(uid)) this.oreBlocks.add(uid);
+					}
+					
+					if(++this.scanX == 16) {
+						this.scanX = 0;
+						this.scanZ++;
+					}
+				}
 			}
 			
 			// Starts infecting the world and earning resources
 			if(this.state == 2) {
 			}
+			
+//			System.out.println(this.oreBlocks.size());
+			System.out.println(this.currentScanningChunk);
 		}
 	}
 	
