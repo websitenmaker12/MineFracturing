@@ -8,6 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
+import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldUtil;
@@ -27,7 +28,7 @@ public class TileEntityBore extends TileEntity {
 	
 	@Override
 	public void updateEntity() {
-		if(!this.worldObj.isRemote) {
+		if(true) { // TODO: insert check for multiblock
 			// Setups the bore
 			if(this.state == -1) {
 				this.state = 0;
@@ -42,9 +43,11 @@ public class TileEntityBore extends TileEntity {
 					return;
 				}
 				
-				Block currentBlock = this.worldObj.getBlock(this.xCoord, this.boreY, this.zCoord);
-				if(!currentBlock.getMaterial().isLiquid() && currentBlock.getBlockHardness(this.worldObj, this.xCoord, this.boreY, this.zCoord) > 0) {
-					this.worldObj.func_147480_a(this.xCoord, this.boreY, this.zCoord, false);
+				if(!this.worldObj.isRemote) {
+					Block currentBlock = this.worldObj.getBlock(this.xCoord, this.boreY, this.zCoord);
+					if(!currentBlock.getMaterial().isLiquid() && currentBlock.getBlockHardness(this.worldObj, this.xCoord, this.boreY, this.zCoord) > 0) {
+						this.worldObj.func_147480_a(this.xCoord, this.boreY, this.zCoord, false);
+					}
 				}
 			}
 			
@@ -79,7 +82,7 @@ public class TileEntityBore extends TileEntity {
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
-				WorldUtil.setBiomeForCoords(this.worldObj, xCoord, -zCoord, 2);
+				WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord, this.zCoord, MineFracturing.INSTNACE.infestedBiome.biomeID);
 				this.state = 3;
 			}
 		}
