@@ -10,11 +10,10 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
-import de.teamdna.mf.api.IPipeConnectable;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldUtil;
 
-public class TileEntityBore extends TileEntity implements IPipeConnectable {
+public class TileEntityBore extends TileEntity {
 
 	public final int maxBoreY = 8;
 	public final int structureHeight = 7;
