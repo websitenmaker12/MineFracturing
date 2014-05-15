@@ -34,7 +34,7 @@ public class TileEntityBore extends TileEntity {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(0); // TODO: calc by range upgrades
+				this.addChunksToQueue(12);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -69,10 +69,12 @@ public class TileEntityBore extends TileEntity {
 				} else {
 					for(int x = 0; x < 16; x++) {
 						for(int z = 0; z < 16; z++) {
-							Block block = this.currentScanningChunk.getBlock(x, this.scanY, z);
-							if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
-								String uid = Util.createUID(this.worldObj.provider.dimensionId, x, this.scanY, z);
-								if(!this.oreBlocks.contains(uid)) this.oreBlocks.add(uid);
+							if(Math.pow(this.xCoord + x, 2) + Math.pow(this.zCoord + z, 2) <= Math.pow(this.radius, 2)) {
+								Block block = this.currentScanningChunk.getBlock(x, this.scanY, z);
+								if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
+									String uid = Util.createUID(this.worldObj.provider.dimensionId, x, this.scanY, z);
+									if(!this.oreBlocks.contains(uid)) this.oreBlocks.add(uid);
+								}
 							}
 						}
 					}
@@ -83,7 +85,19 @@ public class TileEntityBore extends TileEntity {
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
-				WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord, this.zCoord, MineFracturing.INSTANCE.infestedBiome.biomeID);
+				System.out.println(this.oreBlocks.size());
+				int r = this.radius;
+				int rSq = r * r;
+				
+				for(int i = -r; i <= r; i++) {
+					for(int j = -r; j <= r; j++) {
+						int distance = i * i + j * j;
+						if(distance <= rSq) {
+							WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
+						}
+					}
+				}
+				
 				this.state = 3;
 			}
 		}
@@ -91,8 +105,10 @@ public class TileEntityBore extends TileEntity {
 	
 	public void addChunksToQueue(int radius) {
 		this.radius = radius;
-		for(int x = -radius; x <= radius; x++) {
-			for(int z = -radius; z <= radius; z++) {
+		int r = (int)(radius / 16) + 1;
+		System.out.println(r);
+		for(int x = -r; x <= r; x++) {
+			for(int z = -r; z <= r; z++) {
 				ChunkCoordIntPair coord = new ChunkCoordIntPair(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
 				if(!this.chunkQueue.contains(coord)) {
 					this.chunkQueue.add(coord);
@@ -112,20 +128,3 @@ public class TileEntityBore extends TileEntity {
 	}
 	
 }
-
-/*
- * int radius;
- * int radiusSq = radius*radius;
- * 
- * for(int i = -radius; i <= radius; i++)
- * {
- * 		for(int j = 0, j < -radius; j++)
- * 		{
- * 			int distance = i*i + j*j;
- * 			if(distance <= radius*radius)
- * 			{
- * 				WorldUtil.setBiomeForCoords()par1World, xCoord+i; zCoord+j, Main.infestedBiome.biomeID);
- * 			
- * 		}
- * }
- * */

@@ -42,7 +42,7 @@ public class MineFracturing {
 		}
 	};
 	
-	public static BiomeGenBase infestedBiome;
+	public BiomeGenBase infestedBiome;
 	
 	public Block bore;
 	public Block pressureTube;
