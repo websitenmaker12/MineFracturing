@@ -112,3 +112,20 @@ public class TileEntityBore extends TileEntity {
 	}
 	
 }
+
+/*
+ * int radius;
+ * int radiusSq = radius*radius;
+ * 
+ * for(int i = -radius; i <= radius; i++)
+ * {
+ * 		for(int j = 0, j < -radius; j++)
+ * 		{
+ * 			int distance = i*i + j*j;
+ * 			if(distance <= radius*radius)
+ * 			{
+ * 				WorldUtil.setBiomeForCoords()par1World, xCoord+i; zCoord+j, Main.infestedBiome.biomeID);
+ * 			
+ * 		}
+ * }
+ * */
