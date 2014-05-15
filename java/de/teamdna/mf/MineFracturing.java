@@ -28,7 +28,7 @@ public class MineFracturing {
 	public static Logger logger;
 	
 	@Instance(Reference.modid)
-	public static MineFracturing INSTNACE;
+	public static MineFracturing INSTANCE;
 	
 	@SidedProxy(clientSide = Reference.clientProxy, serverSide = Reference.commonProxy)
 	public static CommonProxy proxy;
