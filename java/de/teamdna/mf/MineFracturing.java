@@ -1,11 +1,13 @@
 package de.teamdna.mf;
 
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.world.biome.BiomeGenBase;
+
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -14,6 +16,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import de.teamdna.mf.api.CoreRegistry;
+import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
@@ -35,12 +38,17 @@ public class MineFracturing {
 		}
 	};
 	
+	public BiomeGenBase infestedBiome;
+	
 	public Block bore;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Reference.setupMetadata(event.getModMetadata());
 		logger = event.getModLog();
+		
+		//Todo: Get the next free biome id instead of 75
+		infestedBiome = new BiomeGenInfested(75);
 		
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
 		
