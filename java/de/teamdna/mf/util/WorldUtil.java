@@ -10,6 +10,5 @@ public class WorldUtil {
 		byte[] chunkArray = chunk.getBiomeArray();
 		chunkArray[((z & 0xF) << 4 | x & 0xF)] = ((byte)(biomeID & 0xFF));
 		chunk.setBiomeArray(chunkArray);
-		System.out.println(x+","+z);
 	}
 }
