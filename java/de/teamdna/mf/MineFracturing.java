@@ -48,12 +48,6 @@ public class MineFracturing {
 		Reference.setupMetadata(event.getModMetadata());
 		logger = event.getModLog();
 		
-<<<<<<< HEAD
-		//TODO: Get the next free biome id instead of 75
-		infestedBiome = new BiomeGenInfested(75);
-		
-=======
->>>>>>> a5688bfc45f47d2648dbe4d52ca9cb5b5b6f039c
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
 		
 		proxy.registerBlock(this.bore);
