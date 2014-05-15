@@ -26,4 +26,9 @@ public class Util {
 		return FMLCommonHandler.instance().getEffectiveSide().isServer();
 	}
 	
+	public static int getFirstEmptyIndex(Object[] array) {
+		for(int i = 0; i < array.length; i++) if(array[i] == null) return i;
+		return -1;
+	}
+	
 }
