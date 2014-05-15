@@ -57,7 +57,7 @@ public class MineFracturing {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		this.infestedBiome = new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()));
+		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
 	}
 	
 	@EventHandler
