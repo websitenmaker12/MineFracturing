@@ -10,12 +10,13 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.util.Util;
+import de.teamdna.mf.util.WorldUtil;
 
 public class TileEntityBore extends TileEntity {
 
 	public final int maxBoreY = 8;
 	
-	public int state = -1; // Inactive: -1 ; Boring: 0 ; Scanning Chunks: 1; Injecting: 2
+	public int state = -1; // Inactive: -1 ; Boring: 0 ; Scanning Chunks: 1; Infesting: 2
 	public int boreY;
 	public int radius;
 	
@@ -31,7 +32,7 @@ public class TileEntityBore extends TileEntity {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord;
-				this.addChunksToQueue(2);
+				this.addChunksToQueue(0); // TODO: calc by range upgrades
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -59,6 +60,8 @@ public class TileEntityBore extends TileEntity {
 				if(this.scanY <= 0) {
 					this.chunkQueue.remove(0);
 					this.currentScanningChunk = null;
+					
+					if(this.chunkQueue.size() == 0) this.state = 2;
 				} else {
 					for(int x = 0; x < 16; x++) {
 						for(int z = 0; z < 16; z++) {
@@ -74,8 +77,9 @@ public class TileEntityBore extends TileEntity {
 				}
 			}
 			
-			// Starts infecting the world and earning resources
+			// Starts infesting the world and earning resources
 			if(this.state == 2) {
+				WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord >> 4, this.zCoord >> 4, 75);
 			}
 		}
 	}

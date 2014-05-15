@@ -14,6 +14,9 @@ public class CoreRegistry {
 
 	private static List<Integer> oreBlocks = new ArrayList<Integer>();
 	
+	/**
+	 * Registers a Block as an Ore
+	 */
 	public static void registerOre(Block block) {
 		int id = Block.getIdFromBlock(block);
 		if(!oreBlocks.contains(id)) {
@@ -21,6 +24,9 @@ public class CoreRegistry {
 		}
 	}
 	
+	/**
+	 * Scans the BlockRegistry for Ore entries
+	 */
 	public static void scanForOres() {
 		Iterator iterator = Block.blockRegistry.iterator();
 		while(iterator.hasNext()) {
@@ -31,6 +37,9 @@ public class CoreRegistry {
 		}
 	}
 	
+	/**
+	 * Checks if a block is a registed ore
+	 */
 	public static boolean isOre(Block block) {
 		return oreBlocks.contains(Block.getIdFromBlock(block));
 	}
