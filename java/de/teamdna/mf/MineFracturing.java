@@ -18,8 +18,10 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
+import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.tile.TileEntityPressureTube;
 import de.teamdna.mf.util.Util;
 
 @Mod(modid = Reference.modid, name = Reference.name, version = Reference.version)
@@ -42,6 +44,7 @@ public class MineFracturing {
 	public BiomeGenBase infestedBiome;
 	
 	public Block bore;
+	public Block pressureTube;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -49,10 +52,13 @@ public class MineFracturing {
 		logger = event.getModLog();
 		
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
+		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(tab);
 		
 		proxy.registerBlock(this.bore);
+		proxy.registerBlock(this.pressureTube);
 		
 		proxy.registerTile(TileEntityBore.class, "bore");
+		proxy.registerTile(TileEntityPressureTube.class, "pressureTube");
 	}
 	
 	@EventHandler
