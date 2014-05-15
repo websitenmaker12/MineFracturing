@@ -1,5 +1,7 @@
 package de.teamdna.mf;
 
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -18,6 +20,8 @@ import de.teamdna.mf.tile.TileEntityBore;
 @Mod(modid = Reference.modid, name = Reference.name, version = Reference.version)
 public class MineFracturing {
 
+	public static Logger logger;
+	
 	@Instance(Reference.modid)
 	public static MineFracturing INSTNACE;
 	
@@ -34,6 +38,9 @@ public class MineFracturing {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		Reference.setupMetadata(event.getModMetadata());
+		logger = event.getModLog();
+		
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
 		
 		proxy.registerBlock(this.bore);

@@ -12,6 +12,12 @@ public class Reference {
 	public static final String commonProxy = "de.teamdna.mf.net.CommonProxy";
 	
 	public static void setupMetadata(ModMetadata meta) {
+		meta.modId = modid;
+		meta.name = name;
+		meta.version = version;
+		meta.description = "A mod that adds Fracturing to the game to get ores!";
+		meta.authorList.add("ObsiLP");
+		meta.authorList.add("wara286");
 	}
 	
 }
