@@ -2,6 +2,7 @@ package de.teamdna.mf.util;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 
 public class WorldBlock {
 
@@ -17,6 +18,10 @@ public class WorldBlock {
 	
 	public WorldBlock(String blockID) {
 		Object[] objs = Util.splitUID(blockID);
+		this.world = DimensionManager.getWorld((int)objs[0]);
+		this.x = (int)objs[1];
+		this.y = (int)objs[2];
+		this.z = (int)objs[3];
 	}
 	
 	public WorldBlock(World world, int x, int y, int z) {
@@ -24,6 +29,10 @@ public class WorldBlock {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+	
+	public String getUID() {
+		return Util.createUID(this.world.provider.dimensionId, this.x, this.y, this.z);
 	}
 	
 }

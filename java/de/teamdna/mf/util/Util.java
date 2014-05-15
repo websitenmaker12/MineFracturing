@@ -1,5 +1,7 @@
 package de.teamdna.mf.util;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+
 public class Util {
 
 	public static String createUID(Object... elements) {
@@ -18,6 +20,10 @@ public class Util {
 	
 	public static Object[] splitUID(String uid, String seperator) {
 		return uid.split(seperator);
+	}
+	
+	public static boolean runOnServer() {
+		return FMLCommonHandler.instance().getEffectiveSide().isServer();
 	}
 	
 }

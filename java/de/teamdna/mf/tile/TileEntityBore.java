@@ -1,14 +1,20 @@
 package de.teamdna.mf.tile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBore extends TileEntity {
 
 	public final int maxBoreY = 8;
+	public final int chunkRadius = 4;
 	
 	public int state = -1; // Inactive: -1 ; Boring: 0 ; Injecting: 1
 	public int boreY;
+	
+	public List<String> oreBlocks = new ArrayList<String>();
 	
 	@Override
 	public void updateEntity() {
