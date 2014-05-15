@@ -79,7 +79,8 @@ public class TileEntityBore extends TileEntity {
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
-				WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord >> 4, this.zCoord >> 4, 75);
+				WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord, this.zCoord, 75);
+				this.state = 3;
 			}
 		}
 	}
