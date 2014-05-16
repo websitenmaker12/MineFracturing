@@ -101,16 +101,16 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_TEXTURE_2D); //TODO: REMOVE!!!
-		GL11.glColor4f(1F, 0, 0, 1);
+		GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 		model_pipe_01_inner.renderAll();
-		GL11.glColor4f(0, 0, 1F, 1);
+		GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 		model_pipe_01_outer.renderAll();
 		
 		if (tubeTile.isConnectedToSide(ForgeDirection.EAST)) {
 			GL11.glPushMatrix();
-			GL11.glColor4f(1F, 0, 0, 1F);
+			GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 			model_pipe_02_inner.renderAll();
-			GL11.glColor4f(0, 0, 1F, 1F);
+			GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 			model_pipe_02_outer.renderAll();
 			GL11.glPopMatrix();
 		}
@@ -118,9 +118,9 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		if (tubeTile.isConnectedToSide(ForgeDirection.SOUTH)) {
 			GL11.glPushMatrix();
 			GL11.glRotated(-90, 0, 1, 0);
-			GL11.glColor4f(1F, 0, 0, 1F);
+			GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 			model_pipe_02_inner.renderAll();
-			GL11.glColor4f(0, 0, 1F, 1F);
+			GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 			model_pipe_02_outer.renderAll();
 			GL11.glPopMatrix();
 		}
@@ -128,9 +128,9 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		if (tubeTile.isConnectedToSide(ForgeDirection.WEST)) {
 			GL11.glPushMatrix();
 			GL11.glRotated(180, 0, 1, 0);
-			GL11.glColor4f(1F, 0, 0, 1F);
+			GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 			model_pipe_02_inner.renderAll();
-			GL11.glColor4f(0, 0, 1F, 1F);
+			GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 			model_pipe_02_outer.renderAll();
 			GL11.glPopMatrix();
 		}
@@ -138,9 +138,9 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		if (tubeTile.isConnectedToSide(ForgeDirection.NORTH) || isInInv) {
 			GL11.glPushMatrix();
 			GL11.glRotated(90, 0, 1, 0);
-			GL11.glColor4f(1F, 0, 0, 1F);
+			GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 			model_pipe_02_inner.renderAll();
-			GL11.glColor4f(0, 0, 1F, 1F);
+			GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 			model_pipe_02_outer.renderAll();
 			GL11.glPopMatrix();
 		}
@@ -149,9 +149,9 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 			GL11.glPushMatrix();
 			GL11.glTranslated(0, -0.25, 0);
 			GL11.glRotated(90, 0, 0, 1);
-			GL11.glColor4f(1F, 0, 0, 1F);
+			GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 			model_pipe_02_inner.renderAll();
-			GL11.glColor4f(0, 0, 1F, 1F);
+			GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 			model_pipe_02_outer.renderAll();
 			GL11.glPopMatrix();
 		}
@@ -160,9 +160,9 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 			GL11.glPushMatrix();
 			//GL11.glTranslated(0, +0.25, 0);
 			GL11.glRotated(-90, 0, 0, 1);
-			GL11.glColor4f(1F, 0, 0, 1F);
+			GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 			model_pipe_02_inner.renderAll();
-			GL11.glColor4f(0, 0, 1F, 1F);
+			GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 			model_pipe_02_outer.renderAll();
 			GL11.glPopMatrix();
 		}
