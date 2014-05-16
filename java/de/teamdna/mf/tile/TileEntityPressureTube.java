@@ -1,7 +1,9 @@
 package de.teamdna.mf.tile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -17,6 +19,7 @@ public class TileEntityPressureTube extends TileEntity {
 	private List<ForgeDirection> adjacentExtractors = new ArrayList<ForgeDirection>();
 	private List<ForgeDirection> adjacentImporters = new ArrayList<ForgeDirection>();
 	private List<ForgeDirection> adjacentPipes = new ArrayList<ForgeDirection>();
+	private Map<NBTTagCompound, ForgeDirection> pathTracker = new HashMap<NBTTagCompound, ForgeDirection>();
 	
 	private boolean needsUpdate = true;
 	
@@ -53,12 +56,13 @@ public class TileEntityPressureTube extends TileEntity {
 		}
 		
 		// Transfer packets
-		if(this.adjacentPipes.size() > 0) {
-			// TODO: avoid that packet can be send to the pipe it is coming from except there is no other pipe to send
+		if(this.adjacentPipes.size() > 0 && this.packets.size() > 0) {
 			ForgeDirection dir = this.adjacentPipes.get(this.worldObj.rand.nextInt(this.adjacentPipes.size()));
 			TileEntityPressureTube tile = this.getByDirection(dir);
-			if(tile != null && this.packets.size() > 0) {
-				this.sendPacket(this.packets.get(0), dir);
+			NBTTagCompound packet = this.packets.get(0);
+			
+			if(tile != null && packet != null && (dir != this.pathTracker.get(packet) || this.adjacentPipes.size() == 1)) {
+				this.sendPacket(packet, dir);
 			}
 		}
 		
@@ -120,8 +124,9 @@ public class TileEntityPressureTube extends TileEntity {
 		if(this.isConnectedToPipe(direction)) {
 			TileEntityPressureTube tile = this.getByDirection(direction);
 			if(tile.canReceivePackets()) {
-				tile.receivePacket(packet);
+				tile.receivePacket(packet, direction.getOpposite());
 				this.packets.remove(packet);
+				this.pathTracker.remove(packet);
 				return true;
 			}
 		}
@@ -132,8 +137,10 @@ public class TileEntityPressureTube extends TileEntity {
 		return this.packets.size() < maxPacketStorage;
 	}
 	
-	public void receivePacket(NBTTagCompound packet) {
+	public void receivePacket(NBTTagCompound packet, ForgeDirection direction) {
+		packet.setInteger("sends", packet.getInteger("sends") + 1);
 		this.packets.add(packet);
+		this.pathTracker.put(packet, direction);
 	}
 	
 }

@@ -18,7 +18,7 @@ public class BlockPressureTube extends BlockContainer {
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileEntityPressureTube();
 	}
-
+	
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
 		super.onNeighborBlockChange(world, x, y, z, block);

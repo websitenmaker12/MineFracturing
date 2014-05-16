@@ -22,6 +22,7 @@ public class TileEntityExtractor extends TileEntity implements IExtractor {
 	public NBTTagCompound extract(ForgeDirection direction) {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setString("msg", "hallo");
+		tag.setInteger("sends", 0);
 		return tag;
 	}
 
