@@ -75,6 +75,7 @@ public class TileEntityBore extends TileEntity {
 					for(int x = 0; x < 16; x++) {
 						for(int z = 0; z < 16; z++) {
 							Block block = this.currentScanningChunk.getBlock(x, this.scanY, z);
+							if(!worldObj.isRemote) System.out.println(this.currentScanningChunk.xPosition + " " + this.currentScanningChunk.zPosition);
 //							if(block != Blocks.air && block != Blocks.dirt && block != Blocks.grass) System.out.println(block);
 							if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
 								String uid = Util.createUID(this.worldObj.provider.dimensionId, this.currentScanningChunk.xPosition * 16 + x, this.scanY, this.currentScanningChunk.zPosition * 16 + z);
@@ -146,7 +147,8 @@ public class TileEntityBore extends TileEntity {
 		int r = (int)(radius / 16) + 1;
 		for(int x = -r; x <= r; x++) {
 			for(int z = -r; z <= r; z++) {
-				ChunkCoordIntPair coord = new ChunkCoordIntPair(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
+				Chunk chunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
+				ChunkCoordIntPair coord = new ChunkCoordIntPair(chunk.xPosition + x, chunk.zPosition + z);
 				if(!this.chunkQueue.contains(coord)) {
 					this.chunkQueue.add(coord);
 				}
