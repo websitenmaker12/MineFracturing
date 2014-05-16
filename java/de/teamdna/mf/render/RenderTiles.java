@@ -47,7 +47,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
 		else if (tile instanceof TileEntityBore) renderTileBore(x, y, z);
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
-		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
+		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z, false);
 	}
 	
 	private void renderTileTraverse(double x, double y, double z) {
@@ -93,7 +93,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 	
-	public void renderTilePipe(TileEntityPressureTube tubeTile, double x, double y, double z) {
+	public void renderTilePipe(TileEntityPressureTube tubeTile, double x, double y, double z, boolean isInInv) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.5, y+0.5, z+0.5D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
@@ -107,34 +107,64 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		model_pipe_01_outer.renderAll();
 		
 		if (tubeTile.isConnectedToSide(ForgeDirection.EAST)) {
+			GL11.glPushMatrix();
 			GL11.glColor4f(1F, 0, 0, 1F);
 			model_pipe_02_inner.renderAll();
 			GL11.glColor4f(0, 0, 1F, 1F);
 			model_pipe_02_outer.renderAll();
+			GL11.glPopMatrix();
 		}
 		
 		if (tubeTile.isConnectedToSide(ForgeDirection.SOUTH)) {
-			GL11.glRotated(90, 0, 1, 0);
-			GL11.glColor4f(1F, 0, 0, 1F);
-			model_pipe_02_inner.renderAll();
-			GL11.glColor4f(0, 0, 1F, 1F);
-			model_pipe_02_outer.renderAll();
-		}
-		
-		if (tubeTile.isConnectedToSide(ForgeDirection.WEST)) {
-			GL11.glRotated(180, 0, 1, 0);
-			GL11.glColor4f(1F, 0, 0, 1F);
-			model_pipe_02_inner.renderAll();
-			GL11.glColor4f(0, 0, 1F, 1F);
-			model_pipe_02_outer.renderAll();
-		}
-		
-		if (tubeTile.isConnectedToSide(ForgeDirection.NORTH)) {
+			GL11.glPushMatrix();
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glColor4f(1F, 0, 0, 1F);
 			model_pipe_02_inner.renderAll();
 			GL11.glColor4f(0, 0, 1F, 1F);
 			model_pipe_02_outer.renderAll();
+			GL11.glPopMatrix();
+		}
+		
+		if (tubeTile.isConnectedToSide(ForgeDirection.WEST)) {
+			GL11.glPushMatrix();
+			GL11.glRotated(180, 0, 1, 0);
+			GL11.glColor4f(1F, 0, 0, 1F);
+			model_pipe_02_inner.renderAll();
+			GL11.glColor4f(0, 0, 1F, 1F);
+			model_pipe_02_outer.renderAll();
+			GL11.glPopMatrix();
+		}
+		
+		if (tubeTile.isConnectedToSide(ForgeDirection.NORTH) || isInInv) {
+			GL11.glPushMatrix();
+			GL11.glRotated(90, 0, 1, 0);
+			GL11.glColor4f(1F, 0, 0, 1F);
+			model_pipe_02_inner.renderAll();
+			GL11.glColor4f(0, 0, 1F, 1F);
+			model_pipe_02_outer.renderAll();
+			GL11.glPopMatrix();
+		}
+		
+		if (tubeTile.isConnectedToSide(ForgeDirection.UP)) {
+			GL11.glPushMatrix();
+			GL11.glTranslated(0, -0.25, 0);
+			GL11.glRotated(90, 0, 0, 1);
+			GL11.glColor4f(1F, 0, 0, 1F);
+			model_pipe_02_inner.renderAll();
+			GL11.glColor4f(0, 0, 1F, 1F);
+			model_pipe_02_outer.renderAll();
+			GL11.glPopMatrix();
+		}
+		
+		if (tubeTile.isConnectedToSide(ForgeDirection.DOWN) || isInInv) {
+			GL11.glPushMatrix();
+			//GL11.glTranslated(0, +0.25, 0);
+			GL11.glRotated(-90, 0, 0, 1);
+			GL11.glColor4f(1F, 0, 0, 1F);
+			model_pipe_02_inner.renderAll();
+			GL11.glColor4f(0, 0, 1F, 1F);
+			model_pipe_02_outer.renderAll();
+			GL11.glPopMatrix();
 		}
 		
 		GL11.glEnable(GL11.GL_LIGHTING);
