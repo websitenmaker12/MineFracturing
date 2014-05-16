@@ -26,6 +26,12 @@ public class TileEntityPressureTube extends TileEntity {
 		
 		// Checking incoming packets
 		if(this.canReceivePackets()) {
+			for(ForgeDirection dir : this.adjacentExtractors) {
+				IExtractor extractor = this.getByDirection(dir);
+				if(extractor != null && extractor.canExtract(dir)) {
+					this.packets.add(extractor.extract(dir));
+				}
+			}
 		}
 
 		// Export packets
@@ -48,6 +54,7 @@ public class TileEntityPressureTube extends TileEntity {
 		
 		// Transfer packets
 		if(this.adjacentPipes.size() > 0) {
+			// TODO: avoid that packet can be send to the pipe it is coming from except there is no other pipe to send
 			ForgeDirection dir = this.adjacentPipes.get(this.worldObj.rand.nextInt(this.adjacentPipes.size()));
 			TileEntityPressureTube tile = this.getByDirection(dir);
 			if(tile != null && this.packets.size() > 0) {
@@ -64,22 +71,28 @@ public class TileEntityPressureTube extends TileEntity {
 	}
 	
 	public List<ForgeDirection> getAdjacentExtractors() {
-		return this.getAdjacents(IExtractor.class);
-	}
-	
-	public List<ForgeDirection> getAdjacentImporters() {
-		return this.getAdjacents(IImporter.class);
-	}
-	
-	public List<ForgeDirection> getAdjacentPipes() {
-		return this.getAdjacents(TileEntityPressureTube.class);
-	}
-	
-	private List<ForgeDirection> getAdjacents(Class type) {
 		List<ForgeDirection> output = new ArrayList<ForgeDirection>();
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			TileEntity tile = this.worldObj.getTileEntity(this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ);
-			if(tile != null && tile.getClass().isInstance(type)) output.add(dir);
+			if(tile != null && tile instanceof IExtractor) output.add(dir);
+		}
+		return output;
+	}
+	
+	public List<ForgeDirection> getAdjacentImporters() {
+		List<ForgeDirection> output = new ArrayList<ForgeDirection>();
+		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			TileEntity tile = this.worldObj.getTileEntity(this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ);
+			if(tile != null && tile instanceof IImporter) output.add(dir);
+		}
+		return output;
+	}
+	
+	public List<ForgeDirection> getAdjacentPipes() {
+		List<ForgeDirection> output = new ArrayList<ForgeDirection>();
+		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+			TileEntity tile = this.worldObj.getTileEntity(this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ);
+			if(tile != null && tile instanceof TileEntityPressureTube) output.add(dir);
 		}
 		return output;
 	}

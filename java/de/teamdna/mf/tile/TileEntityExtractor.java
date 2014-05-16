@@ -6,14 +6,23 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityExtractor extends TileEntity implements IExtractor {
 
+	private long ticks = 0;
+	
 	@Override
-	public boolean canExtract(ForgeDirection side) {
-		return false;
+	public void updateEntity() {
+		ticks++;
+	}
+	
+	@Override
+	public boolean canExtract(ForgeDirection direction) {
+		return ticks == 20;
 	}
 
 	@Override
-	public NBTTagCompound extract(ForgeDirection side) {
-		return null;
+	public NBTTagCompound extract(ForgeDirection direction) {
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("msg", "hallo");
+		return tag;
 	}
 
 }

@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public interface IExtractor {
 
-	boolean canExtract(ForgeDirection side);
-	NBTTagCompound extract(ForgeDirection side);
+	boolean canExtract(ForgeDirection direction);
+	NBTTagCompound extract(ForgeDirection direction);
 	
 }
