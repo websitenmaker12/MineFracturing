@@ -9,11 +9,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityPressureTube extends TileEntity implements IPipe {
+public class TileEntityPressureTube extends TileEntity {
 	
 	public static final int maxPacketStorage = 10;
-	private List<NBTTagCompound> packets = new ArrayList<NBTTagCompound>();
 	
+	private List<NBTTagCompound> packets = new ArrayList<NBTTagCompound>();
 	private List<ForgeDirection> adjacentExtractors = new ArrayList<ForgeDirection>();
 	private List<ForgeDirection> adjacentImporters = new ArrayList<ForgeDirection>();
 	private List<ForgeDirection> adjacentPipes = new ArrayList<ForgeDirection>();
@@ -25,11 +25,11 @@ public class TileEntityPressureTube extends TileEntity implements IPipe {
 		if(this.worldObj.isRemote) return;
 		
 		// Checking incoming packets
-		if(this.packets.size() < maxPacketStorage) {
+		if(this.canReceivePackets()) {
 		}
 
 		// Export packets
-		if(this.adjacentImporters.size() > 0) {
+		if(this.adjacentImporters.size() > 0 && this.packets.size() > 0) {
 			ForgeDirection dir = this.adjacentImporters.get(this.worldObj.rand.nextInt(this.adjacentImporters.size()));
 			IImporter importer = this.getByDirection(dir);
 			if(importer != null) {
@@ -48,6 +48,11 @@ public class TileEntityPressureTube extends TileEntity implements IPipe {
 		
 		// Transfer packets
 		if(this.adjacentPipes.size() > 0) {
+			ForgeDirection dir = this.adjacentPipes.get(this.worldObj.rand.nextInt(this.adjacentPipes.size()));
+			TileEntityPressureTube tile = this.getByDirection(dir);
+			if(tile != null && this.packets.size() > 0) {
+				this.sendPacket(this.packets.get(0), dir);
+			}
 		}
 		
 		if(this.needsUpdate) {
@@ -67,7 +72,7 @@ public class TileEntityPressureTube extends TileEntity implements IPipe {
 	}
 	
 	public List<ForgeDirection> getAdjacentPipes() {
-		return this.getAdjacents(IPipe.class);
+		return this.getAdjacents(TileEntityPressureTube.class);
 	}
 	
 	private List<ForgeDirection> getAdjacents(Class type) {
@@ -96,6 +101,26 @@ public class TileEntityPressureTube extends TileEntity implements IPipe {
 	@SideOnly(Side.CLIENT)
 	public void updatePipeConnections() {
 		this.adjacentPipes = this.getAdjacentPipes();
+	}
+	
+	public boolean sendPacket(NBTTagCompound packet, ForgeDirection direction) {
+		if(this.isConnectedToPipe(direction)) {
+			TileEntityPressureTube tile = this.getByDirection(direction);
+			if(tile.canReceivePackets()) {
+				tile.receivePacket(packet);
+				this.packets.remove(packet);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean canReceivePackets() {
+		return this.packets.size() < maxPacketStorage;
+	}
+	
+	public void receivePacket(NBTTagCompound packet) {
+		this.packets.add(packet);
 	}
 	
 }
