@@ -23,9 +23,11 @@ public class TileEntityBore extends TileEntity {
 	public int radius;
 	
 	public List<String> oreBlocks = new ArrayList<String>();
+	public int totalOres = 0;
 	public List<ChunkCoordIntPair> chunkQueue = new ArrayList<ChunkCoordIntPair>();
 	public Chunk currentScanningChunk;
 	private int scanY = 0;
+	private int lastInfestRadius = -1;
 	
 	@Override
 	public void updateEntity() {
@@ -34,7 +36,7 @@ public class TileEntityBore extends TileEntity {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(64);
+				this.addChunksToQueue(8);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -65,7 +67,10 @@ public class TileEntityBore extends TileEntity {
 					this.chunkQueue.remove(0);
 					this.currentScanningChunk = null;
 					
-					if(this.chunkQueue.size() == 0) this.state = 2;
+					if(this.chunkQueue.size() == 0) {
+						this.totalOres = this.oreBlocks.size();
+						this.state = 2;
+					}
 				} else {
 					for(int x = 0; x < 16; x++) {
 						for(int z = 0; z < 16; z++) {
@@ -76,27 +81,41 @@ public class TileEntityBore extends TileEntity {
 							}
 						}
 					}
-					
 					this.scanY--;
 				}
 			}
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
-				System.out.println("> " + this.oreBlocks.size());
-				int r = this.radius;
+				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
 				int rSq = r * r;
 				
-				for(int i = -r; i <= r; i++) {
-					for(int j = -r; j <= r; j++) {
-						int distance = i * i + j * j;
-						if(distance <= rSq) {
-							WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
+				if(r != this.lastInfestRadius) {
+					this.lastInfestRadius = r;
+					
+					// Infests the world
+					for(int i = -r; i <= r; i++) {
+						for(int j = -r; j <= r; j++) {
+							int distance = i * i + j * j;
+							if(distance <= rSq) {
+								WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
+							}
 						}
 					}
+	
+					// Update infested Chunks
+					int chunkRadius = (int)(r / 16) + 1;
+					this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord).setChunkModified();
+					for(int x = -chunkRadius; x <= chunkRadius; x++) {
+						for(int z = -chunkRadius; z <= chunkRadius; z++) {
+							if(x == -chunkRadius || z == -chunkRadius || x == chunkRadius || z == chunkRadius) {
+								this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z).setChunkModified();
+							}
+						}
+					}
+					
+					this.state = 3;
 				}
-				
-				this.state = 3;
 			}
 		}
 	}
