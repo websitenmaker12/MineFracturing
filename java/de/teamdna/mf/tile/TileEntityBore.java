@@ -10,6 +10,7 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
+import de.teamdna.mf.block.IBoreBlock;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
 import de.teamdna.mf.util.WorldUtil;
@@ -76,7 +77,6 @@ public class TileEntityBore extends TileEntity {
 						for(int z = 0; z < 16; z++) {
 							Block block = this.currentScanningChunk.getBlock(x, this.scanY, z);
 							if(!worldObj.isRemote) System.out.println(this.currentScanningChunk.xPosition + " " + this.currentScanningChunk.zPosition);
-//							if(block != Blocks.air && block != Blocks.dirt && block != Blocks.grass) System.out.println(block);
 							if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
 								String uid = Util.createUID(this.worldObj.provider.dimensionId, this.currentScanningChunk.xPosition * 16 + x, this.scanY, this.currentScanningChunk.zPosition * 16 + z);
 								if(!this.oreBlocks.contains(uid)) this.oreBlocks.add(uid);
@@ -90,6 +90,7 @@ public class TileEntityBore extends TileEntity {
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
 				// Ore replacing
+				// TODO: Make this much slower
 				if(this.oreBlocks.size() == 0) this.state = 3;
 				else {
 					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
@@ -161,7 +162,7 @@ public class TileEntityBore extends TileEntity {
 		for(i = 1; i <= this.structureHeight; i++) {
 			int y = this.yCoord - i;
 			if(y <= 0) break;
-			if(this.worldObj.getBlock(this.xCoord, y, this.zCoord) != MineFracturing.INSTANCE.traverse) break;
+			if(!(this.worldObj.getBlock(this.xCoord, y, this.zCoord) instanceof IBoreBlock)) break;
 		}
 		return i == structureHeight;
 	}

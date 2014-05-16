@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityBore;
 
-public class BlockBore extends BlockContainer {
+public class BlockBore extends BlockContainer implements IBoreBlock {
 
 	public BlockBore() {
 		super(Material.iron);
