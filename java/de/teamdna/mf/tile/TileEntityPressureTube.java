@@ -115,7 +115,7 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 	}
 	
 	public boolean isConnectedToSide(ForgeDirection direction) {
-		TileEntity tile = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord);
+		TileEntity tile = this.worldObj.getTileEntity(this.xCoord + direction.offsetX, this.yCoord + direction.offsetY, this.zCoord + direction.offsetZ);
 		return tile != null && tile instanceof IConnectable;
 	}
 	
