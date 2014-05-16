@@ -38,7 +38,7 @@ public class TileEntityBore extends TileEntity {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(6);
+				this.addChunksToQueue(32);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -61,14 +61,12 @@ public class TileEntityBore extends TileEntity {
 				if(this.currentScanningChunk == null) {
 					this.scanY = this.yCoord - 1;
 					ChunkCoordIntPair coord = this.chunkQueue.get(0);
+					this.chunkQueue.remove(0);
 					this.currentScanningChunk = this.worldObj.getChunkFromChunkCoords(coord.chunkXPos, coord.chunkZPos);
-					if(this.currentScanningChunk == null) return;
 				}
 				
 				if(this.scanY <= 0) {
-					this.chunkQueue.remove(0);
 					this.currentScanningChunk = null;
-					
 					if(this.chunkQueue.size() == 0) {
 						this.totalOres = this.oreBlocks.size();
 						this.state = 2;
@@ -94,7 +92,7 @@ public class TileEntityBore extends TileEntity {
 				else {
 					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
 					this.oreBlocks.remove(0);
-
+					System.out.println(this.oreBlocks.size());
 					if(!this.worldObj.isRemote) {
 						this.worldObj.setBlock(block.x, block.y, block.z, CoreRegistry.getContainer(block.getBlock()));
 					}
