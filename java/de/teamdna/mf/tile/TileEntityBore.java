@@ -104,13 +104,14 @@ public class TileEntityBore extends TileEntity {
 					}
 	
 					// Update infested Chunks
-					int chunkRadius = (int)(r / 16) + 1;
-					this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord).setChunkModified();
-					for(int x = -chunkRadius; x <= chunkRadius; x++) {
-						for(int z = -chunkRadius; z <= chunkRadius; z++) {
-							if(x == -chunkRadius || z == -chunkRadius || x == chunkRadius || z == chunkRadius) {
-								Chunk chunk = this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
-								this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+					if(!this.worldObj.isRemote) {
+						int chunkRadius = (int)(r / 16) + 1;
+						for(int x = -chunkRadius; x <= chunkRadius; x++) {
+							for(int z = -chunkRadius; z <= chunkRadius; z++) {
+								if(x == -chunkRadius || z == -chunkRadius || x == chunkRadius || z == chunkRadius) {
+									Chunk chunk = this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
+									System.out.println("hi");
+								}
 							}
 						}
 					}
