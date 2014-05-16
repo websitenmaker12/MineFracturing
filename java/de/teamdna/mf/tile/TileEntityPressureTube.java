@@ -27,8 +27,13 @@ public class TileEntityPressureTube extends TileEntity implements IPipe {
 		}
 
 		// Export packets
+		if(this.adjacentImporters.size() > 0) {
+			IImporter importer = this.getByDirection(this.adjacentImporters.get(this.worldObj.rand.nextInt(this.adjacentImporters.size())));
+		}
 		
 		// Transfer packets
+		if(this.adjacentPipes.size() > 0) {
+		}
 		
 		if(this.needsUpdate) {
 			this.adjacentExtractors = this.getAdjacentExtractors();
@@ -59,8 +64,14 @@ public class TileEntityPressureTube extends TileEntity implements IPipe {
 		return output;
 	}
 	
-	public void neighborsHasChanged() {
+	public void neighborsHadChanged() {
 		this.needsUpdate = true;
+	}
+	
+	private <V> V getByDirection(ForgeDirection dir) {
+		TileEntity tile = this.worldObj.getTileEntity(this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ);
+		if(tile != null) return (V)tile;
+		else return null;
 	}
 	
 }
