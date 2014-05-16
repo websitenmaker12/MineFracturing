@@ -106,14 +106,14 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glColor4f(0, 0, 1F, 1);
 		model_pipe_01_outer.renderAll();
 		
-		if (!tubeTile.isConnectedToPipe(ForgeDirection.EAST)) {
+		if (tubeTile.isConnectedToSide(ForgeDirection.EAST)) {
 			GL11.glColor4f(1F, 0, 0, 1F);
 			model_pipe_02_inner.renderAll();
 			GL11.glColor4f(0, 0, 1F, 1F);
 			model_pipe_02_outer.renderAll();
 		}
 		
-		if (!tubeTile.isConnectedToPipe(ForgeDirection.SOUTH)) {
+		if (tubeTile.isConnectedToSide(ForgeDirection.SOUTH)) {
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glColor4f(1F, 0, 0, 1F);
 			model_pipe_02_inner.renderAll();
@@ -121,7 +121,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 			model_pipe_02_outer.renderAll();
 		}
 		
-		if (!tubeTile.isConnectedToPipe(ForgeDirection.WEST)) {
+		if (tubeTile.isConnectedToSide(ForgeDirection.WEST)) {
 			GL11.glRotated(180, 0, 1, 0);
 			GL11.glColor4f(1F, 0, 0, 1F);
 			model_pipe_02_inner.renderAll();
@@ -129,7 +129,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 			model_pipe_02_outer.renderAll();
 		}
 		
-		if (!tubeTile.isConnectedToPipe(ForgeDirection.NORTH)) {
+		if (tubeTile.isConnectedToSide(ForgeDirection.NORTH)) {
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glColor4f(1F, 0, 0, 1F);
 			model_pipe_02_inner.renderAll();

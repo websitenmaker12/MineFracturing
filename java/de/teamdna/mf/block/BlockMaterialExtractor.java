@@ -11,6 +11,7 @@ public class BlockMaterialExtractor extends BlockContainer implements IBoreBlock
 
 	public BlockMaterialExtractor() {
 		super(Material.iron);
+		this.setBlockTextureName("iron_block");
 	}
 
 	@Override

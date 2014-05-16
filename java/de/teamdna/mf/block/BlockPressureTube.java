@@ -12,6 +12,7 @@ public class BlockPressureTube extends BlockContainer {
 
 	public BlockPressureTube() {
 		super(Material.iron);
+		this.setBlockTextureName("iron_block");
 	}
 
 	@Override

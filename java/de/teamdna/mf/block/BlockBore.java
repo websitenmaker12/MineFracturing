@@ -11,6 +11,7 @@ public class BlockBore extends BlockContainer implements IBoreBlock {
 
 	public BlockBore() {
 		super(Material.iron);
+		this.setBlockTextureName("iron_block");
 	}
 
 	@Override
