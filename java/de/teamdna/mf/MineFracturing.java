@@ -23,6 +23,7 @@ import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityPressureTube;
+import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.mf.util.Util;
 
 @Mod(modid = Reference.modid, name = Reference.name, version = Reference.version)
@@ -63,10 +64,12 @@ public class MineFracturing {
 		
 		proxy.registerTile(TileEntityBore.class, "bore");
 		proxy.registerTile(TileEntityPressureTube.class, "pressureTube");
+		proxy.registerTile(TileEntityTraverse.class, "traverse");
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		proxy.registerRenderer();
 		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
 	}
 	
