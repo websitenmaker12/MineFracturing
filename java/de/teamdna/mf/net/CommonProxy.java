@@ -23,4 +23,6 @@ public abstract class CommonProxy {
 	
 	public abstract EntityPlayer getClientPlayer();
 	
+	public abstract void registerRenderer();
+	
 }

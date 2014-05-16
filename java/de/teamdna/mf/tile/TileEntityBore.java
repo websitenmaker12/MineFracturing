@@ -110,7 +110,7 @@ public class TileEntityBore extends TileEntity {
 						for(int z = -chunkRadius; z <= chunkRadius; z++) {
 							if(x == -chunkRadius || z == -chunkRadius || x == chunkRadius || z == chunkRadius) {
 								Chunk chunk = this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
-								chunk.sendUpdates = chunk.isModified = true;
+								this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 							}
 						}
 					}
