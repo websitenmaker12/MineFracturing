@@ -87,7 +87,7 @@ public class TileEntityBore extends TileEntity {
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
-				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
+				int r = (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
 				int rSq = r * r;
 				
 				if(r != this.lastInfestRadius) {
@@ -109,12 +109,13 @@ public class TileEntityBore extends TileEntity {
 					for(int x = -chunkRadius; x <= chunkRadius; x++) {
 						for(int z = -chunkRadius; z <= chunkRadius; z++) {
 							if(x == -chunkRadius || z == -chunkRadius || x == chunkRadius || z == chunkRadius) {
-								this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z).setChunkModified();
+								Chunk chunk = this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
+								chunk.sendUpdates = chunk.isModified = true;
 							}
 						}
 					}
 					
-					this.state = 3;
+//					this.state = 3;
 				}
 			}
 		}
