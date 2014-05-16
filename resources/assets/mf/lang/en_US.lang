@@ -1,5 +1,6 @@
 tile.bore.name=Bore
 tile.pressureTube.name=Pressure Tube
 tile.traverse.name=Traverse
+tile.materialExtractor.name=Material Extractor
 
 itemGroup.mf=MineFracturing
