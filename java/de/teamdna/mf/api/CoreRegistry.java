@@ -1,26 +1,28 @@
 package de.teamdna.mf.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.logging.log4j.Level;
-
-import de.teamdna.mf.MineFracturing;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
+import net.minecraft.init.Blocks;
 
 public class CoreRegistry {
 
 	private static List<Integer> oreBlocks = new ArrayList<Integer>();
+	private static Map<Integer, Integer> containerBlocks = new HashMap<Integer, Integer>();
 	
 	/**
 	 * Registers a Block as an Ore
 	 */
-	public static void registerOre(Block block) {
-		int id = Block.getIdFromBlock(block);
+	public static void registerOre(Block ore) {
+		int id = Block.getIdFromBlock(ore);
 		if(!oreBlocks.contains(id)) {
 			oreBlocks.add(id);
+			registerContainerBlock(ore, Blocks.stone);
 		}
 	}
 	
@@ -40,8 +42,25 @@ public class CoreRegistry {
 	/**
 	 * Checks if a block is a registered ore
 	 */
-	public static boolean isOre(Block block) {
-		return oreBlocks.contains(Block.getIdFromBlock(block));
+	public static boolean isOre(Block ore) {
+		return oreBlocks.contains(Block.getIdFromBlock(ore));
+	}
+	
+	
+	/**
+	 * Sets the Container block which replaces a fractured ore
+	 */
+	public static void registerContainerBlock(Block ore, Block container) {
+		if(oreBlocks.contains(Block.getIdFromBlock(ore))) {
+			containerBlocks.put(Block.getIdFromBlock(ore), Block.getIdFromBlock(container));
+		}
+	}
+	
+	/**
+	 * Returns the Container for the given Ore
+	 */
+	public static Block getContainer(Block ore) {
+		return Block.getBlockById(containerBlocks.get(Block.getIdFromBlock(ore)));
 	}
 	
 }

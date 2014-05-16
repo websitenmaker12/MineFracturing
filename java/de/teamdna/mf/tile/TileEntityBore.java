@@ -11,6 +11,7 @@ import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.util.Util;
+import de.teamdna.mf.util.WorldBlock;
 import de.teamdna.mf.util.WorldUtil;
 
 public class TileEntityBore extends TileEntity {
@@ -37,7 +38,7 @@ public class TileEntityBore extends TileEntity {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(8);
+				this.addChunksToQueue(6);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -88,6 +89,19 @@ public class TileEntityBore extends TileEntity {
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
+				// Ore replacing
+				if(this.oreBlocks.size() == 0) this.state = 3;
+				else {
+					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
+					block.world = this.worldObj;
+					this.oreBlocks.remove(0);
+
+					if(!this.worldObj.isRemote) {
+						this.worldObj.setBlock(block.x, block.y, block.z, CoreRegistry.getContainer(block.getBlock()));
+					}
+				}
+				
+				// Infesting
 				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
 				int rSq = r * r;
 				
