@@ -15,7 +15,7 @@ import de.teamdna.mf.util.WorldUtil;
 
 public class TileEntityBore extends TileEntity {
 
-	public final int maxBoreY = 8;
+	public final int maxBoreY = 1;
 	public final int structureHeight = 7;
 	
 	public int state = -1; // Inactive: -1 ; Boring: 0 ; Scanning Chunks: 1; Infesting: 2
@@ -36,7 +36,7 @@ public class TileEntityBore extends TileEntity {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(8);
+				this.addChunksToQueue(64);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -56,6 +56,7 @@ public class TileEntityBore extends TileEntity {
 			
 			// Scanning Chunks
 			if(this.state == 1 && (this.chunkQueue.size() > 0 || this.currentScanningChunk != null)) {
+				this.state = 2;
 				if(this.currentScanningChunk == null) {
 					this.scanY = this.yCoord - 1;
 					ChunkCoordIntPair coord = this.chunkQueue.get(0);
@@ -87,7 +88,8 @@ public class TileEntityBore extends TileEntity {
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
-				int r = (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
+//		TODO:		int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
+				int r = this.radius;
 				int rSq = r * r;
 				
 				if(r != this.lastInfestRadius) {
@@ -108,9 +110,12 @@ public class TileEntityBore extends TileEntity {
 						int chunkRadius = (int)(r / 16) + 1;
 						for(int x = -chunkRadius; x <= chunkRadius; x++) {
 							for(int z = -chunkRadius; z <= chunkRadius; z++) {
-								Chunk chunk = this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
-								this.worldObj.setBlock(chunk.xPosition * 16, 255, chunk.zPosition * 16, Blocks.bedrock);
-								this.worldObj.setBlock(chunk.xPosition * 16, 255, chunk.zPosition * 16, Blocks.air);
+								Chunk containerChunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
+								int x2 = (containerChunk.xPosition + x) * 16;
+								int z2 = (containerChunk.zPosition + z) * 16;
+								System.out.println(x2 / 16 + " " + z2 / 16);
+								this.worldObj.setBlock(x2, 255, z2, Blocks.bedrock);
+								this.worldObj.setBlock(x2, 255, z2, Blocks.air);
 							}
 						}
 					}
