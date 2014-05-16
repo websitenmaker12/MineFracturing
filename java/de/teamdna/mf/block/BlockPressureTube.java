@@ -5,6 +5,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 
 public class BlockPressureTube extends BlockContainer {
@@ -25,6 +26,21 @@ public class BlockPressureTube extends BlockContainer {
 		if(tile != null && tile instanceof TileEntityPressureTube) {
 			((TileEntityPressureTube)tile).neighborsHadChanged();
 		}
+	}
+	
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+	
+	@Override
+	public int getRenderType() {
+		return ClientProxy.coreRenderID;
 	}
 	
 }

@@ -41,6 +41,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
 		else if (tile instanceof TileEntityBore) renderTileBore(x, y, z);
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
+		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
 	}
 	
 	private void renderTileTraverse(double x, double y, double z) {
@@ -86,9 +87,9 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 	
-	public void renderPipe(TileEntityPressureTube tubeTil, double x, double y, double z) {
+	public void renderTilePipe(TileEntityPressureTube tubeTil, double x, double y, double z) {
 		GL11.glPushMatrix();
-		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
+		GL11.glTranslated(x+0.5, y+0.5, z+0.5D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -102,5 +103,4 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}
-
 }
