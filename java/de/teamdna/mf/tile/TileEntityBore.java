@@ -108,10 +108,9 @@ public class TileEntityBore extends TileEntity {
 						int chunkRadius = (int)(r / 16) + 1;
 						for(int x = -chunkRadius; x <= chunkRadius; x++) {
 							for(int z = -chunkRadius; z <= chunkRadius; z++) {
-								if(x == -chunkRadius || z == -chunkRadius || x == chunkRadius || z == chunkRadius) {
-									Chunk chunk = this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
-									System.out.println("hi");
-								}
+								Chunk chunk = this.worldObj.getChunkFromChunkCoords(this.xCoord >> 4 + x, this.zCoord >> 4 + z);
+								this.worldObj.setBlock(chunk.xPosition * 16, 255, chunk.zPosition * 16, Blocks.bedrock);
+								this.worldObj.setBlock(chunk.xPosition * 16, 255, chunk.zPosition * 16, Blocks.air);
 							}
 						}
 					}
