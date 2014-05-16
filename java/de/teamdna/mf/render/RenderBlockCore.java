@@ -18,19 +18,24 @@ import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityTraverse;
 
 public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 
 	public TileEntityTraverse dummyTraverse = new TileEntityTraverse();
 	public TileEntityBore dummyBore = new TileEntityBore();
+	public TileEntityExtractor dummyExtractor = new TileEntityExtractor();
 	
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
 		GL11.glPushMatrix();
+		GL11.glTranslated(-0.5, -0.5, -0.5);
 		if(block == MineFracturing.INSTANCE.traverse) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyTraverse, 0, 0, 0, 0);
-		else if(block == MineFracturing.INSTANCE.bore) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyBore, 0, 0, 0, 0);
+		else if (block == MineFracturing.INSTANCE.bore) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyBore, 0, 0, 0, 0);
+		else if (block == MineFracturing.INSTANCE.extractor) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyExtractor, 0, 0, 0, 0);
 		GL11.glPopMatrix();
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	}
 
 	@Override

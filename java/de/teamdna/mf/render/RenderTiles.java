@@ -10,6 +10,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityTraverse;
 
 public class RenderTiles extends TileEntitySpecialRenderer {
@@ -22,10 +23,15 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public static final ResourceLocation texture_traverseBoreLoc = new ResourceLocation(Reference.modid, "model/texture/map_bore.png");
 	public static final IModelCustom model_traverseBore = AdvancedModelLoader.loadModel(model_traverseBoreLoc);
 	
+	public static final ResourceLocation model_traverseExLoc = new ResourceLocation(Reference.modid, "model/tower_extracting.obj");
+	public static final ResourceLocation texture_traverseExLoc = new ResourceLocation(Reference.modid, "model/texture/map_extracting.png");
+	public static final IModelCustom model_traverseEx = AdvancedModelLoader.loadModel(model_traverseExLoc);
+	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float var8) {
 		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
 		else if (tile instanceof TileEntityBore) renderTileBore(x, y, z);
+		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
 	}
 	
 	private void renderTileTraverse(double x, double y, double z) {
@@ -49,6 +55,21 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseBoreLoc);
 		model_traverseBore.renderAll();
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseLoc);
+		model_traverse.renderAll();
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glPopMatrix();
+	}
+	
+	private void renderTileEx(double x, double y, double z) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
+		GL11.glScaled(0.8D, 1.D, 0.8D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseExLoc);
+		model_traverseEx.renderAll();
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseLoc);
 		model_traverse.renderAll();
 		GL11.glEnable(GL11.GL_LIGHTING);

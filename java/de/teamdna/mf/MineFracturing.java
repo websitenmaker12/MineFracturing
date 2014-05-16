@@ -1,6 +1,7 @@
 package de.teamdna.mf;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -18,10 +19,12 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
+import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.mf.util.Util;
@@ -48,6 +51,7 @@ public class MineFracturing {
 	public Block bore;
 	public Block pressureTube;
 	public Block traverse;
+	public Block extractor;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -57,14 +61,17 @@ public class MineFracturing {
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
 		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(tab);
 		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(tab);
+		this.extractor = new BlockMaterialExtractor().setBlockName("materialExtractor").setCreativeTab(tab);
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
 		proxy.registerBlock(this.traverse);
+		proxy.registerBlock(this.extractor);
 		
 		proxy.registerTile(TileEntityBore.class, "bore");
 		proxy.registerTile(TileEntityPressureTube.class, "pressureTube");
 		proxy.registerTile(TileEntityTraverse.class, "traverse");
+		proxy.registerTile(TileEntityExtractor.class, "extractor");
 	}
 	
 	@EventHandler
