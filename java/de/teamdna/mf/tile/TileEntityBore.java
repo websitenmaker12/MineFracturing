@@ -78,7 +78,7 @@ public class TileEntityBore extends TileEntity {
 						for(int z = 0; z < 16; z++) {
 							Block block = this.currentScanningChunk.getBlock(x, this.scanY, z);
 							if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
-								String uid = Util.createUID(this.worldObj.provider.dimensionId, x, this.scanY, z);
+								String uid = Util.createUID(this.worldObj.provider.dimensionId, this.currentScanningChunk.xPosition * 16 + x, this.scanY, this.currentScanningChunk.zPosition * 16 + z);
 								if(!this.oreBlocks.contains(uid)) this.oreBlocks.add(uid);
 							}
 						}
@@ -93,7 +93,6 @@ public class TileEntityBore extends TileEntity {
 				if(this.oreBlocks.size() == 0) this.state = 3;
 				else {
 					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
-					block.world = this.worldObj;
 					this.oreBlocks.remove(0);
 
 					if(!this.worldObj.isRemote) {
