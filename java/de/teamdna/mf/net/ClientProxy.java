@@ -24,6 +24,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerBlockHandler(coreRenderID, new RenderBlockCore());
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTraverse.class, new RenderTiles());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBore.class, new RenderTiles());
 	}
 
 }

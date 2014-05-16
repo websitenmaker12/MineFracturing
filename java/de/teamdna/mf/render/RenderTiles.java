@@ -24,7 +24,8 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float var8) {
-		if(tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
+		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
+		else if (tile instanceof TileEntityBore) renderTileBore(x, y, z);
 	}
 	
 	private void renderTileTraverse(double x, double y, double z) {
@@ -48,6 +49,8 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseBoreLoc);
 		model_traverseBore.renderAll();
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseLoc);
+		model_traverse.renderAll();
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
