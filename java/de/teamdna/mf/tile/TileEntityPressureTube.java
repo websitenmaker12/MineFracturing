@@ -6,6 +6,8 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityPressureTube extends TileEntity implements IPipe {
 	
@@ -28,7 +30,20 @@ public class TileEntityPressureTube extends TileEntity implements IPipe {
 
 		// Export packets
 		if(this.adjacentImporters.size() > 0) {
-			IImporter importer = this.getByDirection(this.adjacentImporters.get(this.worldObj.rand.nextInt(this.adjacentImporters.size())));
+			ForgeDirection dir = this.adjacentImporters.get(this.worldObj.rand.nextInt(this.adjacentImporters.size()));
+			IImporter importer = this.getByDirection(dir);
+			if(importer != null) {
+				List<NBTTagCompound> toRemove = new ArrayList<NBTTagCompound>();
+				for(NBTTagCompound packet : this.packets) {
+					if(importer.canImport(dir, packet)) {
+						importer.doImport(dir, packet);
+						toRemove.add(packet);
+						break;
+					}
+				}
+				for(NBTTagCompound packet : toRemove) this.packets.remove(packet);
+				toRemove.clear();
+			}
 		}
 		
 		// Transfer packets
@@ -72,6 +87,15 @@ public class TileEntityPressureTube extends TileEntity implements IPipe {
 		TileEntity tile = this.worldObj.getTileEntity(this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ);
 		if(tile != null) return (V)tile;
 		else return null;
+	}
+	
+	public boolean isConnectedToPipe(ForgeDirection direction) {
+		return this.adjacentPipes.contains(direction);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void updatePipeConnections() {
+		this.adjacentPipes = this.getAdjacentPipes();
 	}
 	
 }
