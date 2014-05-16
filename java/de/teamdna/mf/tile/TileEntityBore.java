@@ -69,12 +69,10 @@ public class TileEntityBore extends TileEntity {
 				} else {
 					for(int x = 0; x < 16; x++) {
 						for(int z = 0; z < 16; z++) {
-							if(Math.pow(this.xCoord + x, 2) + Math.pow(this.zCoord + z, 2) <= Math.pow(this.radius, 2)) {
-								Block block = this.currentScanningChunk.getBlock(x, this.scanY, z);
-								if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
-									String uid = Util.createUID(this.worldObj.provider.dimensionId, x, this.scanY, z);
-									if(!this.oreBlocks.contains(uid)) this.oreBlocks.add(uid);
-								}
+							Block block = this.currentScanningChunk.getBlock(x, this.scanY, z);
+							if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
+								String uid = Util.createUID(this.worldObj.provider.dimensionId, x, this.scanY, z);
+								if(!this.oreBlocks.contains(uid)) this.oreBlocks.add(uid);
 							}
 						}
 					}
