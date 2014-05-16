@@ -11,6 +11,7 @@ import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.util.Util;
+import de.teamdna.mf.util.WorldBlock;
 import de.teamdna.mf.util.WorldUtil;
 
 public class TileEntityBore extends TileEntity {
@@ -28,6 +29,8 @@ public class TileEntityBore extends TileEntity {
 	public Chunk currentScanningChunk;
 	private int scanY = 0;
 	private int lastInfestRadius = -1;
+	
+	public List<String> placeholderBedrocks = new ArrayList<String>();
 	
 	@Override
 	public void updateEntity() {
@@ -106,18 +109,26 @@ public class TileEntityBore extends TileEntity {
 					}
 	
 					// Update infested Chunks
-					if(!this.worldObj.isRemote) {
-						int chunkRadius = (int)(r / 16) + 1;
-						for(int x = -chunkRadius; x <= chunkRadius; x++) {
-							for(int z = -chunkRadius; z <= chunkRadius; z++) {
-								Chunk containerChunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
-								int x2 = (containerChunk.xPosition + x) * 16;
-								int z2 = (containerChunk.zPosition + z) * 16;
-								System.out.println(x2 / 16 + " " + z2 / 16);
-								this.worldObj.setBlock(x2, 255, z2, Blocks.bedrock);
-								this.worldObj.setBlock(x2, 255, z2, Blocks.air);
+					if(this.placeholderBedrocks.size() == 0) {
+						if(!this.worldObj.isRemote) {
+							int chunkRadius = (int)(r / 16) + 1;
+							for(int x = -chunkRadius; x <= chunkRadius; x++) {
+								for(int z = -chunkRadius; z <= chunkRadius; z++) {
+									Chunk containerChunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
+									int x2 = (containerChunk.xPosition + x) * 16;
+									int z2 = (containerChunk.zPosition + z) * 16;
+									this.worldObj.setBlock(x2, 255, z2, Blocks.bedrock);
+									this.placeholderBedrocks.add((new WorldBlock(this.worldObj, x2, 255, z2)).getUID());
+								}
 							}
 						}
+					} else {
+						for(String placeholder : this.placeholderBedrocks) {
+							WorldBlock block = new WorldBlock(placeholder);
+							this.worldObj.setBlockToAir(block.x, block.y, block.z);
+						}
+						
+						this.placeholderBedrocks.clear();
 					}
 					
 //					this.state = 3;
