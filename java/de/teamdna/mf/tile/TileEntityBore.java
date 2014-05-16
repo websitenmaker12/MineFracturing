@@ -15,7 +15,7 @@ import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
 import de.teamdna.mf.util.WorldUtil;
 
-public class TileEntityBore extends TileEntity {
+public class TileEntityBore extends TileEntityCore {
 
 	public final int maxBoreY = 1;
 	public final int structureHeight = 7;

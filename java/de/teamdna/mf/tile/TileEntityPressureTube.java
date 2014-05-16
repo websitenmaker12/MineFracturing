@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityPressureTube extends TileEntity implements IConnectable {
+public class TileEntityPressureTube extends TileEntityCore implements IConnectable {
 	
 	public static final int maxPacketStorage = 10;
 	
@@ -138,6 +141,55 @@ public class TileEntityPressureTube extends TileEntity implements IConnectable {
 	public void receivePacket(NBTTagCompound packet, ForgeDirection direction) {
 		this.packets.add(packet);
 		this.pathTracker.put(packet, direction);
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		
+//		NBTTagList nbttaglist = new NBTTagList();
+//
+//        for (int i = 0; i < this.chestContents.length; ++i)
+//        {
+//            if (this.chestContents[i] != null)
+//            {
+//                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+//                nbttagcompound1.setByte("Slot", (byte)i);
+//                this.chestContents[i].writeToNBT(nbttagcompound1);
+//                nbttaglist.appendTag(nbttagcompound1);
+//            }
+//        }
+//
+//        p_145841_1_.setTag("Items", nbttaglist);
+//
+//        if (this.hasCustomInventoryName())
+//        {
+//            p_145841_1_.setString("CustomName", this.customName);
+//        }
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		
+//		NBTTagList nbttaglist = p_145839_1_.getTagList("Items", 10);
+//        this.chestContents = new ItemStack[this.getSizeInventory()];
+//
+//        if (p_145839_1_.hasKey("CustomName", 8))
+//        {
+//            this.customName = p_145839_1_.getString("CustomName");
+//        }
+//
+//        for (int i = 0; i < nbttaglist.tagCount(); ++i)
+//        {
+//            NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+//            int j = nbttagcompound1.getByte("Slot") & 255;
+//
+//            if (j >= 0 && j < this.chestContents.length)
+//            {
+//                this.chestContents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+//            }
+//        }
 	}
 	
 }

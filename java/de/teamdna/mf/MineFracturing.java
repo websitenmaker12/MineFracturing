@@ -23,6 +23,7 @@ import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.tile.TileEntityCore;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 import de.teamdna.mf.tile.TileEntityTraverse;
@@ -67,6 +68,7 @@ public class MineFracturing {
 		proxy.registerBlock(this.traverse);
 		proxy.registerBlock(this.extractor);
 		
+		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
 		proxy.registerTile(TileEntityPressureTube.class, "pressureTube");
 		proxy.registerTile(TileEntityTraverse.class, "traverse");
