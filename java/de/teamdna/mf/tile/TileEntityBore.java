@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
@@ -59,6 +58,7 @@ public class TileEntityBore extends TileEntityCore {
 			
 			// Scanning Chunks
 			if(this.state == 1 && (this.chunkQueue.size() > 0 || this.currentScanningChunk != null)) {
+				this.state = 2; // TODO: Remove!
 				if(this.currentScanningChunk == null) {
 					this.scanY = this.yCoord - 1;
 					ChunkCoordIntPair coord = this.chunkQueue.get(0);
@@ -96,14 +96,17 @@ public class TileEntityBore extends TileEntityCore {
 					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
 					this.oreBlocks.remove(0);
 					if(!this.worldObj.isRemote) {
-						this.worldObj.setBlock(block.x, block.y, block.z, CoreRegistry.getContainer(block.getBlock()));
-						//TODO Fix null pointer exception: FUCKING AIR BLOCK!!!!!1111elf
+						Block replace = CoreRegistry.getContainer(block.getBlock());
+						if(replace != null) this.worldObj.setBlock(block.x, block.y, block.z, replace);
 					}
 				}
 				
 				// Infesting
-				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
+//				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
+				int r = this.radius * 2;  // TODO: Remove!
 				int rSq = r * r;
+				
+				// TODO: Bedrock don't get destroied!!!!
 				
 				if(r != this.lastInfestRadius) {
 					// Infests the world

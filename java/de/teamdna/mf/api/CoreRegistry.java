@@ -60,6 +60,7 @@ public class CoreRegistry {
 	 * Returns the Container for the given Ore
 	 */
 	public static Block getContainer(Block ore) {
+		if(!containerBlocks.containsKey(Block.getIdFromBlock(ore))) return null;
 		return Block.getBlockById(containerBlocks.get(Block.getIdFromBlock(ore)));
 	}
 	
