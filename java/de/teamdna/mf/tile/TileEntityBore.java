@@ -97,6 +97,7 @@ public class TileEntityBore extends TileEntity {
 					this.oreBlocks.remove(0);
 					if(!this.worldObj.isRemote) {
 						this.worldObj.setBlock(block.x, block.y, block.z, CoreRegistry.getContainer(block.getBlock()));
+						//TODO Fix null pointer exception: FUCKING AIR BLOCK!!!!!1111elf
 					}
 				}
 				

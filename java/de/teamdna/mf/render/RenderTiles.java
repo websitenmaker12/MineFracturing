@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.common.util.ForgeDirection;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityExtractor;
@@ -33,8 +34,13 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public static final IModelCustom model_pipe_01_inner = AdvancedModelLoader.loadModel(model_pipe_01_inner_Loc);
 	
 	public static final ResourceLocation model_pipe_01_outer_Loc = new ResourceLocation(Reference.modid, "model/pipe_01_outer.obj");
-	//public static final ResourceLocation texture_pipe_01_inner_Loc = new ResourceLocation(Reference.modid, "model/texture/map_extracting.png");
 	public static final IModelCustom model_pipe_01_outer = AdvancedModelLoader.loadModel(model_pipe_01_outer_Loc);
+	
+	public static final ResourceLocation model_pipe_02_inner_Loc = new ResourceLocation(Reference.modid, "model/pipe_02_inner.obj");
+	public static final IModelCustom model_pipe_02_inner = AdvancedModelLoader.loadModel(model_pipe_02_inner_Loc);
+	
+	public static final ResourceLocation model_pipe_02_outer_Loc = new ResourceLocation(Reference.modid, "model/pipe_02_outer.obj");
+	public static final IModelCustom model_pipe_02_outer = AdvancedModelLoader.loadModel(model_pipe_02_outer_Loc);
 	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float var8) {
@@ -87,10 +93,11 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 	
-	public void renderTilePipe(TileEntityPressureTube tubeTil, double x, double y, double z) {
+	public void renderTilePipe(TileEntityPressureTube tubeTile, double x, double y, double z) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.5, y+0.5, z+0.5D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
+		GL11.glScaled(0.75, 0.75, 0.75);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_TEXTURE_2D); //TODO: REMOVE!!!
@@ -98,6 +105,38 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		model_pipe_01_inner.renderAll();
 		GL11.glColor4f(0, 0, 1F, 1);
 		model_pipe_01_outer.renderAll();
+		
+		if (!tubeTile.isConnectedToPipe(ForgeDirection.EAST)) {
+			GL11.glColor4f(1F, 0, 0, 1F);
+			model_pipe_02_inner.renderAll();
+			GL11.glColor4f(0, 0, 1F, 1F);
+			model_pipe_02_outer.renderAll();
+		}
+		
+		if (!tubeTile.isConnectedToPipe(ForgeDirection.SOUTH)) {
+			GL11.glRotated(90, 0, 1, 0);
+			GL11.glColor4f(1F, 0, 0, 1F);
+			model_pipe_02_inner.renderAll();
+			GL11.glColor4f(0, 0, 1F, 1F);
+			model_pipe_02_outer.renderAll();
+		}
+		
+		if (!tubeTile.isConnectedToPipe(ForgeDirection.WEST)) {
+			GL11.glRotated(180, 0, 1, 0);
+			GL11.glColor4f(1F, 0, 0, 1F);
+			model_pipe_02_inner.renderAll();
+			GL11.glColor4f(0, 0, 1F, 1F);
+			model_pipe_02_outer.renderAll();
+		}
+		
+		if (!tubeTile.isConnectedToPipe(ForgeDirection.NORTH)) {
+			GL11.glRotated(-90, 0, 1, 0);
+			GL11.glColor4f(1F, 0, 0, 1F);
+			model_pipe_02_inner.renderAll();
+			GL11.glColor4f(0, 0, 1F, 1F);
+			model_pipe_02_outer.renderAll();
+		}
+		
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
