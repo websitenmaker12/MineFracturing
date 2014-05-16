@@ -103,7 +103,7 @@ public class TileEntityBore extends TileEntityCore {
 				
 				// Infesting
 //				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
-				int r = this.radius * 2;  // TODO: Remove!
+				int r = this.radius * 8;  // TODO: Remove!
 				int rSq = r * r;
 				
 				// TODO: Bedrock don't get destroied!!!!
