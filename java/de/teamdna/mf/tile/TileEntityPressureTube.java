@@ -8,10 +8,8 @@ import java.util.Map;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityPressureTube extends TileEntity {
+public class TileEntityPressureTube extends TileEntity implements IConnectable {
 	
 	public static final int maxPacketStorage = 10;
 	
@@ -112,12 +110,12 @@ public class TileEntityPressureTube extends TileEntity {
 	}
 	
 	public boolean isConnectedToPipe(ForgeDirection direction) {
-		return this.adjacentPipes.contains(direction);
+		return this.adjacentPipes.contains(direction) || this.adjacentExtractors.contains(direction) || this.adjacentImporters.contains(direction);
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public void updatePipeConnections() {
-		this.adjacentPipes = this.getAdjacentPipes();
+	public boolean isConnectedToSide(ForgeDirection direction) {
+		TileEntity tile = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord);
+		return tile != null && tile instanceof IConnectable;
 	}
 	
 	public boolean sendPacket(NBTTagCompound packet, ForgeDirection direction) {
@@ -138,7 +136,6 @@ public class TileEntityPressureTube extends TileEntity {
 	}
 	
 	public void receivePacket(NBTTagCompound packet, ForgeDirection direction) {
-		packet.setInteger("sends", packet.getInteger("sends") + 1);
 		this.packets.add(packet);
 		this.pathTracker.put(packet, direction);
 	}
