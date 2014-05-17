@@ -1,5 +1,7 @@
 package de.teamdna.mf.net;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import de.teamdna.mf.render.RenderBlockCore;
@@ -7,9 +9,8 @@ import de.teamdna.mf.render.RenderTiles;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
+import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class ClientProxy extends CommonProxy {
 
@@ -30,6 +31,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBore.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityExtractor.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPressureTube.class, stdTileRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, stdTileRenderer);
 	}
 
 }

@@ -13,6 +13,7 @@ import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
+import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
 
 public class RenderTiles extends TileEntitySpecialRenderer {
@@ -28,6 +29,14 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public static final ResourceLocation model_traverseExLoc = new ResourceLocation(Reference.modid, "model/tower_extracting.obj");
 	public static final ResourceLocation texture_traverseExLoc = new ResourceLocation(Reference.modid, "model/texture/map_extracting.png");
 	public static final IModelCustom model_traverseEx = AdvancedModelLoader.loadModel(model_traverseExLoc);
+	
+	public static final ResourceLocation model_tank_base_01Loc = new ResourceLocation(Reference.modid, "model/tank_base_01.obj");
+	public static final ResourceLocation texture_tank_base_01Loc = new ResourceLocation(Reference.modid, "model/texture/map_tank_base_01.png");
+	public static final IModelCustom model_tank_base_01 = AdvancedModelLoader.loadModel(model_tank_base_01Loc);
+	
+	public static final ResourceLocation model_tank_base_02Loc = new ResourceLocation(Reference.modid, "model/tank_base_02.obj");
+	public static final ResourceLocation texture_tank_base_02Loc = new ResourceLocation(Reference.modid, "model/texture/map_tank_base_02.png");
+	public static final IModelCustom model_tank_base_02 = AdvancedModelLoader.loadModel(model_tank_base_02Loc);
 	
 	public static final ResourceLocation model_pipe_01_inner_Loc = new ResourceLocation(Reference.modid, "model/pipe_01_inner.obj");
 	//public static final ResourceLocation texture_pipe_01_inner_Loc = new ResourceLocation(Reference.modid, "model/texture/map_extracting.png");
@@ -48,6 +57,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		else if (tile instanceof TileEntityBore) renderTileBore(x, y, z);
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
 		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z, false);
+		else if (tile instanceof TileEntityTank) renderTileTankBase(x, y, z);
 	}
 	
 	private void renderTileTraverse(double x, double y, double z) {
@@ -170,6 +180,21 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glPopMatrix();
+	}
+	
+	private void renderTileTankBase(double x, double y, double z) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
+		GL11.glScaled(0.8D, 1.D, 0.8D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_tank_base_01Loc);
+		model_tank_base_01.renderAll();
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_tank_base_02Loc);
+		model_tank_base_02.renderAll();
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 }

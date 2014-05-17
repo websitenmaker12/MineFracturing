@@ -1,5 +1,7 @@
 package de.teamdna.mf.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -7,7 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityTank;
 
 public class BlockTank extends BlockContainer {
@@ -17,6 +21,30 @@ public class BlockTank extends BlockContainer {
 	public BlockTank(int type) {
 		super(Material.iron);
 		this.type = type;
+	}
+	@Override
+	public boolean renderAsNormalBlock() {
+		if (type == 2) return false;
+		return super.renderAsNormalBlock();
+	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		if (type == 2) return false;
+		return super.isOpaqueCube();
+	}
+	
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess par1BlockAccess, int par2, int par3, int par4, int par5) {
+		if (type == 2) return true;
+		return super.shouldSideBeRendered(par1BlockAccess, par2, par3, par4, par5);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType() {
+		if (type == 2) return ClientProxy.coreRenderID;
+		return super.getRenderType();
 	}
 
 	@Override
