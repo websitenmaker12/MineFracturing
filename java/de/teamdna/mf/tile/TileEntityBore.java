@@ -45,7 +45,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(64);
+				this.addChunksToQueue(48);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -176,7 +176,8 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	}
 	
 	public int getScaledAnalysingProgress(int pixels) {
-		return this.totalChunks / 100 * (this.totalChunks - (int)((double)this.chunkQueue.size() / (double)this.totalChunks * (double)pixels));
+//		return (this.totalChunks - (int)((double)this.chunkQueue.size() / (double)this.totalChunks * (double)pixels)) * pixels / this.totalChunks;
+		return (int)((double)this.chunkQueue.size() * (double)pixels / (double)this.totalChunks);
 	}
 	
 	public int getScaledFracturingProgress(int pixels) {
