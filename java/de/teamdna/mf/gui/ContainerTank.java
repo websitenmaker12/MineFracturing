@@ -46,7 +46,7 @@ public class ContainerTank extends Container {
         FluidStack fluid = this.tile.tank.getFluid();
         par1ICrafting.sendProgressBarUpdate(this, 0, fluid == null ? -1 : fluid.fluidID);
         par1ICrafting.sendProgressBarUpdate(this, 1, this.tile.tank.getFluidAmount());
-        par1ICrafting.sendProgressBarUpdate(this, 3, this.tile.tank.getCapacity());
+        par1ICrafting.sendProgressBarUpdate(this, 2, this.tile.tank.getCapacity());
     }
 
 	@Override
@@ -58,17 +58,17 @@ public class ContainerTank extends Container {
             FluidStack fluid = this.tile.tank.getFluid();
             icrafting.sendProgressBarUpdate(this, 0, fluid == null ? -1 : fluid.fluidID);
             icrafting.sendProgressBarUpdate(this, 1, this.tile.tank.getFluidAmount());
-            icrafting.sendProgressBarUpdate(this, 3, this.tile.tank.getCapacity());
+            icrafting.sendProgressBarUpdate(this, 2, this.tile.tank.getCapacity());
         }
     }
 
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int par1, int par2) {
     	switch(par1) {
-    		default: super.updateProgressBar(par1, par2);
-    		case 0: this.fluidID = par2;
-    		case 1: this.fluidAmount = par2;
-    		case 2: this.capacity = par2;
+    		default: super.updateProgressBar(par1, par2); break;
+    		case 0: this.fluidID = par2; break;
+    		case 1: this.fluidAmount = par2; break;
+    		case 2: this.capacity = par2; break;
     	}
     }
     
