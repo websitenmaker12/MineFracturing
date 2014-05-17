@@ -38,7 +38,7 @@ public class TileEntityBore extends TileEntityCore {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(32);
+				this.addChunksToQueue(8);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -58,7 +58,6 @@ public class TileEntityBore extends TileEntityCore {
 			
 			// Scanning Chunks
 			if(this.state == 1 && (this.chunkQueue.size() > 0 || this.currentScanningChunk != null)) {
-				this.state = 2; // TODO: Remove!
 				if(this.currentScanningChunk == null) {
 					this.scanY = this.yCoord - 1;
 					ChunkCoordIntPair coord = this.chunkQueue.get(0);
@@ -102,8 +101,7 @@ public class TileEntityBore extends TileEntityCore {
 				}
 				
 				// Infesting
-//				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
-				int r = this.radius * 8;  // TODO: Remove!
+				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
 				int rSq = r * r;
 				
 				// TODO: Bedrock don't get destroied!!!!
