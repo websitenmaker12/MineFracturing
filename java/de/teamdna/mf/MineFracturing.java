@@ -85,7 +85,7 @@ public class MineFracturing {
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");;
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
 		
-		this.oil = (new Fluid("oil")).setViscosity(3400);
+		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
 		FluidRegistry.registerFluid(this.oil);
 		this.oilBlock = this.oil.getBlock();
 		if(this.oilBlock == null) {
