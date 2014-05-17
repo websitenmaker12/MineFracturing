@@ -60,7 +60,6 @@ public class MineFracturing {
 	public Block extractor;
 	public Block tankWall;
 	public Block tankController;
-	public Block tankBase;
 	
 	public Fluid oil;
 	
@@ -77,8 +76,6 @@ public class MineFracturing {
 		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName("mf" + ":tank_Wall");;
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab);
-		this.tankBase = (new BlockTank(2)).setBlockName("tankBase").setCreativeTab(this.tab);
-		System.out.println(Reference.modid + ":tank_Wall");
 		
 		this.oil = (new Fluid("oil")).setDensity(900).setViscosity(1600);
 		FluidRegistry.registerFluid(this.oil);
@@ -89,7 +86,6 @@ public class MineFracturing {
 		proxy.registerBlock(this.extractor);
 		proxy.registerBlock(this.tankWall);
 		proxy.registerBlock(this.tankController);
-		proxy.registerBlock(this.tankBase);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");

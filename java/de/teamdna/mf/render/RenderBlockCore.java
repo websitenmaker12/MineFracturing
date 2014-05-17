@@ -1,21 +1,15 @@
 package de.teamdna.mf.render;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import de.teamdna.mf.MineFracturing;
-import de.teamdna.mf.Reference;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityExtractor;
@@ -29,7 +23,6 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 	public TileEntityBore dummyBore = new TileEntityBore();
 	public TileEntityExtractor dummyExtractor = new TileEntityExtractor();
 	public TileEntityPressureTube dummyPipe = new TileEntityPressureTube();
-	public TileEntityTank dummyTank = new TileEntityTank(2);
 	
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
@@ -39,7 +32,6 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 		else if (block == MineFracturing.INSTANCE.bore) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyBore, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.extractor) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyExtractor, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.pressureTube) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyPipe, 0, 0, 0, 0);
-		else if (block == MineFracturing.INSTANCE.tankBase) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyTank, 0, 0, 0, 0);
 		
 		GL11.glPopMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);

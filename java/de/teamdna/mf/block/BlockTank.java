@@ -5,12 +5,8 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import de.teamdna.mf.MineFracturing;
-import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityTank;
 
 public class BlockTank extends BlockContainer {
@@ -20,29 +16,6 @@ public class BlockTank extends BlockContainer {
 	public BlockTank(int type) {
 		super(Material.iron);
 		this.type = type;
-	}
-	@Override
-	public boolean renderAsNormalBlock() {
-		if(this.type == 2) return false;
-		return super.renderAsNormalBlock();
-	}
-	
-	@Override
-	public boolean isOpaqueCube() {
-		return false;
-	}
-	
-	@Override
-	public boolean shouldSideBeRendered(IBlockAccess par1BlockAccess, int par2, int par3, int par4, int par5) {
-		if(this.type == 2) return true;
-		return true;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderType() {
-		if(this.type == 2) return ClientProxy.coreRenderID;
-		return super.getRenderType();
 	}
 
 	@Override
