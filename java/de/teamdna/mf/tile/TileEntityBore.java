@@ -123,6 +123,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 						}
 					}
 	
+					// TODO: Bedrock doesn't get replaced
 					// Update infested Chunks
 					if(!this.worldObj.isRemote) {
 						int chunkRadius = (int)(r / 16) + 1;
