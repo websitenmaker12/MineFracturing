@@ -1,6 +1,5 @@
 package de.teamdna.mf.tile;
 
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -28,14 +27,13 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 			if(this.needsUpdate || !this.isConnected) {
 				this.needsUpdate = false;
 				this.isConnected = this.isStructureComplete();
-				if(this.isConnected) {
-					for(int x = -1; x <= 1; x++) {
-						for(int y = -2; y <= 1; y++) {
-							for(int z = -1; z <= 1; z++) {
-								TileEntity tile = this.worldObj.getTileEntity(this.xCoord + x, this.yCoord + y, this.zCoord + z);
-								if(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type != 1) {
-									((TileEntityTank)tile).controllerTile = this;
-								}
+				for(int x = -1; x <= 1; x++) {
+					for(int y = -2; y <= 1; y++) {
+						for(int z = -1; z <= 1; z++) {
+							TileEntity tile = this.worldObj.getTileEntity(this.xCoord + x, this.yCoord + y, this.zCoord + z);
+							if(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type != 1) {
+								((TileEntityTank)tile).controllerTile = this.isConnected ? this : null;
+								((TileEntityTank)tile).isConnected = this.isConnected;
 							}
 						}
 					}
@@ -56,7 +54,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 
 	@Override
 	public boolean canConnect(ForgeDirection direction) {
-		return false;
+		return this.isConnected;
 	}
 
 	@Override

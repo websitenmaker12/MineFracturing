@@ -15,6 +15,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
@@ -22,6 +23,7 @@ import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.block.BlockTraverse;
+import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityCore;
@@ -92,7 +94,10 @@ public class MineFracturing {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		proxy.registerRenderer();
+		
 		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
+		
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 	
 	@EventHandler
