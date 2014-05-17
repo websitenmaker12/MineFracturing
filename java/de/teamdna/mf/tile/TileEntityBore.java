@@ -34,7 +34,7 @@ public class TileEntityBore extends TileEntityCore {
 	
 	@Override
 	public void updateEntity() {
-		if(this.isMultiblockComplete()) {
+		if(this.isMultiblockComplete() && this.worldObj.getBiomeGenForCoords(this.xCoord, this.zCoord).biomeID != MineFracturing.INSTANCE.infestedBiome.biomeID) {
 			// Setups the bore
 			if(this.state == -1) {
 				this.state = 0;

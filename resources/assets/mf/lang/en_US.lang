@@ -8,3 +8,6 @@ tile.tankController.name=Tank Controller
 item.bucketOil.name=Oil Bucket
 
 itemGroup.mf=MineFracturing
+
+gui.bore.analyzingStatus=Analyzing status
+gui.bore.frackingStatus=Fracking status
