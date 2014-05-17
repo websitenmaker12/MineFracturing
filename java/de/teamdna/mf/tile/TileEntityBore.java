@@ -40,7 +40,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	
 	@Override
 	public void updateEntity() {
-		if(this.isMultiblockComplete() && this.worldObj.getBiomeGenForCoords(this.xCoord, this.zCoord).biomeID != MineFracturing.INSTANCE.infestedBiome.biomeID) {
+		if(this.isMultiblockComplete()) {
 			// Setups the bore
 			if(this.state == -1) {
 				this.state = 0;

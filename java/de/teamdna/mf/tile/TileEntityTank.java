@@ -17,14 +17,14 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 
 	public final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 750);
 	
-	public final int type;
+	public int type;
 	private boolean isConnected = false;
 	private boolean needsUpdate = true;
 	
 	public TileEntityTank controllerTile;
 	
 	public TileEntityTank() {
-		this(1);
+		this(0);
 	}
 	
 	public TileEntityTank(int type) {
@@ -43,7 +43,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 						for(int z = -1; z <= 1; z++) {
 							TileEntity tile = this.worldObj.getTileEntity(this.xCoord + x, this.yCoord + y, this.zCoord + z);
 							if(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type != 1) {
-								((TileEntityTank)tile).controllerTile = this.isConnected ? this : null;
+								((TileEntityTank)tile).controllerTile = this;
 								((TileEntityTank)tile).isConnected = this.isConnected;
 							}
 						}
@@ -51,12 +51,13 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 				}
 			}
 			
-			if(!this.worldObj.isRemote && this.isConnected && this.inventory[0] != null) {
+			if(!this.worldObj.isRemote && this.isConnected && this.inventory[0] != null && this.controllerTile != null) {
 				if(FluidContainerRegistry.isFilledContainer(this.inventory[0])) {
 					FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(this.inventory[0]);
 					if((this.tank.getFluid() == null || this.tank.getFluid().isFluidEqual(fluid)) && this.tank.getFluidAmount() + fluid.amount <= this.tank.getCapacity()) {
 						ItemStack output = Util.getEmptyContainerForFilledContainer(this.inventory[0]);
 						if(this.inventory[1] == null || (this.inventory[1].stackSize + 1 <= this.inventory[1].getMaxStackSize() && this.inventory[1].isItemEqual(output))) {
+							this.fill(ForgeDirection.UNKNOWN, fluid, true);
 							if(--this.inventory[0].stackSize == 0) this.inventory[0] = null;
 							if(this.inventory[1] == null) this.inventory[1] = new ItemStack(output.getItem());
 							else this.inventory[1].stackSize++;
@@ -71,12 +72,14 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		this.tank.writeToNBT(tag);
+		tag.setInteger("type", this.type);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.tank.readFromNBT(tag);
+		this.type = tag.getInteger("type");
 	}
 
 	/* IConnectable */
