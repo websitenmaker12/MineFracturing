@@ -26,8 +26,17 @@ public class BlockTank extends BlockContainer {
 		super.onNeighborBlockChange(world, x, y, z, block);
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile != null && tile instanceof TileEntityTank) {
-			((TileEntityTank)tile).neighborsHadChanged();
+			world.addBlockEvent(x, y, z, this, 1, 0);
 		}
 	}
 
+	@Override
+	public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventData) {
+		super.onBlockEventReceived(world, x, y, z, eventID, eventData);
+		if(eventID != 1) return true;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile != null && tile instanceof TileEntityTank) ((TileEntityTank)tile).neighborsHadChanged();
+        return true;
+    }
+	
 }
