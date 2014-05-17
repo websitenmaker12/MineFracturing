@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -51,7 +52,7 @@ public class MineFracturing {
 	
 	public CreativeTabs tab = new CreativeTabs(CreativeTabs.getNextID(), Reference.modid) {
 		public Item getTabIconItem() {
-			return Items.diamond;
+			return new ItemStack(traverse).getItem();
 		}
 	};
 	
@@ -81,7 +82,7 @@ public class MineFracturing {
 		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(this.tab);
 		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");;
-		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab);
+		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
 		
 		this.oil = (new Fluid("oil")).setDensity(900).setViscosity(1600);
 		FluidRegistry.registerFluid(this.oil);
