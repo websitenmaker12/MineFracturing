@@ -3,6 +3,7 @@ package de.teamdna.mf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
@@ -92,8 +93,8 @@ public class MineFracturing {
 			this.oilBlock = (new BlockFluid(this.oil, Material.water)).setBlockName("oilSource");
 		}
 		
-		this.bucketOil = (new ItemBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_oil");
-		FluidContainerRegistry.registerFluidContainer(this.oil, new ItemStack(this.bucketOil));
+		this.bucketOil = (new ItemBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_oil").setContainerItem(Items.bucket);
+		FluidContainerRegistry.registerFluidContainer(this.oil, new ItemStack(this.bucketOil), FluidContainerRegistry.EMPTY_BUCKET);
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
