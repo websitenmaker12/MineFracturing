@@ -75,9 +75,10 @@ public class MineFracturing {
 		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(this.tab);
 		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(this.tab);
 		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
-		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab);
+		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName("mf" + ":tank_Wall");;
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab);
 		this.tankBase = (new BlockTank(2)).setBlockName("tankBase").setCreativeTab(this.tab);
+		System.out.println(Reference.modid + ":tank_Wall");
 		
 		this.oil = (new Fluid("oil")).setDensity(900).setViscosity(1600);
 		FluidRegistry.registerFluid(this.oil);

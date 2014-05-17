@@ -17,7 +17,7 @@ import de.teamdna.mf.util.WorldUtil;
 public class TileEntityBore extends TileEntityCore {
 
 	public final int maxBoreY = 1;
-	public final int structureHeight = 7;
+	public final int structureHeight = 15;
 	
 	public int state = -1; // Inactive: -1 ; Boring: 0 ; Scanning Chunks: 1; Infesting: 2
 	public int boreY;
@@ -38,7 +38,7 @@ public class TileEntityBore extends TileEntityCore {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(8);
+				this.addChunksToQueue(64);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
