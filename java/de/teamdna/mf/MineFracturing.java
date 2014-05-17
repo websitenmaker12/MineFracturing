@@ -6,8 +6,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import org.apache.logging.log4j.Logger;
@@ -83,14 +85,15 @@ public class MineFracturing {
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");;
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab);
 		
-		this.oil = (new Fluid("oil")).setDensity(900).setViscosity(1600);
+		this.oil = (new Fluid("oil")).setViscosity(3400);
 		FluidRegistry.registerFluid(this.oil);
 		this.oilBlock = this.oil.getBlock();
 		if(this.oilBlock == null) {
 			this.oilBlock = (new BlockFluid(this.oil, Material.water)).setBlockName("oilSource");
 		}
 		
-		this.bucketOil = (new ItemBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab);
+		this.bucketOil = (new ItemBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_oil");
+		FluidContainerRegistry.registerFluidContainer(this.oil, new ItemStack(this.bucketOil));
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
