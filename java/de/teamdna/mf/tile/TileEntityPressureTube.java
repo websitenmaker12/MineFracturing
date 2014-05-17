@@ -31,7 +31,8 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 			for(ForgeDirection dir : this.adjacentExtractors) {
 				IExtractor extractor = this.getByDirection(dir);
 				if(extractor != null && extractor.canExtract(dir)) {
-					this.packets.add(extractor.extract(dir));
+					NBTTagCompound packet = extractor.extract(dir);
+					if(packet != null) this.packets.add(packet);
 				}
 			}
 		}
