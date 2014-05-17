@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import de.teamdna.mf.Reference;
+import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.util.Util;
 
 public class TileEntityTank extends TileEntityCore implements IExtractor, IImporter, IFluidHandler {
@@ -20,20 +21,18 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	public int type;
 	private boolean isConnected = false;
 	private boolean needsUpdate = true;
+	private boolean isFirstTick = true;
 	
 	public TileEntityTank controllerTile;
-	
-	public TileEntityTank() {
-		this(0);
-	}
-	
-	public TileEntityTank(int type) {
-		this.type = type;
-		if(this.type == 1) this.inventory = new ItemStack[2];
-	}
 
 	@Override
 	public void updateEntity() {
+		if(this.isFirstTick) {
+			this.isFirstTick = false;
+			this.type = ((BlockTank)this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord)).type;
+			this.inventory = new ItemStack[2];
+		}
+		
 		if(this.type == 1) {
 			if(this.needsUpdate || !this.isConnected) {
 				this.needsUpdate = false;
@@ -42,7 +41,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 					for(int y = -1; y <= 2; y++) {
 						for(int z = -1; z <= 1; z++) {
 							TileEntity tile = this.worldObj.getTileEntity(this.xCoord + x, this.yCoord + y, this.zCoord + z);
-							if(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type != 1) {
+							if(tile != null && tile instanceof TileEntityTank) {
 								((TileEntityTank)tile).controllerTile = this;
 								((TileEntityTank)tile).isConnected = this.isConnected;
 							}
@@ -58,6 +57,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 						ItemStack output = Util.getEmptyContainerForFilledContainer(this.inventory[0]);
 						if(this.inventory[1] == null || (this.inventory[1].stackSize + 1 <= this.inventory[1].getMaxStackSize() && this.inventory[1].isItemEqual(output))) {
 							this.fill(ForgeDirection.UNKNOWN, fluid, true);
+							System.out.println(this.tank.getFluidAmount());
 							if(--this.inventory[0].stackSize == 0) this.inventory[0] = null;
 							if(this.inventory[1] == null) this.inventory[1] = new ItemStack(output.getItem());
 							else this.inventory[1].stackSize++;
@@ -72,14 +72,12 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
 		this.tank.writeToNBT(tag);
-		tag.setInteger("type", this.type);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
 		this.tank.readFromNBT(tag);
-		this.type = tag.getInteger("type");
 	}
 
 	/* IConnectable */

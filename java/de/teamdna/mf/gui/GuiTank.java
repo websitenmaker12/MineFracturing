@@ -17,10 +17,12 @@ public class GuiTank extends GuiContainer {
 	private static final ResourceLocation guiBg = new ResourceLocation(Reference.modid, "textures/gui/guiTank.png");
 	
 	private TileEntityTank tile;
+	private ContainerTank container;
 	
 	public GuiTank(EntityPlayer player, World world, int x, int y, int z) {
 		super(new ContainerTank(player, world, x, y, z));
 		this.tile = (TileEntityTank)world.getTileEntity(x, y, z);
+		this.container = (ContainerTank)this.inventorySlots;
 	}
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
@@ -31,10 +33,7 @@ public class GuiTank extends GuiContainer {
 		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 4, 4210752);
 		
 		// Draw fluid
-		if(this.tile.tank.getFluid() != null) {
-			Fluid fluid = this.tile.tank.getFluid().getFluid();
-			System.out.println(fluid.getIcon());
-		}
+		if(this.)
 		
 		// Overlay
 		this.mc.getTextureManager().bindTexture(guiBg);
