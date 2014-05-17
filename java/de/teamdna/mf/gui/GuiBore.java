@@ -26,9 +26,11 @@ public class GuiBore extends GuiContainer{
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 	    int k = (this.width - this.xSize) / 2;
 	    int l = (this.height - this.ySize) / 2;
+		drawRect(47, 14, 46 + tile.getScaledAnalysingProgress(118), 28, 0x9F00DEFF);
+		drawRect(47, 34, 46 + tile.getScaledFracturingProgress(118), 48, 0x9F00DEFF);
 		this.fontRendererObj.drawString("Fracturating Bore", 8, 5, 4210752);
-		this.fontRendererObj.drawString("Analyzing status " + tile.getScaledAnalysingProgress(100) + "%", 40, 20, 4210752);
-		this.fontRendererObj.drawString("Fracking status " + tile.getScaledFracturingProgress(100) + "%", 40, 32, 4210752);
+		this.fontRendererObj.drawString("Analyzing status " + tile.getScaledAnalysingProgress(100) + "%", 50, 18, 4210752);
+		this.fontRendererObj.drawString("Fracking status " + tile.getScaledFracturingProgress(100) + "%", 50, 37, 4210752);
 	}
 	
 	@Override

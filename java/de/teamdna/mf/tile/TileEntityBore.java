@@ -39,7 +39,7 @@ public class TileEntityBore extends TileEntityCore {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(8);
+				this.addChunksToQueue(64);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -174,7 +174,8 @@ public class TileEntityBore extends TileEntityCore {
 	}
 	
 	public int getScaledFracturingProgress(int pixels) {
-		return (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)pixels);
+		if(getScaledAnalysingProgress(100) > 0) return 100;
+		return ((int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)pixels));
 	}
 	
 }
