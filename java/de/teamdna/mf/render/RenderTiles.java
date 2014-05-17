@@ -57,7 +57,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		else if (tile instanceof TileEntityBore) renderTileBore(x, y, z);
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
 		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z, false);
-		else if (tile instanceof TileEntityTank) renderTileTankBase(x, y, z);
+		else if (tile instanceof TileEntityTank && ((TileEntityTank)tile).type == 2) renderTileTankBase(x, y, z);
 	}
 	
 	private void renderTileTraverse(double x, double y, double z) {
@@ -177,6 +177,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 		}
 		
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -185,16 +186,16 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	
 	private void renderTileTankBase(double x, double y, double z) {
 		GL11.glPushMatrix();
-		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
-		GL11.glScaled(0.8D, 1.D, 0.8D);
+		GL11.glTranslated(x+0.5D, y+0.5, z+0.5D);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
+		//GL11.glEnable(GL11.GL_BLEND);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_tank_base_01Loc);
 		model_tank_base_01.renderAll();
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_tank_base_02Loc);
 		model_tank_base_02.renderAll();
 		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_BLEND);
+		//GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 }

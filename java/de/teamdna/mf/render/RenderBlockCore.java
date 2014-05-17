@@ -29,7 +29,7 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 	public TileEntityBore dummyBore = new TileEntityBore();
 	public TileEntityExtractor dummyExtractor = new TileEntityExtractor();
 	public TileEntityPressureTube dummyPipe = new TileEntityPressureTube();
-	public TileEntityTank dummyTank = new TileEntityTank();
+	public TileEntityTank dummyTank = new TileEntityTank(2);
 	
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
