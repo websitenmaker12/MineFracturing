@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -30,6 +31,7 @@ import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.block.BlockTraverse;
+import de.teamdna.mf.event.BucketHandler;
 import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
@@ -87,13 +89,11 @@ public class MineFracturing {
 		
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
 		FluidRegistry.registerFluid(this.oil);
-		this.oilBlock = this.oil.getBlock();
-		if(this.oilBlock == null) {
-			this.oilBlock = (new BlockFluid(this.oil, Material.water)).setBlockName("oilSource");
-		}
+		this.oilBlock = (new BlockFluid(this.oil, Material.water)).setBlockName("oilSource");
 		
 		this.bucketOil = (new ItemBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_oil").setContainerItem(Items.bucket);
 		FluidContainerRegistry.registerFluidContainer(this.oil, new ItemStack(this.bucketOil), FluidContainerRegistry.EMPTY_BUCKET);
+		BucketHandler.INSTANCE.register(this.oilBlock, this.bucketOil);
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
@@ -120,6 +120,7 @@ public class MineFracturing {
 		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
 	}
 	
 	@EventHandler
