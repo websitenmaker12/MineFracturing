@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import org.lwjgl.opengl.GL11;
 
@@ -20,8 +19,7 @@ public class GuiTank extends GuiContainer {
 	
 	public GuiTank(EntityPlayer player, World world, int x, int y, int z) {
 		super(new ContainerTank(player, world, x, y, z));
-		
-		this.tile = ((TileEntityTank)world.getTileEntity(x, y, z)).controllerTile;
+		this.tile = (TileEntityTank)world.getTileEntity(x, y, z);
 	}
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
@@ -32,7 +30,7 @@ public class GuiTank extends GuiContainer {
 		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 4, 4210752);
 		
 		// Draw fluid
-		System.out.println(FluidRegistry.getFluid(this.tile.tank.getFluid().fluidID).getFlowingIcon());
+//		System.out.println(FluidRegistry.getFluid(this.tile.tank.getFluid().fluidID).getFlowingIcon());
 		
 		// Overlay
 		this.mc.getTextureManager().bindTexture(guiBg);

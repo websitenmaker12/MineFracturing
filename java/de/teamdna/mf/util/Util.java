@@ -10,6 +10,8 @@ import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -65,6 +67,14 @@ public class Util {
             if(item == Items.blaze_rod) return 2400;
             return GameRegistry.getFuelValue(stack);
         }
+	}
+	
+	public static ItemStack getEmptyContainerForFilledContainer(ItemStack filledContainer) {
+		for(FluidContainerData data : FluidContainerRegistry.getRegisteredFluidContainerData()) {
+			if(data.filledContainer.isItemEqual(filledContainer)) return data.emptyContainer;
+		}
+		
+		return null;
 	}
 	
 }

@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.world.World;
-import de.teamdna.mf.gui.slot.FuelSlot;
 import de.teamdna.mf.tile.TileEntityTank;
 
 public class ContainerTank extends Container {
@@ -13,7 +12,8 @@ public class ContainerTank extends Container {
 	
 	public ContainerTank(EntityPlayer player, World world, int x, int y, int z) {
 		this.tile = (TileEntityTank)world.getTileEntity(x, y, z);
-		this.addSlotToContainer(new FuelSlot(this.tile, 0, 47, 52));
+		this.addSlotToContainer(new Slot(this.tile, 0, 148, 15));
+		this.addSlotToContainer(new Slot(this.tile, 1, 148, 60));
 		
 		for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {

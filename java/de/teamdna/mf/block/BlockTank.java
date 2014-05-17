@@ -45,7 +45,7 @@ public class BlockTank extends BlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int meta, float dx, float dy, float dz) {
 		TileEntityTank tile = (TileEntityTank)world.getTileEntity(x, y, z);
 		if(tile.isStructureComplete()) {
-			player.openGui(MineFracturing.INSTANCE, 0, world, x, y, z);
+			player.openGui(MineFracturing.INSTANCE, 0, world, tile.controllerTile.xCoord, tile.controllerTile.yCoord, tile.controllerTile.zCoord);
 	        return true;
 		}
         return false;
