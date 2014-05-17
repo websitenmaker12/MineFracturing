@@ -69,9 +69,17 @@ public class Util {
         }
 	}
 	
-	public static ItemStack getEmptyContainerForFilledContainer(ItemStack filledContainer) {
+	public static ItemStack getEmptyForFilledContainer(ItemStack filledContainer) {
 		for(FluidContainerData data : FluidContainerRegistry.getRegisteredFluidContainerData()) {
 			if(data.filledContainer.isItemEqual(filledContainer)) return data.emptyContainer;
+		}
+		
+		return null;
+	}
+	
+	public static ItemStack getFilledForEmptyContainer(ItemStack emptyContainer) {
+		for(FluidContainerData data : FluidContainerRegistry.getRegisteredFluidContainerData()) {
+			if(data.emptyContainer.isItemEqual(emptyContainer)) return data.filledContainer;
 		}
 		
 		return null;
