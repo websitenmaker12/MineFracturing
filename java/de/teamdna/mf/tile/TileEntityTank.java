@@ -16,6 +16,8 @@ import de.teamdna.mf.util.Util;
 
 public class TileEntityTank extends TileEntityCore implements IExtractor, IImporter, IFluidHandler {
 
+	// TODO: Inventory doesn't get saved....
+	
 	public final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 750);
 	
 	public int type;

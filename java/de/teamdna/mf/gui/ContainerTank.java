@@ -9,6 +9,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamdna.mf.gui.slot.FluidSlot;
+import de.teamdna.mf.gui.slot.OutputSlot;
 import de.teamdna.mf.tile.TileEntityTank;
 
 public class ContainerTank extends Container {
@@ -21,8 +23,8 @@ public class ContainerTank extends Container {
 	
 	public ContainerTank(EntityPlayer player, World world, int x, int y, int z) {
 		this.tile = (TileEntityTank)world.getTileEntity(x, y, z);
-		this.addSlotToContainer(new Slot(this.tile, 0, 148, 15));
-		this.addSlotToContainer(new Slot(this.tile, 1, 148, 60));
+		this.addSlotToContainer(new FluidSlot(this.tile, 0, 148, 15));
+		this.addSlotToContainer(new OutputSlot(this.tile, 1, 148, 60));
 		
 		for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {
@@ -72,8 +74,30 @@ public class ContainerTank extends Container {
     	}
     }
     
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
-        return null;
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+		ItemStack itemstack = null;
+        Slot slot = (Slot)this.inventorySlots.get(slotID);
+
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if(slotID == 0) {
+                if(!this.mergeItemStack(itemstack1, 2, 38, true)) return null;
+            } else if(slotID == 1) {
+                if(!this.mergeItemStack(itemstack1, 2, 38, true)) return null;
+            } else {
+            	this.mergeItemStack(itemstack1, 0, 1, false);
+            }
+
+            if(itemstack1.stackSize == 0) slot.putStack((ItemStack)null);
+            else slot.onSlotChanged();
+
+            if(itemstack1.stackSize == itemstack.stackSize) return null;
+            slot.onPickupFromSlot(player, itemstack1);
+        }
+
+        return itemstack;
     }
 	
 }
