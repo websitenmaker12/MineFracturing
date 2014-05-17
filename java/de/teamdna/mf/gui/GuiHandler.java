@@ -9,7 +9,7 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		switch(ID) {
-			case 0: return new GuiTank(player, world, x, y, z);
+			case 0: return new ContainerTank(player, world, x, y, z);
 			default: return null;
 		}
 	}
@@ -17,7 +17,7 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		switch(ID) {
-			case 0: return new ContainerTank(player, world, x, y, z);
+			case 0: return new GuiTank(player, world, x, y, z);
 			default: return null;
 		}
 	}

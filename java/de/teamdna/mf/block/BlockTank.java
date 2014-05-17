@@ -1,16 +1,15 @@
 package de.teamdna.mf.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityTank;
 
@@ -24,7 +23,7 @@ public class BlockTank extends BlockContainer {
 	}
 	@Override
 	public boolean renderAsNormalBlock() {
-		if (type == 2) return false;
+		if(this.type == 2) return false;
 		return super.renderAsNormalBlock();
 	}
 	
@@ -35,14 +34,14 @@ public class BlockTank extends BlockContainer {
 	
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess par1BlockAccess, int par2, int par3, int par4, int par5) {
-		if (type == 2) return true;
+		if(this.type == 2) return true;
 		return true;
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType() {
-		if (type == 2) return ClientProxy.coreRenderID;
+		if(this.type == 2) return ClientProxy.coreRenderID;
 		return super.getRenderType();
 	}
 
@@ -72,19 +71,11 @@ public class BlockTank extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int meta, float dx, float dy, float dz) {
 		TileEntityTank tile = (TileEntityTank)world.getTileEntity(x, y, z);
-		if(!tile.isStructureComplete()) return false;
-		
-		ItemStack itemstack = player.inventory.getCurrentItem();
-	    if(itemstack != null && itemstack.getItem() == Items.bucket) {
-		    if(itemstack.stackSize-- == 1) {
-		    	player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(Items.milk_bucket));
-		    }
-		    else if(!player.inventory.addItemStackToInventory(new ItemStack(Items.milk_bucket))) {
-		    	player.dropPlayerItemWithRandomChoice(new ItemStack(Items.milk_bucket, 1, 0), false);
-		    }
-	    }
-	    
-        return true;
+		if(tile.isStructureComplete()) {
+			player.openGui(MineFracturing.INSTANCE, 0, world, x, y, z);
+			return true;
+		}
+        return false;
     }
 	
 }

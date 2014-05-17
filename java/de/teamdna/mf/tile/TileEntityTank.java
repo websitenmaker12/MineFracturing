@@ -19,7 +19,6 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	private boolean isConnected = false;
 	private boolean needsUpdate = true;
 	
-	// Not for controller
 	public TileEntityTank controllerTile;
 	
 	public TileEntityTank() {
@@ -37,11 +36,11 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 				this.needsUpdate = false;
 				this.isConnected = this.isStructureComplete();
 				for(int x = -1; x <= 1; x++) {
-					for(int y = -2; y <= 1; y++) {
+					for(int y = -1; y <= 2; y++) {
 						for(int z = -1; z <= 1; z++) {
 							TileEntity tile = this.worldObj.getTileEntity(this.xCoord + x, this.yCoord + y, this.zCoord + z);
 							if(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type != 1) {
-								((TileEntityTank)tile).controllerTile = this.isConnected ? this : null;
+								((TileEntityTank)tile).controllerTile = this;
 								((TileEntityTank)tile).isConnected = this.isConnected;
 							}
 						}
@@ -74,13 +73,13 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
 		return direction != ForgeDirection.DOWN
 				&& packet.getInteger("id") == Reference.PipePacketIDs.fluid
-				&& FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")).isFluidEqual(this.tank.getFluid())
-				&& this.tank.getFluidAmount() < this.tank.getInfo().capacity;
+				&& FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")).isFluidEqual(this.controllerTile.tank.getFluid())
+				&& this.controllerTile.tank.getFluidAmount() < this.tank.getInfo().capacity;
 	}
 
 	@Override
 	public void doImport(ForgeDirection direction, NBTTagCompound packet) {
-		this.tank.fill(FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")), true);
+		this.controllerTile.tank.fill(FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")), true);
 	}
 
 	/* IExtractor */
@@ -91,7 +90,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 
 	@Override
 	public NBTTagCompound extract(ForgeDirection direction) {
-		FluidStack stack = this.tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
+		FluidStack stack = this.controllerTile.tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
 		if(stack.amount > 0) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("id", Reference.PipePacketIDs.fluid);
@@ -109,24 +108,15 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 		else {
 			int wallCount = 0;
 			for(int x = -1; x <= 1; x++) {
-				for(int y = -1; y <= 1; y++) {
+				for(int y = -1; y <= 2; y++) {
 					for(int z = -1; z <= 1; z++) {
 						TileEntity tile = this.worldObj.getTileEntity(this.xCoord + x, this.yCoord + y, this.zCoord + z);
 						if(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type == 0) wallCount++;
 					}
 				}
 			}
-			
-			boolean foundBases = true;
-			TileEntity tile = this.worldObj.getTileEntity(this.xCoord - 1, this.yCoord - 2, this.zCoord - 1);
-			if(!(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type == 2)) foundBases = false;
-			tile = this.worldObj.getTileEntity(this.xCoord + 1, this.yCoord - 2, this.zCoord - 1);
-			if(!(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type == 2)) foundBases = false;
-			tile = this.worldObj.getTileEntity(this.xCoord - 1, this.yCoord - 2, this.zCoord + 1);
-			if(!(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type == 2)) foundBases = false;
-			tile = this.worldObj.getTileEntity(this.xCoord + 1, this.yCoord - 2, this.zCoord + 1);
-			if(!(tile != null && tile instanceof TileEntityTank && ((TileEntityTank)tile).type == 2)) foundBases = false;
-			return wallCount == 3 * 3 * 3 - 1 && foundBases;
+
+			return wallCount == 3 * 4 * 3 - 1;
 		}
 	}
 	
@@ -138,18 +128,18 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	/* IFluidHandler */
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		return this.tank.fill(resource, doFill);
+		return this.controllerTile.tank.fill(resource, doFill);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
 		if(resource == null || !resource.isFluidEqual(this.tank.getFluid())) return null;
-		return this.tank.drain(resource.amount, doDrain);
+		return this.controllerTile.tank.drain(resource.amount, doDrain);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-		return this.tank.drain(maxDrain, doDrain);
+		return this.controllerTile.tank.drain(maxDrain, doDrain);
 	}
 
 	@Override
