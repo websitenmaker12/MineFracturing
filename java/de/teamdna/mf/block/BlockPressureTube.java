@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 
@@ -49,13 +50,20 @@ public class BlockPressureTube extends BlockContainer {
     {
 		TileEntityPressureTube tile = (TileEntityPressureTube) par1BlockAcces.getTileEntity(x, y, z);
 		
-		float minX = 0.25F;
-		float maxX = 0.75F;
-		float minY = 0.25F;
-		float maxY = 0.75F;
-		float minZ = 0.25F;
-		float maxZ = 0.75F;
-            
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+		float minX = 0.4F;
+		float maxX = 0.6F;
+		float minY = 0.4F;
+		float maxY = 0.6F;
+		float minZ = 0.4F;
+		float maxZ = 0.6F;
+        
+		if (tile.isConnectedToSide(ForgeDirection.NORTH)) minZ -= 0.4F;
+		if (tile.isConnectedToSide(ForgeDirection.SOUTH)) maxZ += 0.4F;
+		if (tile.isConnectedToSide(ForgeDirection.WEST)) minX -= 0.4F;
+		if (tile.isConnectedToSide(ForgeDirection.EAST)) maxX += 0.4F;
+		if (tile.isConnectedToSide(ForgeDirection.UP)) maxY += 0.4F;
+		if (tile.isConnectedToSide(ForgeDirection.DOWN)) minY -= 0.4F;
+		
+		this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
     }
 }
