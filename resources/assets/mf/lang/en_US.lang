@@ -4,6 +4,7 @@ tile.traverse.name=Traverse
 tile.materialExtractor.name=Material Extractor
 tile.tankWall.name=Tank Wall
 tile.tankController.name=Tank Controller
-tile.tankBase.name=Tank Base
+
+item.bucketOil.name=Oil Bucket
 
 itemGroup.mf=MineFracturing

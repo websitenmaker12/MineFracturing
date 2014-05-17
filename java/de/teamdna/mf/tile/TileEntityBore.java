@@ -103,8 +103,6 @@ public class TileEntityBore extends TileEntityCore {
 				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
 				int rSq = r * r;
 				
-				// TODO: Bedrock don't get destroied!!!!
-				
 				if(r != this.lastInfestRadius) {
 					// Infests the world
 					if(!this.placedBedrocks) {

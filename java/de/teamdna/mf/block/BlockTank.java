@@ -46,9 +46,8 @@ public class BlockTank extends BlockContainer {
 		TileEntityTank tile = (TileEntityTank)world.getTileEntity(x, y, z);
 		if(tile.isStructureComplete()) {
 			player.openGui(MineFracturing.INSTANCE, 0, world, x, y, z);
-			return true;
 		}
-        return false;
+        return true;
     }
 	
 }

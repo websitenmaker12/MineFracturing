@@ -1,9 +1,11 @@
 package de.teamdna.mf;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -21,6 +23,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
+import de.teamdna.mf.block.BlockFluid;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.block.BlockTank;
@@ -60,6 +63,9 @@ public class MineFracturing {
 	public Block extractor;
 	public Block tankWall;
 	public Block tankController;
+	public Block oilBlock;
+	
+	public Item bucketOil;
 	
 	public Fluid oil;
 	
@@ -74,11 +80,17 @@ public class MineFracturing {
 		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(this.tab);
 		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(this.tab);
 		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
-		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName("mf" + ":tank_Wall");;
+		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");;
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab);
 		
 		this.oil = (new Fluid("oil")).setDensity(900).setViscosity(1600);
 		FluidRegistry.registerFluid(this.oil);
+		this.oilBlock = this.oil.getBlock();
+		if(this.oilBlock == null) {
+			this.oilBlock = (new BlockFluid(this.oil, Material.water)).setBlockName("oilSource");
+		}
+		
+		this.bucketOil = (new ItemBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab);
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
@@ -86,6 +98,9 @@ public class MineFracturing {
 		proxy.registerBlock(this.extractor);
 		proxy.registerBlock(this.tankWall);
 		proxy.registerBlock(this.tankController);
+		proxy.registerBlock(this.oilBlock);
+		
+		proxy.registerItem(this.bucketOil);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
