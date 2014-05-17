@@ -89,22 +89,26 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float var8) {
+		
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
 		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
 		else if (tile instanceof TileEntityBore) renderTileBore(x, y, z);
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
-		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z, false);
+		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
+		
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	private void renderTileTraverse(double x, double y, double z) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseLoc);
 		model_traverse.renderAll();
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 	
@@ -112,14 +116,10 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseBoreLoc);
 		model_traverseBore.renderAll();
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseLoc);
 		model_traverse.renderAll();
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 	
@@ -127,24 +127,18 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseExLoc);
 		model_traverseEx.renderAll();
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseLoc);
 		model_traverse.renderAll();
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 	
-	public void renderTilePipe(TileEntityPressureTube tubeTile, double x, double y, double z, boolean isInInv) {
+	public void renderTilePipe(TileEntityPressureTube tubeTile, double x, double y, double z) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.5, y+0.5, z+0.5D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
 		GL11.glScaled(0.75, 0.75, 0.75);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		model_pipe_01_inner.renderAll();
@@ -180,7 +174,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 		}
 		
-		if (tubeTile.isConnectedToSide(ForgeDirection.NORTH) || isInInv) {
+		if (tubeTile.isConnectedToSide(ForgeDirection.NORTH)) {
 			GL11.glPushMatrix();
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
@@ -201,7 +195,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 		}
 		
-		if (tubeTile.isConnectedToSide(ForgeDirection.DOWN) || isInInv) {
+		if (tubeTile.isConnectedToSide(ForgeDirection.DOWN)) {
 			GL11.glPushMatrix();
 			//GL11.glTranslated(0, +0.25, 0);
 			GL11.glRotated(-90, 0, 0, 1);
@@ -214,8 +208,6 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 	

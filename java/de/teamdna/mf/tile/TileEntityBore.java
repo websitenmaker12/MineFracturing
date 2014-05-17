@@ -174,7 +174,7 @@ public class TileEntityBore extends TileEntityCore {
 	}
 	
 	public int getScaledFracturingProgress(int pixels) {
-		if(getScaledAnalysingProgress(100) > 0) return 100;
+		///if(getScaledAnalysingProgress(100) > 0) return 100;
 		return ((int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)pixels));
 	}
 	
