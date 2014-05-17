@@ -5,6 +5,8 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
@@ -14,7 +16,7 @@ import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
 import de.teamdna.mf.util.WorldUtil;
 
-public class TileEntityBore extends TileEntityCore {
+public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
@@ -31,6 +33,10 @@ public class TileEntityBore extends TileEntityCore {
 	private int scanY = 0;
 	private int lastInfestRadius = -1;
 	private boolean placedBedrocks = false;
+	
+	public TileEntityBore() {
+		this.inventory = new ItemStack[1];
+	}
 	
 	@Override
 	public void updateEntity() {
@@ -170,12 +176,26 @@ public class TileEntityBore extends TileEntityCore {
 	}
 	
 	public int getScaledAnalysingProgress(int pixels) {
-		return (int)((double)this.chunkQueue.size() / (double)this.totalChunks * (double)pixels);
+		return Math.min(Math.abs(this.totalChunks - (int)((double)this.chunkQueue.size() / (double)this.totalChunks * (double)pixels)), this.totalChunks);
 	}
 	
 	public int getScaledFracturingProgress(int pixels) {
-		///if(getScaledAnalysingProgress(100) > 0) return 100;
-		return ((int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)pixels));
+		return Math.min(Math.abs(this.totalOres - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)pixels)), this.totalOres);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1) {
+		return new int[] { 1 };
+	}
+
+	@Override
+	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
+		return true;
+	}
+
+	@Override
+	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
+		return false;
 	}
 	
 }

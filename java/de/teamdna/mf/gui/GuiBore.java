@@ -28,7 +28,9 @@ public class GuiBore extends GuiContainer {
 	    int l = (this.height - this.ySize) / 2;
 		drawRect(47, 14, 46 + this.tile.getScaledAnalysingProgress(118), 28, 0x9F00DEFF);
 		drawRect(47, 34, 46 + this.tile.getScaledFracturingProgress(118), 48, 0x9F00DEFF);
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("tile.bore.name"), 8, 5, 4210752);
+		
+		String s = StatCollector.translateToLocal("tile.bore.name");
+		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 4, 4210752);
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.bore.analyzingStatus") + " " + this.tile.getScaledAnalysingProgress(100) + "%", 50, 18, 4210752);
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.bore.frackingStatus") + " " + this.tile.getScaledFracturingProgress(100) + "%", 50, 37, 4210752);
 	}
