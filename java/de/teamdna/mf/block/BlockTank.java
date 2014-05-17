@@ -24,31 +24,26 @@ public class BlockTank extends BlockContainer {
 	}
 	@Override
 	public boolean renderAsNormalBlock() {
-		//if (type == 2) return false;
-		//return super.renderAsNormalBlock();
-		return false;
+		if (type == 2) return false;
+		return super.renderAsNormalBlock();
 	}
 	
 	@Override
 	public boolean isOpaqueCube() {
-		//if (type == 2) return false;
-		//return super.isOpaqueCube();
 		return false;
 	}
 	
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess par1BlockAccess, int par2, int par3, int par4, int par5) {
-		//if (type == 2) return true;
-		//return super.shouldSideBeRendered(par1BlockAccess, par2, par3, par4, par5);
+		if (type == 2) return true;
 		return true;
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType() {
-		//if (type == 2) return ClientProxy.coreRenderID;
-		//return super.getRenderType();
-		return ClientProxy.coreRenderID;
+		if (type == 2) return ClientProxy.coreRenderID;
+		return super.getRenderType();
 	}
 
 	@Override

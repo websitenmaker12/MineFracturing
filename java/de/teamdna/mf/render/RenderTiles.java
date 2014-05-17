@@ -51,6 +51,8 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public static final ResourceLocation model_pipe_02_outer_Loc = new ResourceLocation(Reference.modid, "model/pipe_02_outer.obj");
 	public static final IModelCustom model_pipe_02_outer = AdvancedModelLoader.loadModel(model_pipe_02_outer_Loc);
 	
+	public static final ResourceLocation textureIron = new ResourceLocation("/textures/blocks/iron_block.png");
+	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float var8) {
 		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
@@ -110,8 +112,8 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glScaled(0.75, 0.75, 0.75);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_TEXTURE_2D); //TODO: REMOVE!!!
 		GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		model_pipe_01_inner.renderAll();
 		GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 		model_pipe_01_outer.renderAll();
@@ -178,9 +180,9 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		}
 		
 		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}
 	
