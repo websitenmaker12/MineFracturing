@@ -2,6 +2,7 @@ package de.teamdna.mf.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -25,6 +26,10 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public final ResourceLocation model_traverseBoreLoc;
 	public final ResourceLocation texture_traverseBoreLoc;
 	public final IModelCustom model_traverseBore;
+	
+	public final ResourceLocation model_traverseBoreHeadLoc;
+	public final ResourceLocation texture_traverseBoreHeadLoc;
+	public final IModelCustom model_traverseBoreHead;
 	
 	public final ResourceLocation model_traverseExLoc;
 	public final ResourceLocation texture_traverseExLoc;
@@ -51,6 +56,8 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public final ResourceLocation model_pipe_02_outer_Loc;
 	public final IModelCustom model_pipe_02_outer;
 	
+	public final ResourceLocation ironTexture;
+	
 	public final ResourceLocation textureIron = new ResourceLocation("/textures/blocks/iron_block.png");
 	
 	public RenderTiles() {
@@ -61,6 +68,10 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		model_traverseBoreLoc = new ResourceLocation(Reference.modid, "model/tower_bore.obj");
 		texture_traverseBoreLoc = new ResourceLocation(Reference.modid, "model/texture/map_bore.png");
 		model_traverseBore = AdvancedModelLoader.loadModel(model_traverseBoreLoc);
+		
+		model_traverseBoreHeadLoc = new ResourceLocation(Reference.modid, "model/tower_bore_head.obj");
+		texture_traverseBoreHeadLoc = new ResourceLocation(Reference.modid, "model/texture/map_bore_head.png");
+		model_traverseBoreHead = AdvancedModelLoader.loadModel(model_traverseBoreHeadLoc);
 		
 		model_traverseExLoc = new ResourceLocation(Reference.modid, "model/tower_extracting.obj");
 		texture_traverseExLoc = new ResourceLocation(Reference.modid, "model/texture/map_extracting.png");
@@ -85,6 +96,8 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		
 		model_pipe_02_outer_Loc = new ResourceLocation(Reference.modid, "model/pipe_02_outer.obj");
 		model_pipe_02_outer = AdvancedModelLoader.loadModel(model_pipe_02_outer_Loc);
+		
+		ironTexture = new ResourceLocation("textures/blocks/iron_block.png");
 	}
 	
 	@Override
@@ -95,7 +108,10 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
 		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
-		else if (tile instanceof TileEntityBore) renderTileBore(x, y, z);
+		else if (tile instanceof TileEntityBore) {
+			renderTileBore(x, y, z);
+			renderBoreHead(x, y, z, ((TileEntityBore)tile).boreY);
+		}
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
 		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
 		
@@ -123,6 +139,14 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 	
+	private void renderBoreHead(double x, double y, double z, float deph) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(x+0.5, y + deph, z+0.5);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseBoreHeadLoc);
+		model_traverseBoreHead.renderAll();
+		GL11.glPopMatrix();
+	}
+	
 	private void renderTileEx(double x, double y, double z) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
@@ -141,6 +165,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glScaled(0.75, 0.75, 0.75);
 		GL11.glColor4f(0.5F, 0.5F, 0.5F, 1);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		
 		model_pipe_01_inner.renderAll();
 		GL11.glColor4f(0.25F, 0.25F, 0.25F, 1);
 		model_pipe_01_outer.renderAll();
