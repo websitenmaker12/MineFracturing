@@ -20,4 +20,10 @@ public class Reference {
 		meta.authorList.add("wara286");
 	}
 	
+	public static class PipePacketIDs {
+		
+		public static final int fluid = 1;
+		
+	}
+	
 }

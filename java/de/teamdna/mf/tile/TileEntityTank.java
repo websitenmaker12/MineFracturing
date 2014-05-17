@@ -1,11 +1,20 @@
 package de.teamdna.mf.tile;
 
+import de.teamdna.mf.Reference;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
-public class TileEntityTank extends TileEntityCore implements IExtractor, IImporter {
+public class TileEntityTank extends TileEntityCore implements IExtractor, IImporter, IFluidHandler {
 
+	public final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 750);
+	
 	public final int type;
 	private boolean isConnected = false;
 	private boolean needsUpdate = true;
@@ -45,34 +54,53 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
+		this.tank.writeToNBT(tag);
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
+		this.tank.readFromNBT(tag);
 	}
 
+	/* IConnectable */
 	@Override
 	public boolean canConnect(ForgeDirection direction) {
 		return this.isConnected;
 	}
 
+	/* IImporter */
 	@Override
 	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
-		return false;
+		return direction != ForgeDirection.DOWN
+				&& packet.getInteger("id") == Reference.PipePacketIDs.fluid
+				&& FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")).isFluidEqual(this.tank.getFluid())
+				&& this.tank.getFluidAmount() < this.tank.getInfo().capacity;
 	}
 
 	@Override
 	public void doImport(ForgeDirection direction, NBTTagCompound packet) {
+		this.tank.fill(FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")), true);
 	}
 
+	/* IExtractor */
 	@Override
 	public boolean canExtract(ForgeDirection direction) {
-		return false;
+		return direction == ForgeDirection.DOWN;
 	}
 
 	@Override
 	public NBTTagCompound extract(ForgeDirection direction) {
+		FluidStack stack = this.tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
+		if(stack.amount > 0) {
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setInteger("id", Reference.PipePacketIDs.fluid);
+			tag.setLong("timestamp", System.currentTimeMillis());
+			tag.setInteger("amount", stack.amount);
+			tag.setInteger("fluidID", stack.fluidID);
+			tag.setTag("stackTag", stack.tag);
+			return tag;
+		}
 		return null;
 	}
 	
@@ -105,6 +133,38 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	public void neighborsHadChanged() {
 		if(this.type == 1) this.needsUpdate = true;
 		else if(this.controllerTile != null) this.controllerTile.neighborsHadChanged();
+	}
+
+	/* IFluidHandler */
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		return this.tank.fill(resource, doFill);
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+		if(resource == null || !resource.isFluidEqual(this.tank.getFluid())) return null;
+		return this.tank.drain(resource.amount, doDrain);
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+		return this.tank.drain(maxDrain, doDrain);
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return this.isConnected && from != ForgeDirection.DOWN;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		return this.isConnected && from == ForgeDirection.DOWN;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		return new FluidTankInfo[] { this.tank.getInfo() };
 	}
 	
 }

@@ -5,6 +5,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import org.apache.logging.log4j.Logger;
 
@@ -60,6 +62,8 @@ public class MineFracturing {
 	public Block tankController;
 	public Block tankBase;
 	
+	public Fluid oil;
+	
 	// TODO: Resistance, Hardness to blocks; Crafting receipes
 	
 	@EventHandler
@@ -74,6 +78,9 @@ public class MineFracturing {
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab);
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab);
 		this.tankBase = (new BlockTank(2)).setBlockName("tankBase").setCreativeTab(this.tab);
+		
+		this.oil = (new Fluid("oil")).setDensity(900).setViscosity(1600);
+		FluidRegistry.registerFluid(this.oil);
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
