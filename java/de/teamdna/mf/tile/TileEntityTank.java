@@ -64,8 +64,8 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 					}
 				} else if(FluidContainerRegistry.isEmptyContainer(this.inventory[0])) {
 					if(this.tank.getFluid() != null && this.tank.getFluidAmount() - 1000 >= 0) {
-						ItemStack output = FluidContainerRegistry.fillFluidContainer(new FluidStack(this.tank.getFluid().getFluid(), 1000), Util.getFilledForEmptyContainer(this.inventory[0]));
-						if(output != null && this.inventory[1] == null || (this.inventory[1].stackSize + 1 <= this.inventory[1].getMaxStackSize() && this.inventory[1].isItemEqual(output))) {
+						ItemStack output = Util.getFilledForEmptyContainer(this.inventory[0], this.tank.getFluid());
+						if(output != null && (this.inventory[1] == null || (this.inventory[1].stackSize + 1 <= this.inventory[1].getMaxStackSize() && this.inventory[1].isItemEqual(output)))) {
 							this.drain(ForgeDirection.UNKNOWN, 1000, true);
 							if(--this.inventory[0].stackSize == 0) this.inventory[0] = null;
 							if(this.inventory[1] == null) this.inventory[1] = new ItemStack(output.getItem());

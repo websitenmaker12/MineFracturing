@@ -12,6 +12,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
+import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -77,9 +78,9 @@ public class Util {
 		return null;
 	}
 	
-	public static ItemStack getFilledForEmptyContainer(ItemStack emptyContainer) {
+	public static ItemStack getFilledForEmptyContainer(ItemStack emptyContainer, FluidStack fluid) {
 		for(FluidContainerData data : FluidContainerRegistry.getRegisteredFluidContainerData()) {
-			if(data.emptyContainer.isItemEqual(emptyContainer)) return data.filledContainer;
+			if(data.emptyContainer.isItemEqual(emptyContainer) && data.fluid.isFluidEqual(fluid)) return data.filledContainer;
 		}
 		
 		return null;
