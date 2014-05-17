@@ -1,5 +1,7 @@
 package de.teamdna.mf.render;
 
+import java.util.Random;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
@@ -30,9 +32,6 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public final ResourceLocation model_traverseBoreHeadLoc;
 	public final ResourceLocation texture_traverseBoreHeadLoc;
 	public final IModelCustom model_traverseBoreHead;
-	
-	public final ResourceLocation model_traverseBorePipeLoc;
-	public final IModelCustom model_traverseBorePipe;
 	
 	public final ResourceLocation model_traverseExLoc;
 	public final ResourceLocation texture_traverseExLoc;
@@ -75,10 +74,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		model_traverseBoreHeadLoc = new ResourceLocation(Reference.modid, "model/tower_bore_head.obj");
 		texture_traverseBoreHeadLoc = new ResourceLocation(Reference.modid, "model/texture/map_bore_head.png");
 		model_traverseBoreHead = AdvancedModelLoader.loadModel(model_traverseBoreHeadLoc);
-		
-		model_traverseBorePipeLoc  = new ResourceLocation(Reference.modid, "model/tower_bore_pipe.obj");
-		model_traverseBorePipe = AdvancedModelLoader.loadModel(model_traverseBorePipeLoc);
-		
+
 		model_traverseExLoc = new ResourceLocation(Reference.modid, "model/tower_extracting.obj");
 		texture_traverseExLoc = new ResourceLocation(Reference.modid, "model/texture/map_extracting.png");
 		model_traverseEx = AdvancedModelLoader.loadModel(model_traverseExLoc);
@@ -134,6 +130,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	}
 	
 	private void renderTileBore(double x, double y, double z, TileEntityBore tile) {
+		// Block
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.9D, y+0.5D, z+0.1D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
@@ -142,17 +139,43 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseLoc);
 		model_traverse.renderAll();
 		GL11.glPopMatrix();
+		
+		// Bore Head
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.5, y - (tile.yCoord - tile.boreY) + 1, z+0.5);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseBoreHeadLoc);
 		model_traverseBoreHead.renderAll();
 		GL11.glPopMatrix();
+		
+		// Connection Pipe
 		GL11.glPushMatrix();
-		GL11.glScaled(1F, (y - (tile.yCoord - tile.boreY) + 1), 1F);
-		GL11.glTranslated(x, (y - (tile.yCoord - tile.boreY) + 1), z);
+		GL11.glColor3f(1, 1, 1);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glColor4f(0.5F, 0.5F, 0.5F, 1F);
-		model_traverseBorePipe.renderAll();
+		
+		GL11.glTranslated(x, y + 1, z);
+		GL11.glBegin(GL11.GL_QUADS);
+			GL11.glVertex3f(0, 0, 0);
+			GL11.glVertex3f(0, 1, 0);
+			GL11.glVertex3f(1, 1, 0);
+			GL11.glVertex3f(1, 0, 0);
+			
+			GL11.glVertex3f(0, 0, 1);
+			GL11.glVertex3f(1, 0, 1);
+			GL11.glVertex3f(1, 1, 1);
+			GL11.glVertex3f(0, 1, 1);
+			
+			GL11.glVertex3f(0, 0, 0);
+			GL11.glVertex3f(0, 0, 1);
+			GL11.glVertex3f(0, 1, 1);
+			GL11.glVertex3f(0, 1, 0);
+			
+			GL11.glVertex3f(1, 0, 0);
+			GL11.glVertex3f(1, 1, 0);
+			GL11.glVertex3f(1, 1, 1);
+			GL11.glVertex3f(1, 0, 1);
+			
+		GL11.glEnd();
+		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
 	}

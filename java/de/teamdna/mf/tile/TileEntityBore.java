@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -59,6 +60,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 					Block currentBlock = this.worldObj.getBlock(this.xCoord, this.boreY, this.zCoord);
 					if(!currentBlock.getMaterial().isLiquid() && currentBlock.getBlockHardness(this.worldObj, this.xCoord, this.boreY, this.zCoord) > 0) {
 						this.worldObj.func_147480_a(this.xCoord, this.boreY, this.zCoord, false);
+						this.worldObj.spawnEntityInWorld(new EntityTNTPrimed(worldObj));
 					}
 				}
 			}
