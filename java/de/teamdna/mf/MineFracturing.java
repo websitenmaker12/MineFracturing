@@ -3,7 +3,6 @@ package de.teamdna.mf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
@@ -54,7 +53,7 @@ public class MineFracturing {
 	
 	public CreativeTabs tab = new CreativeTabs(CreativeTabs.getNextID(), Reference.modid) {
 		public Item getTabIconItem() {
-			return new ItemStack(traverse).getItem();
+			return (new ItemStack(traverse)).getItem();
 		}
 	};
 	

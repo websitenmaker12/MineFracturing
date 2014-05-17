@@ -14,7 +14,6 @@ import de.teamdna.mf.tile.TileEntityTraverse;
 public class ClientProxy extends CommonProxy {
 
 	public static int coreRenderID;
-	private RenderTiles stdTileRenderer = new RenderTiles();
 	
 	@Override
 	public EntityPlayer getClientPlayer() {
@@ -26,6 +25,7 @@ public class ClientProxy extends CommonProxy {
 		coreRenderID = RenderingRegistry.getNextAvailableRenderId();
 		RenderingRegistry.registerBlockHandler(coreRenderID, new RenderBlockCore());
 		
+		RenderTiles stdTileRenderer = new RenderTiles();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTraverse.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBore.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityExtractor.class, stdTileRenderer);
