@@ -137,7 +137,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		model_traverse.renderAll();
 		GL11.glPopMatrix();
 		GL11.glPushMatrix();
-		GL11.glTranslated(x+0.5, y - (tile.yCoord - tile.boreY), z+0.5);
+		GL11.glTranslated(x+0.5, y - (tile.yCoord - tile.boreY) + 1, z+0.5);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseBoreHeadLoc);
 		model_traverseBoreHead.renderAll();
 		GL11.glPopMatrix();
