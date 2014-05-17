@@ -49,7 +49,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
-			if(this.state == 0 && this.worldObj.getWorldTime() % 1L == 0L) { // TODO: 40L
+			if(this.state == 0 && this.worldObj.getWorldTime() % 80L == 0L) { // TODO: 40L
 				if(--this.boreY < this.maxBoreY) {
 					this.state = 1;
 					return;

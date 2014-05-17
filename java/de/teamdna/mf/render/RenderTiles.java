@@ -109,8 +109,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		
 		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
 		else if (tile instanceof TileEntityBore) {
-			renderTileBore(x, y, z);
-			renderBoreHead(x, y, z, ((TileEntityBore)tile).boreY);
+			renderTileBore(x, y, z, (TileEntityBore)tile);
 		}
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
 		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
@@ -128,23 +127,24 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 	
-	private void renderTileBore(double x, double y, double z) {
+	private void renderTileBore(double x, double y, double z, TileEntityBore tile) {
 		GL11.glPushMatrix();
-		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
+		GL11.glTranslated(x+0.9D, y+0.5D, z+0.1D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseBoreLoc);
 		model_traverseBore.renderAll();
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseLoc);
 		model_traverse.renderAll();
 		GL11.glPopMatrix();
-	}
-	
-	private void renderBoreHead(double x, double y, double z, float deph) {
 		GL11.glPushMatrix();
-		GL11.glTranslated(x+0.5, y + deph, z+0.5);
+		GL11.glTranslated(x+0.5, y - (tile.yCoord - tile.boreY), z+0.5);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_traverseBoreHeadLoc);
 		model_traverseBoreHead.renderAll();
 		GL11.glPopMatrix();
+	}
+	
+	private void renderBoreHead(double x, double y, double z, int deph) {
+		
 	}
 	
 	private void renderTileEx(double x, double y, double z) {
