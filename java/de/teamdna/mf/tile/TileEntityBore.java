@@ -26,6 +26,7 @@ public class TileEntityBore extends TileEntityCore {
 	public List<String> oreBlocks = new ArrayList<String>();
 	public int totalOres = 0;
 	public List<ChunkCoordIntPair> chunkQueue = new ArrayList<ChunkCoordIntPair>();
+	public int totalChunks = 0;
 	public Chunk currentScanningChunk;
 	private int scanY = 0;
 	private int lastInfestRadius = -1;
@@ -154,6 +155,8 @@ public class TileEntityBore extends TileEntityCore {
 				}
 			}
 		}
+		
+		this.totalChunks = this.chunkQueue.size();
 	}
 	
 	public boolean isMultiblockComplete() {
@@ -164,6 +167,14 @@ public class TileEntityBore extends TileEntityCore {
 			if(!(this.worldObj.getBlock(this.xCoord, y, this.zCoord) instanceof IBoreBlock)) break;
 		}
 		return i == structureHeight;
+	}
+	
+	public int getScaledAnalysingProgress(int pixels) {
+		return (int)((double)this.chunkQueue.size() / (double)this.totalChunks * (double)pixels);
+	}
+	
+	public int getScaledFracturingProgress(int pixels) {
+		return (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)pixels);
 	}
 	
 }
