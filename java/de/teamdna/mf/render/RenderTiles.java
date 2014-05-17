@@ -1,10 +1,7 @@
 package de.teamdna.mf.render;
 
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
@@ -140,6 +137,8 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		model_traverse.renderAll();
 		GL11.glPopMatrix();
 		
+		if(!tile.hasWorldObj()) return;
+		
 		// Bore Head
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.5, y - (tile.yCoord - tile.boreY) + 1, z+0.5);
@@ -149,32 +148,58 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		
 		// Connection Pipe
 		GL11.glPushMatrix();
-		GL11.glColor3f(1, 1, 1);
+		GL11.glColor4f(0.2F, 0.2F, 0.2F, 1);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glTranslated(x, y - (tile.yCoord - tile.boreY) + 1, z);
 		
-		GL11.glTranslated(x, y + 1, z);
+		float height = tile.yCoord - tile.boreY;
 		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glVertex3f(0, 0, 0);
-			GL11.glVertex3f(0, 1, 0);
-			GL11.glVertex3f(1, 1, 0);
-			GL11.glVertex3f(1, 0, 0);
-			
-			GL11.glVertex3f(0, 0, 1);
-			GL11.glVertex3f(1, 0, 1);
-			GL11.glVertex3f(1, 1, 1);
-			GL11.glVertex3f(0, 1, 1);
-			
-			GL11.glVertex3f(0, 0, 0);
-			GL11.glVertex3f(0, 0, 1);
-			GL11.glVertex3f(0, 1, 1);
-			GL11.glVertex3f(0, 1, 0);
-			
-			GL11.glVertex3f(1, 0, 0);
-			GL11.glVertex3f(1, 1, 0);
-			GL11.glVertex3f(1, 1, 1);
-			GL11.glVertex3f(1, 0, 1);
-			
+			GL11.glVertex3f(0.4F, 0, 0.4F);
+			GL11.glVertex3f(0.4F, height, 0.4F);
+			GL11.glVertex3f(0.6F, height, 0.4F);
+			GL11.glVertex3f(0.6F, 0, 0.4F);
+			GL11.glVertex3f(0.4F, 0, 0.6F);
+			GL11.glVertex3f(0.6F, 0, 0.6F);
+			GL11.glVertex3f(0.6F, height, 0.6F);
+			GL11.glVertex3f(0.4F, height, 0.6F);
+			GL11.glVertex3f(0.4F, 0, 0.4F);
+			GL11.glVertex3f(0.4F, 0, 0.6F);
+			GL11.glVertex3f(0.4F, height, 0.6F);
+			GL11.glVertex3f(0.4F, height, 0.4F);
+			GL11.glVertex3f(0.6F, 0, 0.4F);
+			GL11.glVertex3f(0.6F, height, 0.4F);
+			GL11.glVertex3f(0.6F, height, 0.6F);
+			GL11.glVertex3f(0.6F, 0, 0.6F);
 		GL11.glEnd();
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glPopMatrix();
+		
+		// Ropes
+		GL11.glPushMatrix();
+		GL11.glColor4f(0.1F, 0.1F, 0.1F, 1);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glTranslated(x, y, z);
+		
+		if(tile.isMultiblockComplete()) {
+			int centerOffset = 8;
+			GL11.glBegin(GL11.GL_LINE_LOOP);
+				GL11.glVertex3f(0.5F, 0F, 0.9F);
+				GL11.glVertex3f(0.5F, tile.getWorldObj().getHeightValue(tile.xCoord, tile.zCoord + centerOffset) - tile.yCoord, centerOffset);
+			GL11.glEnd();
+			GL11.glBegin(GL11.GL_LINE_LOOP);
+				GL11.glVertex3f(0.5F, 0F, 0.1F);
+				GL11.glVertex3f(0.5F, tile.getWorldObj().getHeightValue(tile.xCoord, tile.zCoord - centerOffset + 1) - tile.yCoord, -centerOffset + 1);
+			GL11.glEnd();
+			GL11.glBegin(GL11.GL_LINE_LOOP);
+				GL11.glVertex3f(0.9F, 0F, 0.5F);
+				GL11.glVertex3f(centerOffset, tile.getWorldObj().getHeightValue(tile.xCoord + centerOffset, tile.zCoord) - tile.yCoord, 0.5F);
+			GL11.glEnd();
+			GL11.glBegin(GL11.GL_LINE_LOOP);
+				GL11.glVertex3f(0.1F, 0F, 0.5F);
+				GL11.glVertex3f(-centerOffset + 1, tile.getWorldObj().getHeightValue(tile.xCoord - centerOffset + 1, tile.zCoord) - tile.yCoord, 0.5F);
+			GL11.glEnd();
+		}
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glPopMatrix();
