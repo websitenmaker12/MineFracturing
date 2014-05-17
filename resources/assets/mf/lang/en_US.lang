@@ -2,5 +2,8 @@ tile.bore.name=Bore
 tile.pressureTube.name=Pressure Tube
 tile.traverse.name=Traverse
 tile.materialExtractor.name=Material Extractor
+tile.tankWall.name=Tank Wall
+tile.tankController.name=Tank Controller
+tile.tankBase.name=Tank Base
 
 itemGroup.mf=MineFracturing

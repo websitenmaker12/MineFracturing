@@ -15,4 +15,9 @@ public class TileEntityExtractor extends TileEntityCore implements IExtractor {
 		return null;
 	}
 
+	@Override
+	public boolean canConnect(ForgeDirection direction) {
+		return true;
+	}
+
 }

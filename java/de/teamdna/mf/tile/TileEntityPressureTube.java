@@ -111,13 +111,13 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 	}
 	
 	public boolean isConnectedToPipe(ForgeDirection direction) {
-		return this.adjacentPipes.contains(direction) || this.adjacentExtractors.contains(direction) || this.adjacentImporters.contains(direction);
+		return this.adjacentPipes.contains(direction);
 	}
 	
 	public boolean isConnectedToSide(ForgeDirection direction) {
 		if(!this.hasWorldObj()) return false;
 		TileEntity tile = this.worldObj.getTileEntity(this.xCoord + direction.offsetX, this.yCoord + direction.offsetY, this.zCoord + direction.offsetZ);
-		return tile != null && tile instanceof IConnectable;
+		return tile != null && tile instanceof IConnectable && ((IConnectable)tile).canConnect(direction.getOpposite());
 	}
 	
 	public boolean sendPacket(NBTTagCompound packet, ForgeDirection direction) {
@@ -173,6 +173,11 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 			NBTTagCompound entry = pathTrackMap.getCompoundTagAt(i);
 			this.pathTracker.put(entry.getCompoundTag("packet"), ForgeDirection.values()[entry.getInteger("direction")]);
 		}
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction) {
+		return true;
 	}
 	
 }

@@ -20,12 +20,14 @@ import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
+import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityCore;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
+import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.mf.util.Util;
 
@@ -52,6 +54,11 @@ public class MineFracturing {
 	public Block pressureTube;
 	public Block traverse;
 	public Block extractor;
+	public Block tankWall;
+	public Block tankController;
+	public Block tankBase;
+	
+	// TODO: Resistance, Hardness to blocks; Crafting receipes
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -59,20 +66,27 @@ public class MineFracturing {
 		logger = event.getModLog();
 		
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
-		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(tab);
-		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(tab);
-		this.extractor = new BlockMaterialExtractor().setBlockName("materialExtractor").setCreativeTab(tab);
+		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(this.tab);
+		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(this.tab);
+		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
+		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab);
+		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab);
+		this.tankBase = (new BlockTank(2)).setBlockName("tankBase").setCreativeTab(this.tab);
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
 		proxy.registerBlock(this.traverse);
 		proxy.registerBlock(this.extractor);
+		proxy.registerBlock(this.tankWall);
+		proxy.registerBlock(this.tankController);
+		proxy.registerBlock(this.tankBase);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
 		proxy.registerTile(TileEntityPressureTube.class, "pressureTube");
 		proxy.registerTile(TileEntityTraverse.class, "traverse");
 		proxy.registerTile(TileEntityExtractor.class, "extractor");
+		proxy.registerTile(TileEntityTank.class, "tank");
 	}
 	
 	@EventHandler
