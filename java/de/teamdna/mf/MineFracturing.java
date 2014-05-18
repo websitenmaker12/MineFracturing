@@ -110,6 +110,7 @@ public class MineFracturing {
 		Reference.setupMetadata(event.getModMetadata());
 		logger = event.getModLog();
 		
+		// Configuration
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "NOTICE: This values should be the same on client and server. Otherwise it'll crash or look really ugly.");

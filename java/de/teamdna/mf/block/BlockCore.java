@@ -14,7 +14,9 @@ public abstract class BlockCore extends BlockContainer {
 
 	protected BlockCore(Material material) {
 		super(material);
-		this.setResistance(10F);
+		this.setHardness(5.0F);
+		this.setResistance(10.0F);
+		this.setStepSound(soundTypeMetal);
 	}
 
 	@Override
