@@ -27,6 +27,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	private int workProgress = 0;
 	private int maxWorkProgress = 200;
 	private int burnTime = 0;
+	private int maxBurnTime = 1;
 	
 	public TileEntityChemicalsMixer() {
 		super(6);
@@ -39,6 +40,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 		if (this.burnTime == 0) {
 			if (isItemFuel(inventory[3]) && canWork()) {
 				this.burnTime = getItemBurnTime(inventory[3]);
+				this.maxBurnTime = this.burnTime;
 				this.decrStackSize(3);
 			}
 		}
@@ -50,6 +52,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 				this.workProgress = 0;
 			}
 		}
+		System.out.println(maxBurnTime);
 	}
 	
 	//Returns if the mixer is working
@@ -60,6 +63,10 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	//For GUI
 	public int getWorkProgressScaled(int pixels) {
 		return this.workProgress * pixels / this.maxWorkProgress;
+	}
+	
+	public int getBurnTimeScaled(int pixels) {
+		return this.burnTime * pixels / this.maxBurnTime;
 	}
 	
 	//Returns the burn time of an item

@@ -25,7 +25,7 @@ public class ContainerChemicalsMixer extends Container {
 		this.addSlotToContainer(new Slot(this.tile, 0, 25, 16));
 		this.addSlotToContainer(new Slot(this.tile, 1, 25, 36));
 		this.addSlotToContainer(new Slot(this.tile, 2, 25, 56));
-		this.addSlotToContainer(new Slot(this.tile, 3, 54, 56));
+		this.addSlotToContainer(new Slot(this.tile, 3, 176, 48));
 		
 		for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {

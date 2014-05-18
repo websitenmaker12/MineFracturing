@@ -28,10 +28,16 @@ public class GuiChemicalsMixer extends GuiContainer {
 		super(new ContainerChemicalsMixer(player, world, x, y, z));
 		container = (ContainerChemicalsMixer)this.inventorySlots;
 		tile = (TileEntityChemicalsMixer) world.getTileEntity(x, y, z);
+		this.xSize = 242;
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
+	    int k = (this.width - this.xSize) / 2;
+	    int l = (this.height - this.ySize) / 2;
+	    
+	    this.fontRendererObj.drawString("Combustion", 177, 18, 4210752);
+	    this.fontRendererObj.drawString("Generator", 177, 28, 4210752);
 	}
 	
 	@Override
@@ -56,12 +62,17 @@ public class GuiChemicalsMixer extends GuiContainer {
 	    this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 	    
  		this.mc.getTextureManager().bindTexture(bg);
- 		drawTexturedModalRect(k + 112, l + 13, 176, 16, 24, 65);
+ 		drawTexturedModalRect(k + 112, l + 13, 0, 182, 24, 65);
  		
  		GL11.glEnable(GL11.GL_BLEND);
  		this.mc.getTextureManager().bindTexture(bg);
-        this.drawTexturedModalRect(k + 50, l + 36, 176, 0, tile.getWorkProgressScaled(49) + 1, 16);
+        this.drawTexturedModalRect(k + 50, l + 36, 0, 166, tile.getWorkProgressScaled(49) + 1, 16);
  		GL11.glDisable(GL11.GL_BLEND);
+ 		
+ 		//Combustion Generator
+ 		this.mc.getTextureManager().bindTexture(bg);
+        int i1 = this.tile.getBurnTimeScaled(12);
+        this.drawTexturedModalRect(k + 203, l + 50 + 12 - i1, 242, 12 - i1 + 1, 14, i1 + 2);
 	}
 
 }
