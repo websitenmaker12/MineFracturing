@@ -22,7 +22,7 @@ public class ContainerBore extends Container {
 	
 	public ContainerBore(EntityPlayer player, World world, int x, int y, int z) {
 		this.tile = (TileEntityBore)world.getTileEntity(x, y, z);
-		this.addSlotToContainer(new FuelSlot(this.tile, 0, 47, 52));
+		this.addSlotToContainer(new FuelSlot(this.tile, 0, 176, 48));
 		
 		for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {
@@ -93,8 +93,6 @@ public class ContainerBore extends Container {
             if(itemstack1.stackSize == itemstack.stackSize) return null;
             slot.onPickupFromSlot(player, itemstack1);
         }
-
         return itemstack;
     }
-	
 }

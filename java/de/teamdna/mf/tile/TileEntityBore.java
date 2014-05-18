@@ -45,6 +45,9 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	private ChunkCoordIntPair currentChunkForLoad = null;
 	private boolean isFirstTick = true;
 	
+	private int maxBurnTime = 1;
+	private int currentBurnTime = 0;
+	
 	public TileEntityBore() {
 		super(8);
 		this.inventory = new ItemStack[1];
@@ -282,6 +285,10 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	public int getScaledAnalysingProgress(int pixels) {
 		if(this.totalChunks == 0) return 0;
 		return pixels - (int)((double)this.chunkQueue.size() * (double)pixels / (double)this.totalChunks);
+	}
+	
+	public int getCurrentItemBurnTime(int pixels) {
+		return this.currentBurnTime * pixels / this.maxBurnTime;
 	}
 	
 	public int getScaledFracturingProgress(int pixels) {

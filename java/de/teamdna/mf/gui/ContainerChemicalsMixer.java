@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -71,5 +72,27 @@ public class ContainerChemicalsMixer extends Container {
     		case 1: this.capacity = par2; break;
     	}
     }
+    
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+    	ItemStack itemstack = null;
+        Slot slot = (Slot)this.inventorySlots.get(slotID);
 
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if(slotID == 0) {
+                if(!this.mergeItemStack(itemstack1, 1, 37, true)) return null;
+            } else {
+                this.mergeItemStack(itemstack1, 3, 4, false);
+            }
+
+            if(itemstack1.stackSize == 0) slot.putStack((ItemStack)null);
+            else slot.onSlotChanged();
+
+            if(itemstack1.stackSize == itemstack.stackSize) return null;
+            slot.onPickupFromSlot(player, itemstack1);
+        }
+        return itemstack;
+    }
 }

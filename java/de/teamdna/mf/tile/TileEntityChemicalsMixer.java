@@ -75,7 +75,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	}
 	
 	//Returns if the item is a fuel
-	private boolean isItemFuel(ItemStack itemstack) {
+	public boolean isItemFuel(ItemStack itemstack) {
 		return getItemBurnTime(itemstack) > 0;
 	}
 	
@@ -101,7 +101,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	//Decreases the stack size of the given index by one
 	private void decrStackSize(int stackID) {
 		if (inventory[stackID] != null) {
-			ItemStack itemstack = inventory[stackID].copy();
+			ItemStack itemstack = inventory[stackID];
 			itemstack.stackSize--;
 			if (itemstack.stackSize == 0) itemstack = null;
 			
