@@ -30,8 +30,8 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 		if(this.canReceivePackets()) {
 			for(ForgeDirection dir : this.adjacentExtractors) {
 				IExtractor extractor = this.getByDirection(dir);
-				if(extractor != null && extractor.canExtract(dir)) {
-					NBTTagCompound packet = extractor.extract(dir);
+				if(extractor != null && extractor.canExtract(dir.getOpposite())) {
+					NBTTagCompound packet = extractor.extract(dir.getOpposite());
 					if(packet != null) this.packets.add(packet);
 				}
 			}
@@ -44,8 +44,8 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 			if(importer != null) {
 				List<NBTTagCompound> toRemove = new ArrayList<NBTTagCompound>();
 				for(NBTTagCompound packet : this.packets) {
-					if(importer.canImport(dir, packet)) {
-						importer.doImport(dir, packet);
+					if(importer.canImport(dir.getOpposite(), packet)) {
+						importer.doImport(dir.getOpposite(), packet);
 						toRemove.add(packet);
 						break;
 					}

@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -102,13 +103,14 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
 		return direction != ForgeDirection.DOWN
 				&& packet.getInteger("id") == Reference.PipePacketIDs.fluid
-				&& FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")).isFluidEqual(this.controllerTile.tank.getFluid())
+				&& (this.controllerTile.tank.getFluid() == null || this.controllerTile.tank.getFluid().fluidID == packet.getInteger("fluidID"))
 				&& this.controllerTile.tank.getFluidAmount() < this.tank.getInfo().capacity;
 	}
 
 	@Override
 	public void doImport(ForgeDirection direction, NBTTagCompound packet) {
-		this.controllerTile.tank.fill(FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")), true);
+		if(packet.getCompoundTag("stackTag") != null) this.controllerTile.tank.fill(FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")), true);
+		else this.controllerTile.tank.fill(new FluidStack(FluidRegistry.getFluid(packet.getInteger("fluidID")), packet.getInteger("amount")), true);
 	}
 
 	/* IExtractor */
@@ -120,7 +122,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	@Override
 	public NBTTagCompound extract(ForgeDirection direction) {
 		FluidStack stack = this.controllerTile.tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
-		if(stack.amount > 0) {
+		if(stack != null && stack.amount > 0) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("id", Reference.PipePacketIDs.fluid);
 			tag.setLong("timestamp", System.currentTimeMillis());
