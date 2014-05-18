@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 
-public class BlockPressureTube extends BlockContainer {
+public class BlockPressureTube extends BlockCore {
 
 	public BlockPressureTube() {
 		super(Material.iron);

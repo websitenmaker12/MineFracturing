@@ -11,6 +11,7 @@ public class GuiHandler implements IGuiHandler {
 		switch(ID) {
 			case 0: return new ContainerTank(player, world, x, y, z);
 			case 1: return new ContainerBore(player, world, x, y, z);
+			case 2: return new ContainerChemicalsMixer(player, world, x, y, z);
 			default: return null;
 		}
 	}
@@ -20,6 +21,7 @@ public class GuiHandler implements IGuiHandler {
 		switch(ID) {
 			case 0: return new GuiTank(player, world, x, y, z);
 			case 1: return new GuiBore(player, world, x, y, z);
+			case 2: return new GuiChemicalsMixer(player, world, x, y, z);
 			default: return null;
 		}
 	}

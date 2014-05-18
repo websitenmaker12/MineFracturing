@@ -11,7 +11,7 @@ import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityBore;
 
-public class BlockBore extends BlockContainer implements IBoreBlock {
+public class BlockBore extends BlockCore implements IBoreBlock {
 
 	public BlockBore() {
 		super(Material.iron);

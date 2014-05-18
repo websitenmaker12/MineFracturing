@@ -1,6 +1,7 @@
 package de.teamdna.mf.tile;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -27,12 +28,23 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	private int burnTime = 0;
 	
 	public TileEntityChemicalsMixer() {
-		this.inventory = new ItemStack[3];
+		super(4);
+		this.inventory = new ItemStack[4];
 	}
 	
 	@Override
 	public void updateEntity() {
-		
+		if (this.burnTime == 0 && isItemFuel(inventory[3])) {
+			this.burnTime = getItemBurnTime(inventory[3]);
+			this.decrStackSize(inventory[3]);
+		}
+		if (canWork()) {
+			if(this.workProgress < maxWorkProgress) this.workProgress++;
+			else {
+				this.doWork();
+				this.workProgress = 0;
+			}
+		}
 	}
 	
 	public int getWorkProgressScaled(int pixels) {
@@ -49,7 +61,9 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	
 	private boolean canWork()
 	{
-		if(isRecipe(inventory) && this.tank.getFluidAmount() + 1000 < this.tank.getCapacity()) return true;
+		if (this.burnTime > 0) {
+			if(isRecipe(inventory) && this.tank.getFluidAmount() + 1000 < this.tank.getCapacity()) return true;
+		}
 		return false;
 	}
 	
@@ -57,7 +71,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 		if (canWork()) {
 			for (int i = 0; i < 3; i++) {
 				decrStackSize(inventory[i]);
-				tank.fill(new FluidStack(fluid, amount), !this.worldObj.isRemote);
+				tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), !this.worldObj.isRemote);
 			}
 		}
 	}
@@ -75,11 +89,31 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 			boolean redstoneFound = false;
 			
 			if(itemstacks[0].getItem() == Items.slime_ball || itemstacks[1].getItem() == Items.slime_ball || itemstacks[2].getItem() == Items.slime_ball) slimeFound = true;
-			if(itemstacks[0].getItem() == Items.blaze_powder || itemstacks[1].getItem() == Items.blaze_powder || itemstacks[2].getItem() == Items.blaze_powder) blazeRodFound = true;
-			if(itemstacks[0].getItem() == Items.redstone || itemstacks[1].getItem() == Items.redstone || itemstacks[2].getItem() == Items.redstone) redstoneFound = true;
+			if(itemstacks[1].getItem() == Items.blaze_powder || itemstacks[1].getItem() == Items.blaze_powder || itemstacks[2].getItem() == Items.blaze_powder) blazeRodFound = true;
+			if(itemstacks[2].getItem() == Items.redstone || itemstacks[1].getItem() == Items.redstone || itemstacks[2].getItem() == Items.redstone) redstoneFound = true;
 			
 			if(redstoneFound == true && blazeRodFound == true && slimeFound == true) return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
+		return false;
+	}
+
+	@Override
+	public boolean canExtract(ForgeDirection direction) {
+		return true;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return false;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		return true;
 	}
 }

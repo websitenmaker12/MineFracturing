@@ -53,7 +53,6 @@ public class GuiTank extends GuiContainer {
 	     int l = (this.height - this.ySize) / 2;
 	     drawRect(k + 1, l + 10, k + 150, l + 100, 0xFF8b8b8b);
 	     GL11.glColor4f(1F, 1F, 1F, 1F);
-	     GL11.glColor4f(1F, 1F, 1F, 1F);
 	     
 	     //Liquid
 		if (this.container.fluidID != -1) {

@@ -26,6 +26,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
+import de.teamdna.mf.block.BlockChemicalsMixer;
 import de.teamdna.mf.block.BlockFluid;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
@@ -35,6 +36,7 @@ import de.teamdna.mf.event.BucketHandler;
 import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCore;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
@@ -88,8 +90,9 @@ public class MineFracturing {
 		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(this.tab);
 		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(this.tab);
 		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
-		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");;
+		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
+		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(tab).setBlockTextureName(Reference.modid + "chemicalsMixer");
 		
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
 		FluidRegistry.registerFluid(this.oil);
@@ -114,8 +117,11 @@ public class MineFracturing {
 		proxy.registerBlock(this.tankWall);
 		proxy.registerBlock(this.tankController);
 		proxy.registerBlock(this.oilBlock);
+		proxy.registerBlock(this.fracFluidBlock);
+		proxy.registerBlock(this.chemicalsMixer);
 		
 		proxy.registerItem(this.bucketOil);
+		proxy.registerItem(bucketFracFluid);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
@@ -123,6 +129,7 @@ public class MineFracturing {
 		proxy.registerTile(TileEntityTraverse.class, "traverse");
 		proxy.registerTile(TileEntityExtractor.class, "extractor");
 		proxy.registerTile(TileEntityTank.class, "tank");
+		proxy.registerTile(TileEntityChemicalsMixer.class, "chemicalsMixer");
 	}
 	
 	@EventHandler

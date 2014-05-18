@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.tile.TileEntityTank;
 
-public class BlockTank extends BlockContainer {
+public class BlockTank extends BlockCore {
 
 	public final int type;
 	

@@ -7,7 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockMaterialExtractor extends BlockContainer implements IBoreBlock {
+public class BlockMaterialExtractor extends BlockCore implements IBoreBlock {
 
 	public BlockMaterialExtractor() {
 		super(Material.iron);

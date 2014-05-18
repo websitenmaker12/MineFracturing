@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockTraverse extends BlockContainer implements IBoreBlock {
+public class BlockTraverse extends BlockCore implements IBoreBlock {
 
 	public BlockTraverse() {
 		super(Material.iron);
