@@ -1,5 +1,7 @@
 package de.teamdna.mf.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
@@ -26,6 +28,7 @@ public class BlockChemicalsMixer extends BlockCore {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public int getRenderType() {
 		return ClientProxy.coreRenderID;
 	}

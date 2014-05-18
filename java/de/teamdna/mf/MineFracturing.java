@@ -56,7 +56,7 @@ import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.mf.util.Util;
 
-@Mod(modid = Reference.modid, name = Reference.name, version = Reference.version, dependencies = "required-after:Forge@[10.12.1.1060,)")
+@Mod(modid = Reference.modid, name = Reference.name, version = Reference.version)
 public class MineFracturing {
 
 	public static Logger logger;
@@ -146,8 +146,8 @@ public class MineFracturing {
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
 		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":chemicalsMixer");
 		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
-		this.basicMachine = (new BlockCrafting()).setBlockName("basicMachine").setResistance(10F).setBlockTextureName(Reference.modid + ":basicMachine").setCreativeTab(tab);
-		this.combustionGen = (new BlockGenerator()).setBlockName("combusioneGen").setCreativeTab(tab);
+		this.basicMachine = (new BlockCrafting()).setBlockName("basicMachine").setResistance(10F).setBlockTextureName(Reference.modid + ":basicMachine").setCreativeTab(this.tab);
+		this.combustionGen = (new BlockGenerator()).setBlockName("combusioneGen").setCreativeTab(this.tab);
 		
 		// Items
 		this.coalDust = (new Item()).setUnlocalizedName("coalDust").setTextureName(Reference.modid + ":coalDust").setCreativeTab(this.tab);
@@ -155,7 +155,7 @@ public class MineFracturing {
 		this.goldDust = (new Item()).setUnlocalizedName("goldDust").setTextureName(Reference.modid + ":goldDust").setCreativeTab(this.tab);
 		this.diamondDust = (new Item()).setUnlocalizedName("diamondDust").setTextureName(Reference.modid + ":diamondDust").setCreativeTab(this.tab);
 		this.emeraldDust = (new Item()).setUnlocalizedName("emeraldDust").setTextureName(Reference.modid + ":emeraldDust").setCreativeTab(this.tab);
-		this.valve = (new Item()).setUnlocalizedName("valve").setTextureName(Reference.modid + ":valve").setCreativeTab(tab);
+		this.valve = (new Item()).setUnlocalizedName("valve").setTextureName(Reference.modid + ":valve").setCreativeTab(this.tab);
 		
 		// Fluids
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);

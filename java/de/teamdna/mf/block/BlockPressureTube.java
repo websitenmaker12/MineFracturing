@@ -1,5 +1,7 @@
 package de.teamdna.mf.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -42,6 +44,7 @@ public class BlockPressureTube extends BlockCore {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public int getRenderType() {
 		return ClientProxy.coreRenderID;
 	}

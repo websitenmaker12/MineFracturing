@@ -153,11 +153,11 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(8); // TODO: MineFracturing.boreRadius
+				this.addChunksToQueue(MineFracturing.boreRadius);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
-			if(this.state == 0 && this.worldObj.getWorldTime() % 1L == 0L) { // TODO: 40L
+			if(this.state == 0 && this.worldObj.getWorldTime() % 40L == 0L) {
 				if(--this.boreY < this.maxBoreY) {
 					this.state = 1;
 					return;
@@ -204,9 +204,8 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
 				// Ore replacing
-				// TODO: Make this much slower
 				if(this.oreBlocks.size() == 0) this.state = 3;
-				else {
+				else if(this.worldObj.getWorldTime() % 10L == 0L) {
 					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
 					this.oreBlocks.remove(0);
 					TileEntityExtractor extractor = this.getFirstExtractor();

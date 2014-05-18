@@ -6,7 +6,7 @@ public class Reference {
 
 	public static final String modid   = "mf";
 	public static final String name    = "MineFracturing";
-	public static final String version = "0.1 BETA";
+	public static final String version = "1.0";
 
 	public static void setupMetadata(ModMetadata meta) {
 		meta.modId = modid;

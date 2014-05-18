@@ -1,11 +1,12 @@
 package de.teamdna.mf.block;
 
-import de.teamdna.mf.net.ClientProxy;
-import de.teamdna.mf.tile.TileEntityExtractor;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamdna.mf.net.ClientProxy;
+import de.teamdna.mf.tile.TileEntityExtractor;
 
 public class BlockMaterialExtractor extends BlockCore implements IBoreBlock {
 
@@ -30,6 +31,7 @@ public class BlockMaterialExtractor extends BlockCore implements IBoreBlock {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
 	public int getRenderType() {
 		return ClientProxy.coreRenderID;
 	}
