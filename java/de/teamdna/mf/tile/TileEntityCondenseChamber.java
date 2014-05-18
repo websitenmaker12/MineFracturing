@@ -13,6 +13,9 @@ import de.teamdna.mf.api.CoreRegistry;
 
 public class TileEntityCondenseChamber extends TileEntityFluidCore implements ISidedInventory {
 
+	// TODO: no redstone .... ?!
+	// TODO: everthing goes into the first chamber -> not forward
+	
 	public static final int maxIdle = 200;
 	
 	private int currentBlockID = -1;
@@ -32,7 +35,7 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 		if(!this.worldObj.isRemote) {
 			if(this.currentBlockID != -1 && this.currentBlockAmount > 0) {
 				if(this.isEnoughSpace()) {
-					if(++this.idle >= 1) {
+					if(++this.idle >= maxIdle) {
 						this.currentBlockAmount--;
 						ItemStack stack = CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)).copy();
 						stack.stackSize = this.worldObj.rand.nextInt(7) + 4;

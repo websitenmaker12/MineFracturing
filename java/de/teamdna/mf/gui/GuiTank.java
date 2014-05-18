@@ -22,6 +22,8 @@ import de.teamdna.mf.util.RenderUtil;
 
 public class GuiTank extends GuiContainer {
 
+	// TODO: Mouse hover effect doesn't get triggered on the whole tank slot
+	
 	private static final ResourceLocation guiBg = new ResourceLocation(Reference.modid, "textures/gui/guiTank.png");
 	
 	private TileEntityTank tile;

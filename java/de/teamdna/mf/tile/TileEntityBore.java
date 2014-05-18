@@ -27,6 +27,7 @@ import de.teamdna.mf.util.WorldBlock;
 public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
 
 	// TODO: Should requiere fuel and fracfluid to work
+	// TODO: Infection should cause problems
 	
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;

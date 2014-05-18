@@ -20,6 +20,9 @@ public class ContainerChemicalsMixer extends Container {
 	
 	public int fluidAmount = 0;
 	public int capacity = 0;
+	public int idle = 0;
+	public int burnTime = 0;
+	public int maxBurnTime = 1;
 	
 	public ContainerChemicalsMixer(EntityPlayer player, World world, int x, int y, int z) {
 		this.tile = (TileEntityChemicalsMixer)world.getTileEntity(x, y, z);
@@ -51,6 +54,9 @@ public class ContainerChemicalsMixer extends Container {
         FluidStack fluid = this.tile.tank.getFluid();
         par1ICrafting.sendProgressBarUpdate(this, 0, this.tile.tank.getFluidAmount());
         par1ICrafting.sendProgressBarUpdate(this, 1, this.tile.tank.getCapacity());
+        par1ICrafting.sendProgressBarUpdate(this, 2, this.tile.idle);
+        par1ICrafting.sendProgressBarUpdate(this, 3, this.tile.burnTime);
+        par1ICrafting.sendProgressBarUpdate(this, 4, this.tile.maxBurnTime);
     }
 
 	@Override
@@ -62,6 +68,9 @@ public class ContainerChemicalsMixer extends Container {
             FluidStack fluid = this.tile.tank.getFluid();
             icrafting.sendProgressBarUpdate(this, 0, this.tile.tank.getFluidAmount());
             icrafting.sendProgressBarUpdate(this, 1, this.tile.tank.getCapacity());
+            icrafting.sendProgressBarUpdate(this, 2, this.tile.idle);
+            icrafting.sendProgressBarUpdate(this, 3, this.tile.burnTime);
+            icrafting.sendProgressBarUpdate(this, 4, this.tile.maxBurnTime);
         }
     }
 
@@ -71,6 +80,9 @@ public class ContainerChemicalsMixer extends Container {
     		default: super.updateProgressBar(par1, par2); break;
     		case 0: this.fluidAmount = par2; break;
     		case 1: this.capacity = par2; break;
+    		case 2: this.idle = par2; break;
+    		case 3: this.burnTime = par2; break;
+    		case 4: this.maxBurnTime = par2; break;
     	}
     }
     

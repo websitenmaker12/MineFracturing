@@ -47,30 +47,29 @@ public class GuiChemicalsMixer extends GuiContainer {
 	    
 	    drawRect(k + 1, l + 10, k + 150, l + 100, 0xFF8b8b8b);
 	    
-	    if (container.capacity > 0) {
-	    	 Fluid fluid = FluidRegistry.getFluid(MineFracturing.INSTANCE.fracFluid.getID());
+	    if(container.capacity > 0) {
+	    	Fluid fluid = FluidRegistry.getFluid(MineFracturing.INSTANCE.fracFluid.getID());
 	 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 	 		RenderUtil.setIntColor3(fluid.getColor());
 	 		IIcon icon = fluid.getStillIcon();
 	 		GL11.glEnable(GL11.GL_BLEND);
-	 		this.drawTexturedModelRectFromIcon(k + 112, l + 15 + 60 - tile.tank.getFluidAmount() * 60 / tile.tank.getCapacity(), icon != null ? icon : fluid.getBlock().getIcon(0, 0), 24, 60);
+	 		this.drawTexturedModelRectFromIcon(k + 112, l + 15 + 60 - container.fluidAmount * 60 / tile.tank.getCapacity(), icon != null ? icon : fluid.getBlock().getIcon(0, 0), 24, 60);
 	 		GL11.glDisable(GL11.GL_BLEND);
 	    }
- 		GL11.glColor4f(1F, 1F, 1F, 1F);
-	    this.mc.getTextureManager().bindTexture(bg);
-	    this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 	    
- 		this.mc.getTextureManager().bindTexture(bg);
- 		drawTexturedModalRect(k + 112, l + 13, 0, 182, 24, 65);
+ 		GL11.glColor4f(1F, 1F, 1F, 1F);
+ 		this.mc.getTextureManager().bindTexture(this.bg);
+	    this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+ 		this.drawTexturedModalRect(k + 112, l + 13, 0, 182, 24, 65);
  		
  		GL11.glEnable(GL11.GL_BLEND);
- 		this.mc.getTextureManager().bindTexture(bg);
-        this.drawTexturedModalRect(k + 50, l + 36, 0, 166, tile.getWorkProgressScaled(49) + 1, 16);
+        this.drawTexturedModalRect(k + 50, l + 36, 0, 166, this.container.idle * 49 / TileEntityChemicalsMixer.maxIdle, 16);
  		GL11.glDisable(GL11.GL_BLEND);
  		
- 		//Combustion Generator
- 		this.mc.getTextureManager().bindTexture(bg);
-        int i1 = this.tile.getBurnTimeScaled(12);
+ 		// Combustion Generator
+ 		this.tile.burnTime = this.container.burnTime;
+ 		this.tile.maxBurnTime = this.container.maxBurnTime;
+        int i1 = this.container.burnTime * 12 / this.container.maxBurnTime;
         this.drawTexturedModalRect(k + 203, l + 50 + 12 - i1, 242, 12 - i1 + 1, 14, i1 + 2);
 	}
 

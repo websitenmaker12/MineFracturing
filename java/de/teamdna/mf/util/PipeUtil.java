@@ -17,7 +17,7 @@ public class PipeUtil {
 			tag.setInteger("id", Reference.PipePacketIDs.fluid);
 			tag.setInteger("amount", stack.amount);
 			tag.setInteger("fluidID", stack.fluidID);
-			tag.setTag("stackTag", stack.tag);
+			if(stack.tag != null) tag.setTag("stackTag", stack.tag);
 			return tag;
 		}
 		return null;

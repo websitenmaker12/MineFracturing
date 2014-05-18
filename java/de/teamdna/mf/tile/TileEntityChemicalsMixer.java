@@ -1,128 +1,70 @@
 package de.teamdna.mf.tile;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import de.teamdna.mf.MineFracturing;
-import de.teamdna.mf.util.Util;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
-import net.minecraft.item.ItemTool;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import de.teamdna.mf.MineFracturing;
+import de.teamdna.mf.util.Util;
 
-public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IExtractor, IFluidHandler{
+public class TileEntityChemicalsMixer extends TileEntityFluidCore implements ISidedInventory {
 	
-	private int workProgress = 0;
-	private int maxWorkProgress = 200;
-	private int burnTime = 0;
-	private int maxBurnTime = 1;
+	public static int maxIdle = 200;
+	public int idle = 0;
+	public int burnTime = 0;
+	public int maxBurnTime = 1;
 	
 	public TileEntityChemicalsMixer() {
 		super(6);
 		this.inventory = new ItemStack[4];
 	}
 	
-	//Updates the entity
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		tag.setInteger("burnTime", this.burnTime);
+		tag.setInteger("maxBurnTime", this.maxBurnTime);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		this.burnTime = tag.getInteger("burnTime");
+		this.maxBurnTime = tag.getInteger("maxBurnTime");
+	}
+	
 	@Override
 	public void updateEntity() {
-		if (this.burnTime == 0) {
-			if (isItemFuel(inventory[3]) && canWork()) {
-				this.burnTime = getItemBurnTime(inventory[3]);
-				this.maxBurnTime = this.burnTime;
-				this.decrStackSize(3);
+		if(this.worldObj.isRemote) return;
+		
+		if(this.inventory[3] != null && this.burnTime == 0 && Util.getFuelValue(this.inventory[3]) > 0) {
+			this.burnTime = this.maxBurnTime = Util.getFuelValue(this.inventory[3]);
+			Item container = this.inventory[3].getItem().getContainerItem();
+			if(--this.inventory[3].stackSize == 0) this.inventory[3] = null;
+			if(this.inventory[3] == null && container != null) this.inventory[3] = new ItemStack(container);
+		}
+		
+		if(this.burnTime > 0 && this.inventory[0] != null && this.inventory[1] != null && this.inventory[2] != null && this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
+			boolean flag1 = this.inventory[0].getItem() == Items.blaze_powder || this.inventory[1].getItem() == Items.blaze_powder || this.inventory[2].getItem() == Items.blaze_powder;
+			boolean flag2 = this.inventory[0].getItem() == Items.redstone || this.inventory[1].getItem() == Items.redstone || this.inventory[2].getItem() == Items.redstone;
+			boolean flag3 = this.inventory[0].getItem() == Items.slime_ball || this.inventory[1].getItem() == Items.slime_ball || this.inventory[2].getItem() == Items.slime_ball;
+			
+			if(flag1 && flag2 && flag3) {
+				if(++this.idle >= maxIdle) {
+					this.burnTime -= maxIdle;
+					if(--this.inventory[0].stackSize == 0) this.inventory[0] = null;
+					if(--this.inventory[1].stackSize == 0) this.inventory[1] = null;
+					if(--this.inventory[2].stackSize == 0) this.inventory[2] = null;
+					
+					this.fill(ForgeDirection.UNKNOWN, new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), true);
+					this.idle = 0;
+				}
 			}
 		}
-		else this.burnTime--;
-		if (this.burnTime > 0 && canWork()) {
-			if(this.workProgress < maxWorkProgress) this.workProgress++;
-			else {
-				this.doWork();
-				this.workProgress = 0;
-			}
-		}
-	}
-	//
-	//Returns if the mixer is working
-	private boolean isWorking() {
-		return this.workProgress > 0;
-	}
-	
-	//For GUI
-	public int getWorkProgressScaled(int pixels) {
-		return this.workProgress * pixels / this.maxWorkProgress;
-	}
-	
-	public int getBurnTimeScaled(int pixels) {
-		return this.burnTime * pixels / this.maxBurnTime;
-	}
-	
-	//Returns the burn time of an item
-	private int getItemBurnTime(ItemStack itemstack) {
-		return Util.getFuelValue(itemstack);
-	}
-	
-	//Returns if the item is a fuel
-	public boolean isItemFuel(ItemStack itemstack) {
-		return getItemBurnTime(itemstack) > 0;
-	}
-	
-	//checks if the machine could work
-	private boolean canWork()
-	{
-		if (this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
-			if(isRecipe(inventory)) return true;
-		}
-		return false;
-	}
-	
-	//Lets the machine finish it´s work (Adds liquid, etc.)
-	private void doWork() {
-		if (canWork()) {
-			tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 500), !this.worldObj.isRemote);
-			decrStackSize(0);
-			decrStackSize(1);
-			decrStackSize(2);
-		}
-	}
-	
-	//Decreases the stack size of the given index by one
-	private void decrStackSize(int stackID) {
-		if (inventory[stackID] != null) {
-			ItemStack itemstack = inventory[stackID];
-			itemstack.stackSize--;
-			if (itemstack.stackSize == 0) itemstack = null;
-			
-			inventory[stackID] = itemstack;
-		}
-	}
-	
-	//Vailed recipe?
-	private boolean isRecipe(ItemStack[] itemstacks)
-	{
-		if (itemstacks[0] != null && itemstacks[1] != null && itemstacks[2] != null) {
-			boolean blazeRodFound = false;
-			boolean slimeFound = false;
-			boolean redstoneFound = false;
-			
-			if(itemstacks[0].getItem() == Items.slime_ball || itemstacks[1].getItem() == Items.slime_ball || itemstacks[2].getItem() == Items.slime_ball) slimeFound = true;
-			if(itemstacks[0].getItem() == Items.blaze_powder || itemstacks[1].getItem() == Items.blaze_powder || itemstacks[2].getItem() == Items.blaze_powder) blazeRodFound = true;
-			if(itemstacks[0].getItem() == Items.redstone || itemstacks[1].getItem() == Items.redstone || itemstacks[2].getItem() == Items.redstone) redstoneFound = true;
-			
-			if(redstoneFound && blazeRodFound && slimeFound) return true;
-		}
-		return false;
 	}
 
 	@Override
@@ -143,5 +85,20 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		return true;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1) {
+		return new int[] { 0, 1, 2, 3 };
+	}
+
+	@Override
+	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
+		return true;
+	}
+
+	@Override
+	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
+		return false;
 	}
 }
