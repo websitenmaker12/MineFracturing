@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -113,22 +112,29 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		else if (tile instanceof TileEntityBore) {
 			renderTileBore(x, y, z, (TileEntityBore)tile);
 		}
-		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
+		else if (tile instanceof TileEntityExtractor) renderTileExtractor(x, y, z);
 		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
 		else if (tile instanceof TileEntityChemicalsMixer) renderTileMixer(x, y, z);
-		else if (tile instanceof TileEntityCondenseChamber) renderTileCondenser(x, y, z, tile.getWorldObj());
+		else if (tile instanceof TileEntityCondenseChamber) renderTileCondenser(x, y, z, (TileEntityCondenseChamber)tile);
 		
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
-	private void renderTileCondenser(double x, double y, double z, World world) {
+	private void renderTileCondenser(double x, double y, double z, TileEntityCondenseChamber tile) {
 		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.6, y + 0.5, z + 0.5);
-		if (world != null) {
-			GL11.glRotated(world.getBlockMetadata((int)x, (int)y, (int)z)*90, 0, 1, 0);
-	        System.out.println(world.getBlockMetadata((int)x, (int)y, (int)z));
-		}
+		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+		int l = tile.getBlockMetadata();
+		GL11.glRotated(l == 3 ? -90F : l == 4 ? 180F : l == 2 ? 90F : 0F, 0, 1, 0);
+		GL11.glTranslatef(0.1F, 0, 0);
+		
+//		Fluid fluid = FluidRegistry.getFluid(MineFracturing.INSTANCE.liquidOre.getID());
+// 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+// 		RenderUtil.setIntColor3(fluid.getColor());
+// 		IIcon icon = fluid.getFlowingIcon() != null ? fluid.getFlowingIcon() : fluid.getBlock().getIcon(0, 0);
+ 		
+		// TODO: Render 3D fluid
+		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_condenserLoc);
 		model_condenser.renderAll();
 		GL11.glPopMatrix();
@@ -230,7 +236,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 	
-	private void renderTileEx(double x, double y, double z) {
+	private void renderTileExtractor(double x, double y, double z) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);
