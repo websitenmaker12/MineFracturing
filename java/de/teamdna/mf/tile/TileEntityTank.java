@@ -6,12 +6,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import de.teamdna.mf.Reference;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.util.PipeUtil;
 import de.teamdna.mf.util.Util;
@@ -151,7 +149,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-		if(resource == null || !resource.isFluidEqual(this.tank.getFluid())) return null;
+		if(resource == null || !resource.isFluidEqual(this.controllerTile.tank.getFluid())) return null;
 		return this.controllerTile.tank.drain(resource.amount, doDrain);
 	}
 
@@ -172,7 +170,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		return new FluidTankInfo[] { this.tank.getInfo() };
+		return new FluidTankInfo[] { this.controllerTile.tank.getInfo() };
 	}
 	
 }

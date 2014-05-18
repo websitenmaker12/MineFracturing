@@ -1,16 +1,24 @@
 package de.teamdna.mf.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import de.teamdna.mf.gui.slot.FuelSlot;
 import de.teamdna.mf.tile.TileEntityBore;
 
 public class ContainerBore extends Container {
 
 	private TileEntityBore tile;
+	
+	public int prog1 = 0;
+	public int prog2 = 0;
+	public int fluidAmount = 0;
 	
 	public ContainerBore(EntityPlayer player, World world, int x, int y, int z) {
 		this.tile = (TileEntityBore)world.getTileEntity(x, y, z);
@@ -31,6 +39,31 @@ public class ContainerBore extends Container {
 	public boolean canInteractWith(EntityPlayer var1) {
 		return true;
 	}
+	
+	@Override
+	public void addCraftingToCrafters(ICrafting par1ICrafting) {
+        super.addCraftingToCrafters(par1ICrafting);
+        FluidStack fluid = this.tile.tank.getFluid();
+        par1ICrafting.sendProgressBarUpdate(this, 0, fluid == null ? -1 : fluid.fluidID);
+    }
+
+	@Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
+        for(int i = 0; i < this.crafters.size(); i++) {
+            ICrafting icrafting = (ICrafting)this.crafters.get(i);
+            FluidStack fluid = this.tile.tank.getFluid();
+            icrafting.sendProgressBarUpdate(this, 0, fluid == null ? -1 : fluid.fluidID);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int par1, int par2) {
+    	switch(par1) {
+    		default: super.updateProgressBar(par1, par2); break;
+    	}
+    }
 	
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {

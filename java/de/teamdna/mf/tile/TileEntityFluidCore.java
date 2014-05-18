@@ -8,63 +8,77 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import de.teamdna.mf.util.PipeUtil;
 
-public class TileEntityFluidCore extends TileEntityCore implements IExtractor, IImporter, IFluidHandler{
+public abstract class TileEntityFluidCore extends TileEntityCore implements IExtractor, IImporter, IFluidHandler {
 
-	public final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 4);
+	public final FluidTank tank;
+	
+	public TileEntityFluidCore(int buckets) {
+		this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * buckets);
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		this.tank.writeToNBT(tag);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		this.tank.readFromNBT(tag);
+	}
 	
 	@Override
 	public boolean canConnect(ForgeDirection direction) {
 		return true;
 	}
+	
+	/* IImporter */
+	@Override
+	public abstract boolean canImport(ForgeDirection direction, NBTTagCompound packet);
 
 	@Override
+	public void doImport(ForgeDirection direction, NBTTagCompound packet) {
+		PipeUtil.importToTank(packet, this.tank);
+	}
+
+	/* IExtractor */
+	@Override
+	public abstract boolean canExtract(ForgeDirection direction);
+
+	@Override
+	public NBTTagCompound extract(ForgeDirection direction) {
+		return PipeUtil.extractFromTank(this.tank);
+	}
+
+	/* IFluidHandler */
+	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		return 0;
+		return this.tank.fill(resource, doFill);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-		return null;
+		if(resource == null || !resource.isFluidEqual(this.tank.getFluid())) return null;
+		return this.tank.drain(resource.amount, doDrain);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-		return null;
+		return this.tank.drain(maxDrain, doDrain);
 	}
 
 	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return false;
-	}
+	public abstract boolean canFill(ForgeDirection from, Fluid fluid);
 
 	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return false;
-	}
+	public abstract boolean canDrain(ForgeDirection from, Fluid fluid);
 
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		return null;
+		return new FluidTankInfo[] { this.tank.getInfo() };
 	}
 
-	@Override
-	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
-		return false;
-	}
-
-	@Override
-	public void doImport(ForgeDirection direction, NBTTagCompound packet) {
-		
-	}
-
-	@Override
-	public boolean canExtract(ForgeDirection direction) {
-		return false;
-	}
-
-	@Override
-	public NBTTagCompound extract(ForgeDirection direction) {
-		return null;
-	}
 }
