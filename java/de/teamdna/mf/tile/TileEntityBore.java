@@ -10,17 +10,16 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fluids.FluidStack;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
+import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.IBoreBlock;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
-import de.teamdna.mf.util.WorldUtil;
 
 public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 
@@ -106,7 +105,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 		this.totalChunks = tag.getInteger("totalChunks");
 		
 		String currChunk = tag.getString("currentChunk");
-		if(currChunk.equals("null")) this.currentChunkForLoad = null;
+		if(currChunk.equals("null") || currChunk.equals("")) this.currentChunkForLoad = null;
 		else {
 			String[] parts = currChunk.split("/");
 			this.currentChunkForLoad = new ChunkCoordIntPair(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
@@ -115,18 +114,6 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 		this.scanY = tag.getInteger("scanY");
 		this.lastInfestRadius = tag.getInteger("lastInfestRadius");
 		this.placedBedrocks = tag.getBoolean("placedBedrocks");
-	}
-	
-	@Override
-	public void onDataPacket(NetworkManager mgr, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
-	}
-	
-	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		this.writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, tag);
 	}
 	
 	@Override
@@ -199,6 +186,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 				else {
 					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
 					this.oreBlocks.remove(0);
+					this.getFirstExtractor().addFluid(new FluidStack(MineFracturing.INSTANCE.oil, 100));
 					if(!this.worldObj.isRemote) {
 						Block replace = CoreRegistry.getContainer(block.getBlock());
 						if(replace != null) this.worldObj.setBlock(block.x, block.y, block.z, replace);
@@ -216,7 +204,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 							for(int j = -r; j <= r; j++) {
 								int distance = i * i + j * j;
 								if(distance <= rSq) {
-									WorldUtil.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
+									Util.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
 								}
 							}
 						}
@@ -266,12 +254,22 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	
 	public boolean isMultiblockComplete() {
 		int i;
+		int extractors = 0;
 		for(i = 1; i <= this.structureHeight; i++) {
 			int y = this.yCoord - i;
 			if(y <= 0) break;
 			if(!(this.worldObj.getBlock(this.xCoord, y, this.zCoord) instanceof IBoreBlock)) break;
+			if(this.worldObj.getBlock(this.xCoord, y, this.zCoord) instanceof BlockMaterialExtractor) extractors++;
 		}
-		return i == structureHeight;
+		return i == structureHeight && extractors > 0;
+	}
+	
+	public TileEntityExtractor getFirstExtractor() {
+		for(int y = this.yCoord - this.structureHeight - 1; y < this.yCoord; y++) {
+			TileEntity tile = this.worldObj.getTileEntity(this.xCoord, y, this.zCoord);
+			if(tile != null && tile instanceof TileEntityExtractor) return (TileEntityExtractor)tile;
+		}
+		return null;
 	}
 	
 	public int getScaledAnalysingProgress(int pixels) {

@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.block.BlockTank;
+import de.teamdna.mf.util.PipeUtil;
 import de.teamdna.mf.util.Util;
 
 public class TileEntityTank extends TileEntityCore implements IExtractor, IImporter, IFluidHandler {
@@ -101,16 +102,12 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	/* IImporter */
 	@Override
 	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
-		return direction != ForgeDirection.DOWN
-				&& packet.getInteger("id") == Reference.PipePacketIDs.fluid
-				&& (this.controllerTile.tank.getFluid() == null || this.controllerTile.tank.getFluid().fluidID == packet.getInteger("fluidID"))
-				&& this.controllerTile.tank.getFluidAmount() < this.tank.getInfo().capacity;
+		return direction != ForgeDirection.DOWN && PipeUtil.canImportToTank(packet, this.controllerTile.tank);
 	}
 
 	@Override
 	public void doImport(ForgeDirection direction, NBTTagCompound packet) {
-		if(packet.getCompoundTag("stackTag") != null) this.controllerTile.tank.fill(FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")), true);
-		else this.controllerTile.tank.fill(new FluidStack(FluidRegistry.getFluid(packet.getInteger("fluidID")), packet.getInteger("amount")), true);
+		PipeUtil.importToTank(packet, this.controllerTile.tank);
 	}
 
 	/* IExtractor */
@@ -121,17 +118,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 
 	@Override
 	public NBTTagCompound extract(ForgeDirection direction) {
-		FluidStack stack = this.controllerTile.tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
-		if(stack != null && stack.amount > 0) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setInteger("id", Reference.PipePacketIDs.fluid);
-			tag.setLong("timestamp", System.currentTimeMillis());
-			tag.setInteger("amount", stack.amount);
-			tag.setInteger("fluidID", stack.fluidID);
-			tag.setTag("stackTag", stack.tag);
-			return tag;
-		}
-		return null;
+		return PipeUtil.extractFromTank(this.controllerTile.tank);
 	}
 	
 	public boolean isStructureComplete() {
