@@ -9,20 +9,23 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 
 public class CoreRegistry {
 
 	private static List<Integer> oreBlocks = new ArrayList<Integer>();
 	private static Map<Integer, Integer> containerBlocks = new HashMap<Integer, Integer>();
+	private static Map<Integer, Integer> condensedItems = new HashMap<Integer, Integer>();
 	
 	/**
 	 * Registers a Block as an Ore
 	 */
-	public static void registerOre(Block ore) {
+	public static void registerOre(Block ore, Item condensedItem) {
 		int id = Block.getIdFromBlock(ore);
 		if(!oreBlocks.contains(id)) {
 			oreBlocks.add(id);
 			registerContainerBlock(ore, Blocks.stone);
+			condensedItems.put(id, Item.getIdFromItem(condensedItem));
 		}
 	}
 	
@@ -34,7 +37,7 @@ public class CoreRegistry {
 		while(iterator.hasNext()) {
 			Object block = iterator.next();
 			if(block != null && block instanceof BlockOre) {
-				registerOre((BlockOre)block);
+				registerOre((BlockOre)block, null); // TODO: implement items
 			}
 		}
 	}
@@ -62,6 +65,13 @@ public class CoreRegistry {
 	public static Block getContainer(Block ore) {
 		if(!containerBlocks.containsKey(Block.getIdFromBlock(ore))) return null;
 		return Block.getBlockById(containerBlocks.get(Block.getIdFromBlock(ore)));
+	}
+	
+	/**
+	 * Returns the Item for the given Ore
+	 */
+	public static Item getCondensedItem(Block ore) {
+		return Item.getItemById(condensedItems.get(Block.getIdFromBlock(ore)));
 	}
 	
 }

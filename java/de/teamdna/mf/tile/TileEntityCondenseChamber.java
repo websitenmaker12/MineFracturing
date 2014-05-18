@@ -1,5 +1,6 @@
 package de.teamdna.mf.tile;
 
+import net.minecraft.block.Block;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,11 +9,16 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.Reference;
+import de.teamdna.mf.api.CoreRegistry;
 
 public class TileEntityCondenseChamber extends TileEntityFluidCore implements ISidedInventory {
 
+	public static final int maxIdle = 200;
+	
 	private int currentBlockID = -1;
 	public int currentBlockAmount = 0;
+	
+	public int idle = 0;
 	
 	public TileEntityCondenseChamber() {
 		super(80);
@@ -22,6 +28,19 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+		
+		if(!this.worldObj.isRemote) {
+			if(this.currentBlockID != -1 && this.currentBlockAmount > 0) {
+				if(++this.idle >= maxIdle) {
+					this.currentBlockAmount--;
+					int amount = this.worldObj.rand.nextInt(7) + 4;
+					ItemStack stack = new ItemStack(CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)), amount);
+				}
+			} else {
+				this.currentBlockID = -1;
+				this.currentBlockAmount = 0;
+			}
+		}
 	}
 	
 	@Override

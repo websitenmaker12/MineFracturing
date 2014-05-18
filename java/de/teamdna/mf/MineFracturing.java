@@ -90,6 +90,7 @@ public class MineFracturing {
 	public Fluid liquidOre;
 	
 	// TODO: Resistance, Hardness to blocks; Crafting receipes
+	// TODO: Configs for: Bore radius, Infestion multiplier, Ore multiplication range
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
