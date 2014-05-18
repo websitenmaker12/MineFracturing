@@ -56,7 +56,7 @@ import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.mf.util.Util;
 
-@Mod(modid = Reference.modid, name = Reference.name, version = Reference.version)
+@Mod(modid = Reference.modid, name = Reference.name, version = Reference.version, dependencies = "required-after:Forge@[10.12.1.1060,)")
 public class MineFracturing {
 
 	public static Logger logger;
@@ -65,7 +65,7 @@ public class MineFracturing {
 	@Instance(Reference.modid)
 	public static MineFracturing INSTANCE;
 	
-	@SidedProxy(clientSide = Reference.clientProxy, serverSide = Reference.commonProxy)
+	@SidedProxy(clientSide = "de.teamdna.mf.net.ClientProxy", serverSide = "de.teamdna.mf.net.CommonProxy")
 	public static CommonProxy proxy;
 	
 	public CreativeTabs tab = new CreativeTabs(CreativeTabs.getNextID(), Reference.modid) {
