@@ -28,3 +28,5 @@ fluid.oil=Oil
 fluid.oil.name=Oil
 fluid.fracfluid=Frac Fluid
 fluid.fracfluid.name=Frac Fluid
+
+damage.fracFluid=was fracced by Frac Fluid

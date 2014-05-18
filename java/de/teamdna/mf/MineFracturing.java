@@ -40,6 +40,7 @@ import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.event.BucketHandler;
+import de.teamdna.mf.event.EntityHandler;
 import de.teamdna.mf.event.FuelHandler;
 import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.net.CommonProxy;
@@ -223,6 +224,7 @@ public class MineFracturing {
 		// Registrations
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(new EntityHandler());
 		GameRegistry.registerFuelHandler(new FuelHandler());
 		
 		// Crafting

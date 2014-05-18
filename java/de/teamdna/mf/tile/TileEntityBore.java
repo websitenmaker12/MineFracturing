@@ -28,9 +28,6 @@ import de.teamdna.mf.util.WorldBlock;
 
 public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
 
-	// TODO: Maybe loads chunks: http://greyminecraftcoder.blogspot.de/2013/10/server-packets-changes-to-world-blocks.html
-	// TODO: Infection should cause problems
-	
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
 	
@@ -224,6 +221,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 				
 				// Infesting
 				int m = MineFracturing.infestionMultiplier;
+				System.out.println(MineFracturing.infestionMultiplier);
 				int r = (this.radius * m - (int)((double)this.oreBlocks.size() / (double)this.totalOres * ((double)this.radius) * m));
 				int rSq = r * r;
 				

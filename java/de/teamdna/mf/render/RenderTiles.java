@@ -133,8 +133,6 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 // 		RenderUtil.setIntColor3(fluid.getColor());
 // 		IIcon icon = fluid.getFlowingIcon() != null ? fluid.getFlowingIcon() : fluid.getBlock().getIcon(0, 0);
  		
-		// TODO: Render 3D fluid
-		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_condenserLoc);
 		model_condenser.renderAll();
 		GL11.glPopMatrix();
