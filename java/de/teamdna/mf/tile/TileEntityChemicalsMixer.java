@@ -13,6 +13,7 @@ import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -34,10 +35,10 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	
 	@Override
 	public void updateEntity() {
-		if (this.burnTime == 0) {
+		if (this.burnTime == 0 && canWork()) {
 			if (isItemFuel(inventory[3])) {
 				this.burnTime = getItemBurnTime(inventory[3]);
-				this.decrStackSize(inventory[3]);
+				this.decrStackSize(3);
 			}
 		}
 		else this.burnTime--;
@@ -48,7 +49,10 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 				this.workProgress = 0;
 			}
 		}
-		decrStackSize(inventory[0]);
+	}
+	
+	private boolean isWorking() {
+		return this.workProgress > 0;
 	}
 	
 	public int getWorkProgressScaled(int pixels) {
@@ -65,9 +69,10 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	
 	private boolean canWork()
 	{
-		System.out.println("amount: "+tank.getFluidAmount() + " & capacity: "+tank.getCapacity() + " amount + 1000: " + (tank.getFluidAmount() + 1000));
+//		System.out.println("amount: "+tank.getFluidAmount() + " & capacity: "+tank.getCapacity() + " amount + 1000: " + (tank.getFluidAmount() + 1000));
 		if (this.burnTime > 0 && this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
 			if(isRecipe(inventory)) return true;
+			System.out.println("hi");
 		}
 		return false;
 	}
@@ -75,15 +80,20 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	private void doWork() {
 		if (canWork()) {
 			tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), !this.worldObj.isRemote);
-			decrStackSize(inventory[0]);
-			decrStackSize(inventory[1]);
-			decrStackSize(inventory[2]);
+			decrStackSize(0);
+			decrStackSize(1);
+			decrStackSize(2);
 		}
 	}
 	
-	private void decrStackSize(ItemStack stack) {
-		if(stack.stackSize == 1) stack = null;
-		else stack.stackSize--;
+	private void decrStackSize(int stackID) {
+		if (inventory[stackID] != null) {
+			ItemStack itemstack = inventory[stackID].copy();
+			itemstack.stackSize--;
+			if (itemstack.stackSize == 0) itemstack = null;
+			
+			inventory[stackID] = itemstack;
+		}
 	}
 	
 	private boolean isRecipe(ItemStack[] itemstacks)
