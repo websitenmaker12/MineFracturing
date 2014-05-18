@@ -26,6 +26,7 @@ import de.teamdna.mf.util.WorldBlock;
 
 public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
 
+	// TODO: Maybe loads chunks: http://greyminecraftcoder.blogspot.de/2013/10/server-packets-changes-to-world-blocks.html
 	// TODO: Should requiere fuel and fracfluid to work
 	// TODO: Infection should cause problems
 	
@@ -140,7 +141,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(12);
+				this.addChunksToQueue(MineFracturing.boreRadius);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -207,7 +208,8 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 				}
 				
 				// Infesting
-				int r = (this.radius * 2 - (int)((double)this.oreBlocks.size() / (double)this.totalOres * ((double)this.radius) * 2));
+				int m = MineFracturing.infestionMultiplier;
+				int r = (this.radius * m - (int)((double)this.oreBlocks.size() / (double)this.totalOres * ((double)this.radius) * m));
 				int rSq = r * r;
 				
 				if(r != this.lastInfestRadius) {
@@ -232,7 +234,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 								int x2 = (containerChunk.xPosition + x) * 16;
 								int z2 = (containerChunk.zPosition + z) * 16;
 								
-								if(!this.placedBedrocks) this.worldObj.setBlock(x2, 255, z2, MineFracturing.INSTANCE.ghostLoader);
+								if(!this.placedBedrocks) this.worldObj.setBlock(x2, 255, z2, Blocks.glass);
 								else this.worldObj.setBlockToAir(x2, 255, z2);
 							}
 						}

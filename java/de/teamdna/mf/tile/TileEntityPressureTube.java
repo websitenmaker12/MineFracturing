@@ -135,8 +135,8 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 	}
 	
 	public boolean canReceivePackets() {
-//		return this.packets.size() < maxPacketStorage;
-		return true;
+		return this.packets.size() < maxPacketStorage;
+//		return true;
 	}
 	
 	public void receivePacket(NBTTagCompound packet, ForgeDirection direction) {

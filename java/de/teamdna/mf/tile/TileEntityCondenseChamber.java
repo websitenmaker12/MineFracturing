@@ -38,7 +38,7 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 					if(++this.idle >= maxIdle) {
 						this.currentBlockAmount--;
 						ItemStack stack = CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)).copy();
-						stack.stackSize = this.worldObj.rand.nextInt(7) + 4;
+						stack.stackSize = this.worldObj.rand.nextInt(MineFracturing.oreMultiplierMax) + MineFracturing.oreMultiplierMin;
 						this.mergeStackToOutput(stack);
 						this.tank.drain(1000, true);
 						this.idle = 0;

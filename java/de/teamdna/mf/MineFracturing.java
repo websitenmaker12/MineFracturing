@@ -9,6 +9,8 @@ import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -32,7 +34,6 @@ import de.teamdna.mf.block.BlockCondenseChamber;
 import de.teamdna.mf.block.BlockCrafting;
 import de.teamdna.mf.block.BlockFluid;
 import de.teamdna.mf.block.BlockGenerator;
-import de.teamdna.mf.block.BlockGhostLoader;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.block.BlockTank;
@@ -79,7 +80,6 @@ public class MineFracturing {
 	public Block oilBlock;
 	public Block fracFluidBlock;
 	public Block chemicalsMixer;
-	public Block ghostLoader;
 	public Block condenseChamber;
 	public Block liquidOreBlock;
 	public Block basicMachine;
@@ -98,13 +98,39 @@ public class MineFracturing {
 	public Fluid fracFluid;
 	public Fluid liquidOre;
 	
+	public static int boreRadius;
+	public static int infestionMultiplier;
+	public static int oreMultiplierMin;
+	public static int oreMultiplierMax;
+	
 	// TODO: Resistance, Hardness to blocks; Crafting receipes
-	// TODO: Configs for: Bore radius, Infestion multiplier, Ore multiplication range
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Reference.setupMetadata(event.getModMetadata());
 		logger = event.getModLog();
+		
+		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config.load();
+		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "NOTICE: This values should be the same on client and server. Otherwise it'll crash or look really ugly.");
+		
+		Property p1 = config.get(Configuration.CATEGORY_GENERAL, "INT.BoreRadius", 64);
+		p1.comment = "This is the radius (in blocks) that the Bore will analyse (Standart: 64)";
+		boreRadius = p1.getInt(64);
+		
+		Property p2 = config.get(Configuration.CATEGORY_GENERAL, "INT.InfestionMultiplier", 4);
+		p2.comment = "The multiplier calculates the infection radius. INT.BoreRadius * INT.InfestionMultiplier (Standart: 4)";
+		infestionMultiplier = p2.getInt(4);
+		
+		Property p3 = config.get(Configuration.CATEGORY_GENERAL, "INT.OreMultiplierMin", 4);
+		p3.comment = "The minimum multiplier of the ores (Standart: 4)";
+		oreMultiplierMin = p3.getInt(4);
+		
+		Property p4 = config.get(Configuration.CATEGORY_GENERAL, "INT.OreMultiplierMax", 7);
+		p4.comment = "The maximum multiplier of the ores (Standart: 7)";
+		oreMultiplierMax = p4.getInt(7);
+		
+		config.save();
 		
 		// Blocks
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
@@ -114,11 +140,9 @@ public class MineFracturing {
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
 		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":chemicalsMixer");
-		this.ghostLoader = (new BlockGhostLoader()).setBlockName("ghostLoader");
 		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
 		this.basicMachine = (new BlockCrafting()).setBlockName("basicMachine").setResistance(10F).setBlockTextureName(Reference.modid + ":basicMachine").setCreativeTab(tab);
 		this.combustionGen = (new BlockGenerator()).setBlockName("combusioneGen");
-		
 		
 		// Items
 		this.coalDust = (new Item()).setUnlocalizedName("coalDust").setTextureName(Reference.modid + ":coalDust").setCreativeTab(this.tab);
@@ -162,7 +186,6 @@ public class MineFracturing {
 		proxy.registerBlock(this.oilBlock);
 		proxy.registerBlock(this.fracFluidBlock);
 		proxy.registerBlock(this.chemicalsMixer);
-		proxy.registerBlock(this.ghostLoader);
 		proxy.registerBlock(this.condenseChamber);
 		proxy.registerBlock(this.liquidOreBlock);
 		proxy.registerBlock(this.combustionGen);
