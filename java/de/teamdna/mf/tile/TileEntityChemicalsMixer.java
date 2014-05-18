@@ -53,7 +53,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 			}
 		}
 	}
-	
+	//
 	//Returns if the mixer is working
 	private boolean isWorking() {
 		return this.workProgress > 0;
@@ -90,9 +90,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	//Lets the machine finish it´s work (Adds liquid, etc.)
 	private void doWork() {
 		if (canWork()) {
-			if(!this.worldObj.isRemote) tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), true);
-			System.out.println("hi!!!");
-			System.out.println(tank.getFluidAmount());
+			tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 500), !this.worldObj.isRemote);
 			decrStackSize(0);
 			decrStackSize(1);
 			decrStackSize(2);
@@ -101,11 +99,12 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	
 	//Decreases the stack size of the given index by one
 	private void decrStackSize(int stackID) {
-		if(inventory[stackID] != null) {
+		if (inventory[stackID] != null) {
 			ItemStack itemstack = inventory[stackID];
-			Item container = inventory[stackID].getItem().getContainerItem();
-			if(--itemstack.stackSize == 0) itemstack = null;
-			inventory[stackID] = itemstack == null ? container != null ? new ItemStack(container) : null : null;
+			itemstack.stackSize--;
+			if (itemstack.stackSize == 0) itemstack = null;
+			
+			inventory[stackID] = itemstack;
 		}
 	}
 	
