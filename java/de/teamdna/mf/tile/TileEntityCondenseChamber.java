@@ -14,13 +14,30 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 	private int currentBlockID = -1;
 	public int currentBlockAmount = 0;
 	
-	// TODO: save stuff
-	
 	public TileEntityCondenseChamber() {
 		super(80);
 		this.inventory = new ItemStack[9];
 	}
 
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		tag.setInteger("blockID", this.currentBlockID);
+		tag.setInteger("amount", this.currentBlockAmount);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		this.currentBlockID = tag.getInteger("blockID");
+		this.currentBlockAmount = tag.getInteger("amount");
+	}
+	
 	@Override
 	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
 		return packet.getInteger("id") == Reference.PipePacketIDs.block

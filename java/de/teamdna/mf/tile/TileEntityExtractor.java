@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import de.teamdna.mf.Reference;
@@ -13,8 +14,6 @@ public class TileEntityExtractor extends TileEntityCore implements IExtractor {
 
 	private List<FluidStack> fluidsToSend = new ArrayList<FluidStack>();
 	private List<Block> blocksToSend = new ArrayList<Block>();
-	
-	// TODO: Save stacks
 	
 	@Override
 	public boolean canExtract(ForgeDirection direction) {
@@ -60,6 +59,40 @@ public class TileEntityExtractor extends TileEntityCore implements IExtractor {
 
 	public void addOre(Block block) {
 		this.blocksToSend.add(block);
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		
+		NBTTagList fluids = new NBTTagList();
+		for(FluidStack fluid : this.fluidsToSend) {
+			NBTTagCompound fluidTag = new NBTTagCompound();
+			fluid.writeToNBT(fluidTag);
+			fluids.appendTag(fluidTag);
+		}
+		tag.setTag("fluids", fluids);
+		
+		NBTTagList blocks = new NBTTagList();
+		for(Block block : this.blocksToSend) {
+			NBTTagCompound blockTag = new NBTTagCompound();
+			blockTag.setInteger("blockID", Block.getIdFromBlock(block));
+			blocks.appendTag(blockTag);
+		}
+		tag.setTag("blocks", blocks);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		
+		this.fluidsToSend.clear();
+		NBTTagList fluids = tag.getTagList("fluids", 10);
+		for(int i = 0; i < fluids.tagCount(); i++) this.fluidsToSend.add(FluidStack.loadFluidStackFromNBT(fluids.getCompoundTagAt(i)));
+		
+		this.blocksToSend.clear();
+		NBTTagList blocks = tag.getTagList("blocks", 10);
+		for(int i = 0; i < blocks.tagCount(); i++) this.blocksToSend.add(Block.getBlockById(blocks.getCompoundTagAt(i).getInteger("blockID")));
 	}
 	
 }
