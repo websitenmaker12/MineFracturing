@@ -1,17 +1,18 @@
 package de.teamdna.mf.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamdna.mf.gui.slot.OutputSlot;
-import de.teamdna.mf.tile.TileEntityChemicalsMixer;
-import de.teamdna.mf.tile.TileEntityTank;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamdna.mf.tile.TileEntityChemicalsMixer;
+import de.teamdna.mf.util.Util;
 
 public class ContainerChemicalsMixer extends Container {
 
@@ -74,17 +75,21 @@ public class ContainerChemicalsMixer extends Container {
     }
     
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
-    	ItemStack itemstack = null;
+		ItemStack itemstack = null;
         Slot slot = (Slot)this.inventorySlots.get(slotID);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if(slotID == 0) {
-                if(!this.mergeItemStack(itemstack1, 1, 37, true)) return null;
+            if(slotID < 4) {
+                if(!this.mergeItemStack(itemstack1, 4, 40, true)) return null;
             } else {
-                this.mergeItemStack(itemstack1, 3, 4, false);
+            	int id = Item.getIdFromItem(itemstack1.getItem());
+            	
+            	if(Util.getFuelValue(itemstack1) > 0) this.mergeItemStack(itemstack1, 3, 4, false);
+            	else if(id == Item.getIdFromItem(Items.blaze_powder) || id == Item.getIdFromItem(Items.redstone) || id == Item.getIdFromItem(Items.slime_ball))
+            		this.mergeItemStack(itemstack1, 0, 3, false);
             }
 
             if(itemstack1.stackSize == 0) slot.putStack((ItemStack)null);

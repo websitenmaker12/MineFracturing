@@ -52,7 +52,6 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 				this.workProgress = 0;
 			}
 		}
-		System.out.println(maxBurnTime);
 	}
 	
 	//Returns if the mixer is working
