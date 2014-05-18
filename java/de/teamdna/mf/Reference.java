@@ -23,6 +23,7 @@ public class Reference {
 	public static class PipePacketIDs {
 		
 		public static final int fluid = 1;
+		public static final int block = 2;
 		
 	}
 	

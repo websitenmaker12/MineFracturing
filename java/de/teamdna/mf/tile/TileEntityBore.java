@@ -190,7 +190,10 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 				else {
 					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
 					this.oreBlocks.remove(0);
-					this.getFirstExtractor().addFluid(new FluidStack(MineFracturing.INSTANCE.oil, 100));
+					TileEntityExtractor extractor = this.getFirstExtractor();
+					extractor.addFluid(new FluidStack(MineFracturing.INSTANCE.oil, 100));
+					extractor.addOre(block.getBlock());
+					
 					if(!this.worldObj.isRemote) {
 						Block replace = CoreRegistry.getContainer(block.getBlock());
 						if(replace != null) this.worldObj.setBlock(block.x, block.y, block.z, replace);
