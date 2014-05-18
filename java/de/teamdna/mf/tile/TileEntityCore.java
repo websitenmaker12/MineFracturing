@@ -1,5 +1,7 @@
 package de.teamdna.mf.tile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -144,6 +146,12 @@ public class TileEntityCore extends TileEntity implements IInventory {
         }
 
         tag.setTag("Items", nbttaglist);
+    }
+	
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared()
+    {
+        return 65536.0D;
     }
 	
 }
