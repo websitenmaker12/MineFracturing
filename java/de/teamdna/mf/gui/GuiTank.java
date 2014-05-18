@@ -22,8 +22,6 @@ import de.teamdna.mf.util.RenderUtil;
 
 public class GuiTank extends GuiContainer {
 
-	// TODO: Mouse hover effect doesn't get triggered on the whole tank slot
-	
 	private static final ResourceLocation guiBg = new ResourceLocation(Reference.modid, "textures/gui/guiTank.png");
 	
 	private TileEntityTank tile;
@@ -50,14 +48,14 @@ public class GuiTank extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-		 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	     int k = (this.width - this.xSize) / 2;
-	     int l = (this.height - this.ySize) / 2;
-	     drawRect(k + 1, l + 10, k + 150, l + 100, 0xFF8b8b8b);
-	     GL11.glColor4f(1F, 1F, 1F, 1F);
-	     
-	     //Liquid
-		if (this.container.fluidID != -1) {
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	    int k = (this.width - this.xSize) / 2;
+	    int l = (this.height - this.ySize) / 2;
+	    drawRect(k + 1, l + 10, k + 150, l + 100, 0xFF8b8b8b);
+	    GL11.glColor4f(1F, 1F, 1F, 1F);
+	    
+	    //Liquid
+		if(this.container.fluidID != -1) {
 			Fluid fluid = FluidRegistry.getFluid(this.container.fluidID);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 			RenderUtil.setIntColor3(fluid.getColor());
@@ -67,8 +65,8 @@ public class GuiTank extends GuiContainer {
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 		
-	     this.mc.getTextureManager().bindTexture(guiBg);
-	     this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+		this.mc.getTextureManager().bindTexture(guiBg);
+	    this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 	}
 	
 	@Override
@@ -79,7 +77,7 @@ public class GuiTank extends GuiContainer {
 		
 		Fluid fluid = null;
 		boolean flag = this.container.fluidID != -1 && (fluid = FluidRegistry.getFluid(this.container.fluidID)) != null;
-		if(par1 >= k + 12 && par1 <= k + 124 && par2 >= l + 13 && par2 <= l + 65) {
+		if(par1 >= k + 12 && par1 <= k + 136 && par2 >= l + 13 && par2 <= l + 78) {
 			List<String> list = new ArrayList<String>();
 			if(flag) {
 				list.add(StatCollector.translateToLocal(fluid.getUnlocalizedName()));

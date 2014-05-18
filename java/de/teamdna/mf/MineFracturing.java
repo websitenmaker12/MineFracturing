@@ -104,7 +104,7 @@ public class MineFracturing {
 	public static int oreMultiplierMin;
 	public static int oreMultiplierMax;
 	
-	// TODO: Resistance, Hardness to blocks; Crafting receipes
+	// TODO: Crafting recipes
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

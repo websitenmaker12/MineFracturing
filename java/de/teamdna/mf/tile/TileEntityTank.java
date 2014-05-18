@@ -16,8 +16,6 @@ import de.teamdna.mf.util.Util;
 
 public class TileEntityTank extends TileEntityCore implements IExtractor, IImporter, IFluidHandler {
 
-	// TODO: Inventory doesn't get saved....
-	
 	public final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 750);
 	
 	public int type;
@@ -27,12 +25,15 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	
 	public TileEntityTank controllerTile;
 
+	public TileEntityTank() {
+		this.inventory = new ItemStack[2];
+	}
+	
 	@Override
 	public void updateEntity() {
 		if(this.isFirstTick) {
 			this.isFirstTick = false;
 			this.type = ((BlockTank)this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord)).type;
-			this.inventory = new ItemStack[2];
 		}
 		
 		if(this.type == 1) {

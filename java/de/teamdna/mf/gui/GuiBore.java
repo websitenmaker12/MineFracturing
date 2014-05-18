@@ -37,9 +37,9 @@ public class GuiBore extends GuiContainer {
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.bore.analyzingStatus") + " " + (int)((double)this.container.prog1 / 117D * 100D) + "%", 50, 30, 4210752);
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.bore.frackingStatus") + " " + (int)((double)this.container.prog2 / 117D * 100D) + "%", 50, 50, 4210752);
 		
-		//Combustion generator
-	    this.fontRendererObj.drawString("Combustion", 177, 18, 4210752);
-	    this.fontRendererObj.drawString("Generator", 177, 28, 4210752);
+		// Combustion generator
+	    this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.combustion"), 177, 18, 4210752);
+	    this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.generator"), 177, 28, 4210752);
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -35,7 +36,8 @@ public class GuiCondenseChamber extends GuiContainer {
 	    int k = (this.width - this.xSize) / 2;
 	    int l = (this.height - this.ySize) / 2;
 	    
-	    this.fontRendererObj.drawString("", 177, 28, 4210752);
+	    String s = StatCollector.translateToLocal("tile.condenseChamber.name");
+	    this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2 + 5, 6, 4210752);
 	}
 	
 	@Override

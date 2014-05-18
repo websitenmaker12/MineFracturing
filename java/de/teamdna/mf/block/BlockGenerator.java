@@ -13,7 +13,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockGenerator extends Block{
+public class BlockGenerator extends Block {
 
     @SideOnly(Side.CLIENT)
     private IIcon frontIcon;
@@ -22,6 +22,9 @@ public class BlockGenerator extends Block{
     
 	public BlockGenerator() {
 		super(Material.iron);
+		this.setHardness(5.0F);
+		this.setResistance(10.0F);
+		this.setStepSound(soundTypeMetal);
 	}
 	
 	@SideOnly(Side.CLIENT)

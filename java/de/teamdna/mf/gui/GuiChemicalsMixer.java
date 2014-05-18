@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -35,9 +36,11 @@ public class GuiChemicalsMixer extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 	    int k = (this.width - this.xSize) / 2;
 	    int l = (this.height - this.ySize) / 2;
-	    
-	    this.fontRendererObj.drawString("Combustion", 177, 18, 4210752);
-	    this.fontRendererObj.drawString("Generator", 177, 28, 4210752);
+
+	    String s = StatCollector.translateToLocal("tile.chemicalsMixer.name");
+	    this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s), 4, 4210752);
+	    this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.combustion"), 177, 18, 4210752);
+	    this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.generator"), 177, 28, 4210752);
 	}
 	
 	@Override
