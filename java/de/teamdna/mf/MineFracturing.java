@@ -3,6 +3,7 @@ package de.teamdna.mf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
@@ -209,6 +210,9 @@ public class MineFracturing {
 		proxy.registerTile(TileEntityTank.class, "tank");
 		proxy.registerTile(TileEntityChemicalsMixer.class, "chemicalsMixer");
 		proxy.registerTile(TileEntityCondenseChamber.class, "condenseChamber");
+		
+		//////////Crafting///////////////// 	(und so was in der hauptklasse!)
+		GameRegistry.addRecipe(new ItemStack(traverse), "###", "# #", "###", '#', Blocks.iron_bars);
 	}
 	
 	@EventHandler
