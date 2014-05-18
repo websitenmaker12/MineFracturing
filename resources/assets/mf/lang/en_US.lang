@@ -16,6 +16,7 @@ item.ironDust.name=Iron Dust
 item.goldDust.name=Gold Dust
 item.diamondDust.name=Diamond Dust
 item.emeraldDust.name=Emerald Dust
+item.valve.name=Valve
 
 itemGroup.mf=MineFracturing
 

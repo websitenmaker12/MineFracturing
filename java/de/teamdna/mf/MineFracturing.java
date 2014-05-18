@@ -44,6 +44,8 @@ import de.teamdna.mf.event.EntityHandler;
 import de.teamdna.mf.event.FuelHandler;
 import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.net.CommonProxy;
+import de.teamdna.mf.packet.PacketChunkUpdate;
+import de.teamdna.mf.packet.PacketHandler;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
@@ -58,6 +60,7 @@ import de.teamdna.mf.util.Util;
 public class MineFracturing {
 
 	public static Logger logger;
+	public static final PacketHandler packetHandler = new PacketHandler();
 	
 	@Instance(Reference.modid)
 	public static MineFracturing INSTANCE;
@@ -216,6 +219,8 @@ public class MineFracturing {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		packetHandler.init();
+		packetHandler.registerPacket(PacketChunkUpdate.class);
 		proxy.registerRenderer();
 		
 		// Bioms
@@ -257,6 +262,8 @@ public class MineFracturing {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		packetHandler.postInit();
+		
 		CoreRegistry.scanForOres();
 		CoreRegistry.registerOre(Blocks.redstone_ore, new ItemStack(Items.redstone));
 	}
