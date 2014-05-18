@@ -11,3 +11,6 @@ itemGroup.mf=MineFracturing
 
 gui.bore.analyzingStatus=Analyzing status
 gui.bore.frackingStatus=Fracking status
+
+fluid.oil=Oil
+fluid.oil.name=Oil

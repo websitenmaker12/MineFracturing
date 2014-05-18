@@ -10,6 +10,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
@@ -38,6 +41,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	private boolean placedBedrocks = false;
 	
 	private ChunkCoordIntPair currentChunkForLoad = null;
+	private boolean isFirstTick = true;
 	
 	public TileEntityBore() {
 		this.inventory = new ItemStack[1];
@@ -114,7 +118,26 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	}
 	
 	@Override
+	public void onDataPacket(NetworkManager mgr, S35PacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.func_148857_g());
+	}
+	
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		this.writeToNBT(tag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, tag);
+	}
+	
+	@Override
 	public void updateEntity() {
+		if(this.isFirstTick) {
+			this.isFirstTick = false;
+			if(this.currentChunkForLoad != null) {
+				this.currentScanningChunk = this.worldObj.getChunkFromChunkCoords(this.currentChunkForLoad.chunkXPos, this.currentChunkForLoad.chunkZPos);
+			}
+		}
+		
 		if(this.isMultiblockComplete()) {
 			// Setups the bore
 			if(this.state == -1) {
@@ -183,7 +206,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 				}
 				
 				// Infesting
-				int r = this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius);
+				int r = (this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius)) * 2;
 				int rSq = r * r;
 				
 				if(r != this.lastInfestRadius) {
@@ -208,8 +231,8 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 								int x2 = (containerChunk.xPosition + x) * 16;
 								int z2 = (containerChunk.zPosition + z) * 16;
 								
-								if(!this.placedBedrocks) this.worldObj.setBlock(x2, 255, z2, Blocks.bedrock);
-								else this.worldObj.setBlockToAir(x2, 255, z2);
+								if(this.placedBedrocks) this.worldObj.setBlock(x2, 0, z2, Blocks.bedrock);
+								else this.worldObj.setBlockToAir(x2, 0, z2);
 							}
 						}
 
