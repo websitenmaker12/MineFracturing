@@ -30,7 +30,6 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 
 	// TODO: Maybe loads chunks: http://greyminecraftcoder.blogspot.de/2013/10/server-packets-changes-to-world-blocks.html
 	// TODO: Infection should cause problems
-	// TODO: Smelting recipes
 	// TODO: ISidedInventory
 	
 	public final int maxBoreY = 1;

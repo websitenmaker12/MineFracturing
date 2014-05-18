@@ -6,13 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import de.teamdna.mf.MineFracturing;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
+import de.teamdna.mf.MineFracturing;
 
 public class CoreRegistry {
 
@@ -43,8 +42,7 @@ public class CoreRegistry {
 				ItemStack stack = null;
 				int id = Block.getIdFromBlock((Block)block);
 				
-				if(id == Block.getIdFromBlock(Blocks.redstone_ore)) stack = new ItemStack(Items.redstone);
-				else if(id == Block.getIdFromBlock(Blocks.lapis_ore)) stack = new ItemStack(Items.dye, 1, 4);
+				if(id == Block.getIdFromBlock(Blocks.lapis_ore)) stack = new ItemStack(Items.dye, 1, 4);
 				else if(id == Block.getIdFromBlock(Blocks.quartz_ore)) stack = new ItemStack(Items.quartz);
 				else if(id == Block.getIdFromBlock(Blocks.coal_ore)) stack = new ItemStack(MineFracturing.INSTANCE.coalDust);
 				else if(id == Block.getIdFromBlock(Blocks.iron_ore)) stack = new ItemStack(MineFracturing.INSTANCE.ironDust);

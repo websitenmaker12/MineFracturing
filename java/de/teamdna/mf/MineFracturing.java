@@ -105,8 +105,6 @@ public class MineFracturing {
 	public static int oreMultiplierMin;
 	public static int oreMultiplierMax;
 	
-	// TODO: Crafting recipes
-	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Reference.setupMetadata(event.getModMetadata());
@@ -213,8 +211,21 @@ public class MineFracturing {
 		proxy.registerTile(TileEntityTank.class, "tank");
 		proxy.registerTile(TileEntityChemicalsMixer.class, "chemicalsMixer");
 		proxy.registerTile(TileEntityCondenseChamber.class, "condenseChamber");
+	}
+	
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
+		proxy.registerRenderer();
 		
-		//////////Crafting///////////////// 	(und so was in der hauptklasse!)
+		// Bioms
+		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
+		
+		// Registrations
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
+		GameRegistry.registerFuelHandler(new FuelHandler());
+		
+		// Crafting
 		GameRegistry.addRecipe(new ItemStack(traverse), "###", "# #", "###", '#', Blocks.iron_bars);
 		GameRegistry.addRecipe(new ItemStack(bore), "#C#", "#A#", "#B#", '#', traverse, 'A', basicMachine, 'B', Items.diamond_pickaxe, 'C', combustionGen);
 		GameRegistry.addRecipe(new ItemStack(extractor), "###", "#A#", "###", '#', traverse, 'A', this.valve);
@@ -240,25 +251,12 @@ public class MineFracturing {
 		GameRegistry.addSmelting(diamondDust, new ItemStack(Items.diamond), 1F);
 		GameRegistry.addSmelting(emeraldDust, new ItemStack(Items.emerald), 1F);
 		GameRegistry.addSmelting(goldDust, new ItemStack(Items.gold_ingot), 1F);
-		
-		//GameRegistry.addRecipe(new ItemStack());
-		//GameRegistry.addRecipe(recipe);
-	}
-	
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
-		proxy.registerRenderer();
-		
-		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
-		
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
-		GameRegistry.registerFuelHandler(new FuelHandler());
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		CoreRegistry.scanForOres();
+		CoreRegistry.registerOre(Blocks.redstone_ore, new ItemStack(Items.redstone));
 	}
 	
 }
