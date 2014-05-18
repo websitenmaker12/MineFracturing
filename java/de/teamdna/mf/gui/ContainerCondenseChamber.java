@@ -40,6 +40,7 @@ public class ContainerCondenseChamber extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer var1) {
+		// TODO
 		return true;
 	}
 	

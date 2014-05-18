@@ -84,6 +84,11 @@ public class MineFracturing {
 	public Item bucketOil;
 	public Item bucketFracFluid;
 	public Item bucketLiquidOre;
+	public Item coalDust;
+	public Item ironDust;
+	public Item goldDust;
+	public Item diamondDust;
+	public Item emeraldDust;
 	
 	public Fluid oil;
 	public Fluid fracFluid;
@@ -104,9 +109,16 @@ public class MineFracturing {
 		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
-		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(tab).setBlockTextureName(Reference.modid + "chemicalsMixer");
+		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":chemicalsMixer");
 		this.ghostLoader = (new BlockGhostLoader()).setBlockName("ghostLoader");
-		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(tab);
+		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
+		
+		// Items
+		this.coalDust = (new Item()).setUnlocalizedName("coalDust").setTextureName(Reference.modid + ":coalDust").setCreativeTab(this.tab);
+		this.ironDust = (new Item()).setUnlocalizedName("ironDust").setTextureName(Reference.modid + ":ironDust").setCreativeTab(this.tab);
+		this.goldDust = (new Item()).setUnlocalizedName("goldDust").setTextureName(Reference.modid + ":goldDust").setCreativeTab(this.tab);
+		this.diamondDust = (new Item()).setUnlocalizedName("diamondDust").setTextureName(Reference.modid + ":diamondDust").setCreativeTab(this.tab);
+		this.emeraldDust = (new Item()).setUnlocalizedName("emeraldDust").setTextureName(Reference.modid + ":emeraldDust").setCreativeTab(this.tab);
 		
 		// Fluids
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
@@ -150,6 +162,11 @@ public class MineFracturing {
 		proxy.registerItem(this.bucketOil);
 		proxy.registerItem(this.bucketFracFluid);
 		proxy.registerItem(this.bucketLiquidOre);
+		proxy.registerItem(this.coalDust);
+		proxy.registerItem(this.ironDust);
+		proxy.registerItem(this.goldDust);
+		proxy.registerItem(this.diamondDust);
+		proxy.registerItem(this.emeraldDust);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");

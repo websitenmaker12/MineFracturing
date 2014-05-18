@@ -23,8 +23,7 @@ public class TileEntityExtractor extends TileEntityCore implements IExtractor {
 	@Override
 	public NBTTagCompound extract(ForgeDirection direction) {
 		int i = this.worldObj.rand.nextInt(2);
-		
-		if(i < 0 && this.fluidsToSend.size() > 0) {
+		if(i < 1 && this.fluidsToSend.size() > 0) {
 			FluidStack stack = this.fluidsToSend.get(0);
 			this.fluidsToSend.remove(0);
 			if(stack != null && stack.amount > 0) {

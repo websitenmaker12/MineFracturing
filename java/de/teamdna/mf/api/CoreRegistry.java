@@ -6,26 +6,29 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import de.teamdna.mf.MineFracturing;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 
 public class CoreRegistry {
 
 	private static List<Integer> oreBlocks = new ArrayList<Integer>();
 	private static Map<Integer, Integer> containerBlocks = new HashMap<Integer, Integer>();
-	private static Map<Integer, Integer> condensedItems = new HashMap<Integer, Integer>();
+	private static Map<Integer, ItemStack> condensedItems = new HashMap<Integer, ItemStack>();
 	
 	/**
 	 * Registers a Block as an Ore
 	 */
-	public static void registerOre(Block ore, Item condensedItem) {
+	public static void registerOre(Block ore, ItemStack condensedItem) {
 		int id = Block.getIdFromBlock(ore);
 		if(!oreBlocks.contains(id)) {
 			oreBlocks.add(id);
 			registerContainerBlock(ore, Blocks.stone);
-			condensedItems.put(id, Item.getIdFromItem(condensedItem));
+			condensedItems.put(id, condensedItem);
 		}
 	}
 	
@@ -37,7 +40,18 @@ public class CoreRegistry {
 		while(iterator.hasNext()) {
 			Object block = iterator.next();
 			if(block != null && block instanceof BlockOre) {
-				registerOre((BlockOre)block, null); // TODO: implement items
+				ItemStack stack = null;
+				int id = Block.getIdFromBlock((Block)block);
+				
+				if(id == Block.getIdFromBlock(Blocks.redstone_ore)) stack = new ItemStack(Items.redstone);
+				else if(id == Block.getIdFromBlock(Blocks.lapis_ore)) stack = new ItemStack(Items.dye, 1, 4);
+				else if(id == Block.getIdFromBlock(Blocks.quartz_ore)) stack = new ItemStack(Items.quartz);
+				else if(id == Block.getIdFromBlock(Blocks.coal_ore)) stack = new ItemStack(MineFracturing.INSTANCE.coalDust);
+				else if(id == Block.getIdFromBlock(Blocks.iron_ore)) stack = new ItemStack(MineFracturing.INSTANCE.ironDust);
+				else if(id == Block.getIdFromBlock(Blocks.gold_ore)) stack = new ItemStack(MineFracturing.INSTANCE.goldDust);
+				else if(id == Block.getIdFromBlock(Blocks.diamond_ore)) stack = new ItemStack(MineFracturing.INSTANCE.diamondDust);
+				else if(id == Block.getIdFromBlock(Blocks.emerald_ore)) stack = new ItemStack(MineFracturing.INSTANCE.emeraldDust);
+				registerOre((BlockOre)block, stack);
 			}
 		}
 	}
@@ -70,8 +84,8 @@ public class CoreRegistry {
 	/**
 	 * Returns the Item for the given Ore
 	 */
-	public static Item getCondensedItem(Block ore) {
-		return Item.getItemById(condensedItems.get(Block.getIdFromBlock(ore)));
+	public static ItemStack getCondensedItem(Block ore) {
+		return condensedItems.get(Block.getIdFromBlock(ore));
 	}
 	
 }

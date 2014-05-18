@@ -86,7 +86,6 @@ public class ContainerChemicalsMixer extends Container {
                 if(!this.mergeItemStack(itemstack1, 4, 40, true)) return null;
             } else {
             	int id = Item.getIdFromItem(itemstack1.getItem());
-            	
             	if(Util.getFuelValue(itemstack1) > 0) this.mergeItemStack(itemstack1, 3, 4, false);
             	else if(id == Item.getIdFromItem(Items.blaze_powder) || id == Item.getIdFromItem(Items.redstone) || id == Item.getIdFromItem(Items.slime_ball))
             		this.mergeItemStack(itemstack1, 0, 3, false);

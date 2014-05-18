@@ -34,8 +34,8 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 				if(this.isEnoughSpace()) {
 					if(++this.idle >= maxIdle) {
 						this.currentBlockAmount--;
-						int amount = this.worldObj.rand.nextInt(7) + 4;
-						ItemStack stack = new ItemStack(CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)), amount);
+						ItemStack stack = CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)).copy();
+						stack.stackSize = this.worldObj.rand.nextInt(7) + 4;
 						this.mergeStackToOutput(stack);
 						this.tank.drain(1000, true);
 					}
@@ -50,8 +50,10 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 	private void mergeStackToOutput(ItemStack stack) {
 		for(int i = 0; i < 9; i++) {
 			if(stack == null) break;
-			if(this.inventory[i] == null) this.inventory[i] = stack;
-			else if(this.inventory[i].stackSize < this.inventory[i].getMaxDamage() && this.inventory[i].isItemEqual(stack)) {
+			if(this.inventory[i] == null) {
+				this.inventory[i] = stack;
+				stack = null;
+			} else if(this.inventory[i].stackSize < this.inventory[i].getMaxDamage() && this.inventory[i].isItemEqual(stack)) {
 				int newSize = this.inventory[i].stackSize + stack.stackSize;
 				if(newSize <= this.inventory[i].getMaxStackSize()) {
 					this.inventory[i].stackSize = newSize;
