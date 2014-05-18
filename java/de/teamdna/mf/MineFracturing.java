@@ -29,6 +29,7 @@ import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
 import de.teamdna.mf.block.BlockChemicalsMixer;
 import de.teamdna.mf.block.BlockCondenseChamber;
+import de.teamdna.mf.block.BlockCrafting;
 import de.teamdna.mf.block.BlockFluid;
 import de.teamdna.mf.block.BlockGhostLoader;
 import de.teamdna.mf.block.BlockMaterialExtractor;
@@ -80,6 +81,8 @@ public class MineFracturing {
 	public Block ghostLoader;
 	public Block condenseChamber;
 	public Block liquidOreBlock;
+	public Block basicMachine;
+	public Block combustionGen;
 	
 	public Item bucketOil;
 	public Item bucketFracFluid;
@@ -112,6 +115,9 @@ public class MineFracturing {
 		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":chemicalsMixer");
 		this.ghostLoader = (new BlockGhostLoader()).setBlockName("ghostLoader");
 		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
+		this.basicMachine = (new BlockCrafting()).setBlockName("basicMachine").setResistance(10F).setBlockTextureName(Reference.modid + ":basicMachine").setCreativeTab(tab);
+		this.combustionGen = (new BlockCrafting()).setBlockName("combusioneGen").setBlockTextureName(Reference.modid + ":combustionGen");
+		
 		
 		// Items
 		this.coalDust = (new Item()).setUnlocalizedName("coalDust").setTextureName(Reference.modid + ":coalDust").setCreativeTab(this.tab);
@@ -158,6 +164,8 @@ public class MineFracturing {
 		proxy.registerBlock(this.ghostLoader);
 		proxy.registerBlock(this.condenseChamber);
 		proxy.registerBlock(this.liquidOreBlock);
+		proxy.registerBlock(this.combustionGen);
+		proxy.registerBlock(this.basicMachine);
 		
 		proxy.registerItem(this.bucketOil);
 		proxy.registerItem(this.bucketFracFluid);
