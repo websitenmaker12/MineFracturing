@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -15,6 +16,7 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
@@ -27,8 +29,9 @@ import de.teamdna.mf.util.WorldBlock;
 public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
 
 	// TODO: Maybe loads chunks: http://greyminecraftcoder.blogspot.de/2013/10/server-packets-changes-to-world-blocks.html
-	// TODO: Should requiere fuel and fracfluid to work
 	// TODO: Infection should cause problems
+	// TODO: Smelting recipes
+	// TODO: ISidedInventory
 	
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
@@ -49,8 +52,8 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	private ChunkCoordIntPair currentChunkForLoad = null;
 	private boolean isFirstTick = true;
 	
-	private int maxBurnTime = 1;
-	private int currentBurnTime = 0;
+	public int burnTime = 0;
+	public int maxBurnTime = 1;
 	
 	public TileEntityBore() {
 		super(8);
@@ -60,6 +63,8 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
+		tag.setInteger("burnTime", this.burnTime);
+		tag.setInteger("maxBurnTime", this.maxBurnTime);
 		tag.setInteger("state", this.state);
 		tag.setInteger("boreY", this.boreY);
 		tag.setInteger("radius", this.radius);
@@ -95,6 +100,8 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
+		this.burnTime = tag.getInteger("burnTime");
+		this.maxBurnTime = tag.getInteger("maxBurnTime");
 		this.state = tag.getInteger("state");
 		this.boreY = tag.getInteger("boreY");
 		this.radius = tag.getInteger("radius");
@@ -136,7 +143,16 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			}
 		}
 		
-		if(this.isMultiblockComplete()) {
+		if(this.inventory[0] != null && this.burnTime == 0 && Util.getFuelValue(this.inventory[0]) > 0) {
+			this.burnTime = this.maxBurnTime = Util.getFuelValue(this.inventory[0]);
+			Item container = this.inventory[0].getItem().getContainerItem();
+			if(--this.inventory[0].stackSize == 0) this.inventory[0] = null;
+			if(this.inventory[0] == null && container != null) this.inventory[0] = new ItemStack(container);
+		}
+		
+		if(this.isMultiblockComplete() && this.burnTime > 0 && this.tank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME * 4) {
+			if(this.state != 3) this.burnTime = Math.max(this.burnTime - 5, 0);
+			
 			// Setups the bore
 			if(this.state == -1) {
 				this.state = 0;
@@ -200,6 +216,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 					TileEntityExtractor extractor = this.getFirstExtractor();
 					extractor.addFluid(new FluidStack(MineFracturing.INSTANCE.oil, 100));
 					extractor.addOre(block.getBlock());
+					this.drain(ForgeDirection.UNKNOWN, 10, true);
 					
 					if(!this.worldObj.isRemote) {
 						Block replace = CoreRegistry.getContainer(block.getBlock());
@@ -290,10 +307,6 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	public int getScaledAnalysingProgress(int pixels) {
 		if(this.totalChunks == 0) return 0;
 		return pixels - (int)((double)this.chunkQueue.size() * (double)pixels / (double)this.totalChunks);
-	}
-	
-	public int getCurrentItemBurnTime(int pixels) {
-		return this.currentBurnTime * pixels / this.maxBurnTime;
 	}
 	
 	public int getScaledFracturingProgress(int pixels) {

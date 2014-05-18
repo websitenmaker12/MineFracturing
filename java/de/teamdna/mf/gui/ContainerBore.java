@@ -1,7 +1,5 @@
 package de.teamdna.mf.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
@@ -9,6 +7,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamdna.mf.gui.slot.FuelSlot;
 import de.teamdna.mf.tile.TileEntityBore;
 
@@ -19,6 +19,8 @@ public class ContainerBore extends Container {
 	public int fluidAmount = 0;
 	public int prog1 = 0;
 	public int prog2 = 0;
+	public int burnTime = 0;
+	public int maxBurnTime = 1;
 	
 	public ContainerBore(EntityPlayer player, World world, int x, int y, int z) {
 		this.tile = (TileEntityBore)world.getTileEntity(x, y, z);
@@ -47,6 +49,8 @@ public class ContainerBore extends Container {
         par1ICrafting.sendProgressBarUpdate(this, 0, fluid == null ? 0 : fluid.amount);
         par1ICrafting.sendProgressBarUpdate(this, 1, this.tile.getScaledAnalysingProgress(117));
         par1ICrafting.sendProgressBarUpdate(this, 2, this.tile.getScaledFracturingProgress(117));
+        par1ICrafting.sendProgressBarUpdate(this, 3, this.tile.burnTime);
+        par1ICrafting.sendProgressBarUpdate(this, 4, this.tile.maxBurnTime);
     }
 
 	@Override
@@ -59,6 +63,8 @@ public class ContainerBore extends Container {
             icrafting.sendProgressBarUpdate(this, 0, fluid == null ? 0 : fluid.amount);
             icrafting.sendProgressBarUpdate(this, 1, this.tile.getScaledAnalysingProgress(117));
             icrafting.sendProgressBarUpdate(this, 2, this.tile.getScaledFracturingProgress(117));
+            icrafting.sendProgressBarUpdate(this, 3, this.tile.burnTime);
+            icrafting.sendProgressBarUpdate(this, 4, this.tile.maxBurnTime);
         }
     }
 
@@ -69,6 +75,8 @@ public class ContainerBore extends Container {
     		case 0: this.fluidAmount = par2; break;
     		case 1: this.prog1 = par2; break;
     		case 2: this.prog2 = par2; break;
+    		case 3: this.burnTime = par2; break;
+    		case 4: this.maxBurnTime = par2; break;
     	}
     }
 	
@@ -84,7 +92,7 @@ public class ContainerBore extends Container {
             if(slotID == 0) {
                 if(!this.mergeItemStack(itemstack1, 1, 37, true)) return null;
             } else {
-                this.mergeItemStack(itemstack1, 0, 1, false);
+            	if(((Slot)this.getSlot(0)).isItemValid(itemstack1)) this.mergeItemStack(itemstack1, 0, 1, false);
             }
 
             if(itemstack1.stackSize == 0) slot.putStack((ItemStack)null);

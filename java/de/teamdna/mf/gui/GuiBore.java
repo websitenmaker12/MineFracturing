@@ -1,15 +1,22 @@
 package de.teamdna.mf.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import org.lwjgl.opengl.GL11;
 
+import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.util.RenderUtil;
 
 public class GuiBore extends GuiContainer {
 
@@ -44,15 +51,28 @@ public class GuiBore extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-		 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	     this.mc.getTextureManager().bindTexture(guiBg);
-	     int k = (this.width - this.xSize) / 2;
-	     int l = (this.height - this.ySize) / 2;
-	     this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-	     
-		// Combustion Generator
+		int k = (this.width - this.xSize) / 2;
+	    int l = (this.height - this.ySize) / 2;
+		
+		drawRect(k + 8, l + 14, k + 150, l + 100, 0xFF8b8b8b);
+		
+		if(this.container.fluidAmount > 0) {
+		   	Fluid fluid = FluidRegistry.getFluid(MineFracturing.INSTANCE.fracFluid.getID());
+	 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+	 		RenderUtil.setIntColor3(fluid.getColor());
+			IIcon icon = fluid.getStillIcon();
+			GL11.glEnable(GL11.GL_BLEND);
+			this.drawTexturedModelRectFromIcon(k + 8, l + 14 + 65 - this.container.fluidAmount * 65 / this.tile.tank.getCapacity(), icon != null ? icon : fluid.getBlock().getIcon(0, 0), 24, 65);
+			GL11.glDisable(GL11.GL_BLEND);
+		}
+		
+	 	GL11.glColor4f(1F, 1F, 1F, 1F);
+	    this.mc.getTextureManager().bindTexture(this.guiBg);
+	    this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+
+	    // Combustion Generator
 		this.mc.getTextureManager().bindTexture(guiBg);
-		int i1 = this.tile.getCurrentItemBurnTime(12);
+		int i1 = this.container.burnTime * 12 / this.container.maxBurnTime;
 		this.drawTexturedModalRect(k + 203, l + 50 + 12 - i1, 242, 12 - i1 + 1, 14, i1 + 2);
 	}
 
