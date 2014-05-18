@@ -24,20 +24,23 @@ import net.minecraftforge.fluids.IFluidHandler;
 public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IExtractor, IFluidHandler{
 	
 	private int workProgress = 0;
-	private int maxWorkProgress = 1000;
+	private int maxWorkProgress = 200;
 	private int burnTime = 0;
 	
 	public TileEntityChemicalsMixer() {
-		super(4);
+		super(6);
 		this.inventory = new ItemStack[4];
 	}
 	
 	@Override
 	public void updateEntity() {
-		if (this.burnTime == 0 && isItemFuel(inventory[3])) {
-			this.burnTime = getItemBurnTime(inventory[3]);
-			this.decrStackSize(inventory[3]);
+		if (this.burnTime == 0) {
+			if (isItemFuel(inventory[3])) {
+				this.burnTime = getItemBurnTime(inventory[3]);
+				this.decrStackSize(inventory[3]);
+			}
 		}
+		else this.burnTime--;
 		if (canWork()) {
 			if(this.workProgress < maxWorkProgress) this.workProgress++;
 			else {
@@ -45,6 +48,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 				this.workProgress = 0;
 			}
 		}
+		decrStackSize(inventory[0]);
 	}
 	
 	public int getWorkProgressScaled(int pixels) {
@@ -61,24 +65,25 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	
 	private boolean canWork()
 	{
-		if (this.burnTime > 0) {
-			if(isRecipe(inventory) && this.tank.getFluidAmount() + 1000 < this.tank.getCapacity()) return true;
+		System.out.println("amount: "+tank.getFluidAmount() + " & capacity: "+tank.getCapacity() + " amount + 1000: " + (tank.getFluidAmount() + 1000));
+		if (this.burnTime > 0 && this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
+			if(isRecipe(inventory)) return true;
 		}
 		return false;
 	}
 	
 	private void doWork() {
 		if (canWork()) {
-			for (int i = 0; i < 3; i++) {
-				decrStackSize(inventory[i]);
-				tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), !this.worldObj.isRemote);
-			}
+			tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), !this.worldObj.isRemote);
+			decrStackSize(inventory[0]);
+			decrStackSize(inventory[1]);
+			decrStackSize(inventory[2]);
 		}
 	}
 	
 	private void decrStackSize(ItemStack stack) {
-		stack.stackSize--;
-		if(stack.stackSize == 0) stack = null;
+		if(stack.stackSize == 1) stack = null;
+		else stack.stackSize--;
 	}
 	
 	private boolean isRecipe(ItemStack[] itemstacks)
@@ -89,10 +94,10 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 			boolean redstoneFound = false;
 			
 			if(itemstacks[0].getItem() == Items.slime_ball || itemstacks[1].getItem() == Items.slime_ball || itemstacks[2].getItem() == Items.slime_ball) slimeFound = true;
-			if(itemstacks[1].getItem() == Items.blaze_powder || itemstacks[1].getItem() == Items.blaze_powder || itemstacks[2].getItem() == Items.blaze_powder) blazeRodFound = true;
-			if(itemstacks[2].getItem() == Items.redstone || itemstacks[1].getItem() == Items.redstone || itemstacks[2].getItem() == Items.redstone) redstoneFound = true;
+			if(itemstacks[0].getItem() == Items.blaze_powder || itemstacks[1].getItem() == Items.blaze_powder || itemstacks[2].getItem() == Items.blaze_powder) blazeRodFound = true;
+			if(itemstacks[0].getItem() == Items.redstone || itemstacks[1].getItem() == Items.redstone || itemstacks[2].getItem() == Items.redstone) redstoneFound = true;
 			
-			if(redstoneFound == true && blazeRodFound == true && slimeFound == true) return true;
+			if(redstoneFound && blazeRodFound && slimeFound) return true;
 		}
 		return false;
 	}

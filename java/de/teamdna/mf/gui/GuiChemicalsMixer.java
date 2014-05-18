@@ -2,13 +2,20 @@ package de.teamdna.mf.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityTank;
+import de.teamdna.mf.util.RenderUtil;
 
 public class GuiChemicalsMixer extends GuiContainer {
 
@@ -19,6 +26,8 @@ public class GuiChemicalsMixer extends GuiContainer {
 	
 	public GuiChemicalsMixer(EntityPlayer player, World world, int x, int y, int z) {
 		super(new ContainerChemicalsMixer(player, world, x, y, z));
+		container = (ContainerChemicalsMixer)this.inventorySlots;
+		tile = (TileEntityChemicalsMixer) world.getTileEntity(x, y, z);
 	}
 	
 	@Override
@@ -32,9 +41,27 @@ public class GuiChemicalsMixer extends GuiContainer {
 	    
 	    drawRect(k + 1, l + 10, k + 150, l + 100, 0xFF8b8b8b);
 	    
-	    GL11.glColor4f(1F, 1F, 1F, 1F);
+	    if (container.capacity > 0) {
+	    	 Fluid fluid = FluidRegistry.getFluid(MineFracturing.INSTANCE.fracFluid.getID());
+	 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+	 		RenderUtil.setIntColor3(fluid.getColor());
+	 		IIcon icon = fluid.getStillIcon();
+	 		GL11.glEnable(GL11.GL_BLEND);
+	 		this.drawTexturedModelRectFromIcon(k + 112, l + 13 + 65 - this.container.fluidAmount * 65 / this.container.capacity , icon != null ? icon : fluid.getBlock().getIcon(0, 0), 24, 65);
+//	 		System.out.println("capacity: "+container.capacity+", amount: " + container.fluidAmount);
+	 		GL11.glDisable(GL11.GL_BLEND);
+	    }
+ 		GL11.glColor4f(1F, 1F, 1F, 1F);
 	    this.mc.getTextureManager().bindTexture(bg);
 	    this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+	    
+ 		this.mc.getTextureManager().bindTexture(bg);
+ 		drawTexturedModalRect(k + 112, l + 13, 176, 16, 24, 65);
+ 		
+ 		GL11.glEnable(GL11.GL_BLEND);
+ 		this.mc.getTextureManager().bindTexture(bg);
+        this.drawTexturedModalRect(k + 50, l + 36, 176, 0, tile.getWorkProgressScaled(49) + 1, 16);
+ 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 }
