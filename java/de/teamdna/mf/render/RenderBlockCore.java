@@ -12,6 +12,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 import de.teamdna.mf.tile.TileEntityTank;
@@ -23,6 +24,7 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 	public TileEntityBore dummyBore = new TileEntityBore();
 	public TileEntityExtractor dummyExtractor = new TileEntityExtractor();
 	public TileEntityPressureTube dummyPipe = new TileEntityPressureTube();
+	public TileEntityChemicalsMixer dummyMixer = new TileEntityChemicalsMixer();
 	
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
@@ -32,6 +34,7 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 		else if (block == MineFracturing.INSTANCE.bore) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyBore, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.extractor) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyExtractor, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.pressureTube) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyPipe, 0, 0, 0, 0);
+		else if (block == MineFracturing.INSTANCE.chemicalsMixer) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyMixer, 0, 0, 0, 0);
 		
 		GL11.glPopMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);

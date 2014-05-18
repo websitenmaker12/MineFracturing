@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityBore;
+import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 import de.teamdna.mf.tile.TileEntityTraverse;
@@ -37,6 +38,10 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public final ResourceLocation model_tank_base_01Loc;
 	public final ResourceLocation texture_tank_base_01Loc;
 	public final IModelCustom model_tank_base_01;
+	
+	public final ResourceLocation model_mixerLoc;
+	public final ResourceLocation texture_mixerLoc;
+	public final IModelCustom model_mixer;
 	
 	public final ResourceLocation model_tank_base_02Loc;
 	public final ResourceLocation texture_tank_base_02Loc;
@@ -84,6 +89,10 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		texture_tank_base_02Loc = new ResourceLocation(Reference.modid, "model/texture/map_tank_base_02.png");
 		model_tank_base_02 = AdvancedModelLoader.loadModel(model_tank_base_02Loc);
 		
+		model_mixerLoc = new ResourceLocation(Reference.modid, "model/mixer.obj");
+		texture_mixerLoc = new ResourceLocation(Reference.modid, "model/texture/map_mixer.png");
+		model_mixer = AdvancedModelLoader.loadModel(model_mixerLoc);
+		
 		model_pipe_01_inner_Loc = new ResourceLocation(Reference.modid, "model/pipe_01_inner.obj");
 		model_pipe_01_inner = AdvancedModelLoader.loadModel(model_pipe_01_inner_Loc);
 		
@@ -112,11 +121,19 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		}
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
 		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
+		else if (tile instanceof TileEntityChemicalsMixer) renderTileMixer(x, y, z);
 		
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
+	private void renderTileMixer(double x, double y, double z) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_mixerLoc);
+		model_mixer.renderAll();
+		GL11.glPopMatrix();
+	}	
 	private void renderTileTraverse(double x, double y, double z) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);

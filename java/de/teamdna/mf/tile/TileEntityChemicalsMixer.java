@@ -90,7 +90,9 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	//Lets the machine finish it´s work (Adds liquid, etc.)
 	private void doWork() {
 		if (canWork()) {
-			tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), !this.worldObj.isRemote);
+			tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 500), !this.worldObj.isRemote);
+			System.out.println("hi!!!");
+			System.out.println(tank.getFluidAmount());
 			decrStackSize(0);
 			decrStackSize(1);
 			decrStackSize(2);

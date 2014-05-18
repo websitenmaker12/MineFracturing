@@ -1,6 +1,7 @@
 package de.teamdna.mf.block;
 
 import de.teamdna.mf.MineFracturing;
+import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -12,6 +13,21 @@ public class BlockChemicalsMixer extends BlockCore {
 
 	public BlockChemicalsMixer() {
 		super(Material.iron);
+	}
+	
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+	
+	@Override
+	public int getRenderType() {
+		return ClientProxy.coreRenderID;
 	}
 
 	@Override

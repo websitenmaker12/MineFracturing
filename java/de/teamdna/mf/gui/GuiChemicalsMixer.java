@@ -53,7 +53,7 @@ public class GuiChemicalsMixer extends GuiContainer {
 	 		RenderUtil.setIntColor3(fluid.getColor());
 	 		IIcon icon = fluid.getStillIcon();
 	 		GL11.glEnable(GL11.GL_BLEND);
-	 		this.drawTexturedModelRectFromIcon(k + 112, l + 15, icon != null ? icon : fluid.getBlock().getIcon(0, 0), 24, 60);
+	 		this.drawTexturedModelRectFromIcon(k + 112, l + 15 + 60 - tile.tank.getFluidAmount() * 60 / tile.tank.getCapacity(), icon != null ? icon : fluid.getBlock().getIcon(0, 0), 24, 60);
 	 		GL11.glDisable(GL11.GL_BLEND);
 	    }
  		GL11.glColor4f(1F, 1F, 1F, 1F);
