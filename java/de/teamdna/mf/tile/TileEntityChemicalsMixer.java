@@ -42,7 +42,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 			}
 		}
 		else this.burnTime--;
-		if (canWork()) {
+		if (this.burnTime > 0 && canWork()) {
 			if(this.workProgress < maxWorkProgress) this.workProgress++;
 			else {
 				this.doWork();
@@ -70,7 +70,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 	private boolean canWork()
 	{
 //		System.out.println("amount: "+tank.getFluidAmount() + " & capacity: "+tank.getCapacity() + " amount + 1000: " + (tank.getFluidAmount() + 1000));
-		if (this.burnTime > 0 && this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
+		if (this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
 			if(isRecipe(inventory)) return true;
 			System.out.println("hi");
 		}
