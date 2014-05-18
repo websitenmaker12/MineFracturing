@@ -53,7 +53,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 			}
 		}
 	}
-	
+	//
 	//Returns if the mixer is working
 	private boolean isWorking() {
 		return this.workProgress > 0;
