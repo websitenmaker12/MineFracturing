@@ -113,7 +113,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	/* IExtractor */
 	@Override
 	public boolean canExtract(ForgeDirection direction) {
-		return direction == ForgeDirection.DOWN;
+		return direction == ForgeDirection.DOWN && this.controllerTile != null && this.controllerTile.tank != null;
 	}
 
 	@Override
