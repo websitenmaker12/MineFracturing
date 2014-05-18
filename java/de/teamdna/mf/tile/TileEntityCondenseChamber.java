@@ -13,8 +13,6 @@ import de.teamdna.mf.api.CoreRegistry;
 
 public class TileEntityCondenseChamber extends TileEntityFluidCore implements ISidedInventory {
 
-	// TODO: everthing goes into the first chamber -> not forward
-	
 	public static final int maxIdle = 200;
 	
 	private int currentBlockID = -1;

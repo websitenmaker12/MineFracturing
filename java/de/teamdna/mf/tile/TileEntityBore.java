@@ -30,7 +30,6 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 
 	// TODO: Maybe loads chunks: http://greyminecraftcoder.blogspot.de/2013/10/server-packets-changes-to-world-blocks.html
 	// TODO: Infection should cause problems
-	// TODO: ISidedInventory
 	
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
@@ -312,6 +311,11 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 		if(this.totalOres == 0) return 0;
 		return pixels - (int)((double)this.oreBlocks.size() * (double)pixels / (double)this.totalOres);
 	}
+	
+	@Override
+	public boolean isItemValidForSlot(int var1, ItemStack var2) {
+		return true;
+	}
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int var1) {
@@ -320,7 +324,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 
 	@Override
 	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
-		return true;
+		return Util.getFuelValue(var2) > 0;
 	}
 
 	@Override
