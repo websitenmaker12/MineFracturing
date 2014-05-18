@@ -32,12 +32,14 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 		if(!this.worldObj.isRemote) {
 			if(this.currentBlockID != -1 && this.currentBlockAmount > 0) {
 				if(this.isEnoughSpace()) {
-					if(++this.idle >= maxIdle) {
+					if(++this.idle >= 1) {
 						this.currentBlockAmount--;
 						ItemStack stack = CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)).copy();
 						stack.stackSize = this.worldObj.rand.nextInt(7) + 4;
+						stack.stackSize = 1; // TODO: remove!
 						this.mergeStackToOutput(stack);
 						this.tank.drain(1000, true);
+						this.idle = 0;
 					}
 				}
 			} else {
@@ -49,11 +51,11 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 	
 	private void mergeStackToOutput(ItemStack stack) {
 		for(int i = 0; i < 9; i++) {
-			if(stack == null) break;
+			if(stack == null || stack.stackSize == 0) break;
 			if(this.inventory[i] == null) {
 				this.inventory[i] = stack;
 				stack = null;
-			} else if(this.inventory[i].stackSize < this.inventory[i].getMaxDamage() && this.inventory[i].isItemEqual(stack)) {
+			} else if(this.inventory[i].stackSize < this.inventory[i].getMaxStackSize() && this.inventory[i].isItemEqual(stack)) {
 				int newSize = this.inventory[i].stackSize + stack.stackSize;
 				if(newSize <= this.inventory[i].getMaxStackSize()) {
 					this.inventory[i].stackSize = newSize;
@@ -90,7 +92,9 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
 		return packet.getInteger("id") == Reference.PipePacketIDs.block
 				&& (this.currentBlockID == -1 || this.currentBlockID == packet.getInteger("blockID"))
-				&& this.tank.getFluidAmount() < this.tank.getInfo().capacity;
+				&& this.tank.getFluidAmount() < this.tank.getInfo().capacity
+				&& this.currentBlockAmount < 80
+				&& this.isEnoughSpace();
 	}
 
 	@Override

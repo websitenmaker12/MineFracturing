@@ -170,6 +170,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 					if(this.chunkQueue.size() == 0) {
 						this.totalOres = this.oreBlocks.size();
 						this.state = 2;
+						System.out.println(">>>> " + this.totalOres);
 					}
 				} else {
 					for(int x = 0; x < 16; x++) {

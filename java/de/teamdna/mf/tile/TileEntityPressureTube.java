@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityPressureTube extends TileEntityCore implements IConnectable {
 	
-	public static final int maxPacketStorage = 1;
+	public static final int maxPacketStorage = 20;
 	
 	private List<NBTTagCompound> packets = new ArrayList<NBTTagCompound>();
 	private List<ForgeDirection> adjacentExtractors = new ArrayList<ForgeDirection>();
@@ -135,7 +135,8 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 	}
 	
 	public boolean canReceivePackets() {
-		return this.packets.size() < maxPacketStorage;
+//		return this.packets.size() < maxPacketStorage;
+		return true;
 	}
 	
 	public void receivePacket(NBTTagCompound packet, ForgeDirection direction) {
