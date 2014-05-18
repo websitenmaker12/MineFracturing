@@ -25,7 +25,6 @@ public class TileEntityExtractor extends TileEntityCore implements IExtractor {
 			if(stack != null && stack.amount > 0) {
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setInteger("id", Reference.PipePacketIDs.fluid);
-				tag.setLong("timestamp", System.currentTimeMillis());
 				tag.setInteger("amount", stack.amount);
 				tag.setInteger("fluidID", stack.fluidID);
 				tag.setTag("stackTag", stack.tag);

@@ -13,15 +13,18 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.IBoreBlock;
+import de.teamdna.mf.util.PipeUtil;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
 
-public class TileEntityBore extends TileEntityCore implements ISidedInventory {
+public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
 
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
@@ -43,6 +46,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	private boolean isFirstTick = true;
 	
 	public TileEntityBore() {
+		super(8);
 		this.inventory = new ItemStack[1];
 	}
 	
@@ -130,11 +134,11 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(48);
+				this.addChunksToQueue(12);
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
-			if(this.state == 0 && this.worldObj.getWorldTime() % 5L == 0L) { // TODO: 40L
+			if(this.state == 0 && this.worldObj.getWorldTime() % 1L == 0L) { // TODO: 40L
 				if(--this.boreY < this.maxBoreY) {
 					this.state = 1;
 					return;
@@ -194,7 +198,7 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 				}
 				
 				// Infesting
-				int r = (this.radius - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)this.radius)) * 2;
+				int r = (this.radius * 2 - (int)((double)this.oreBlocks.size() / (double)this.totalOres * ((double)this.radius) * 2));
 				int rSq = r * r;
 				
 				if(r != this.lastInfestRadius) {
@@ -294,6 +298,26 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 
 	@Override
 	public boolean canExtractItem(int var1, ItemStack var2, int var3) {
+		return false;
+	}
+
+	@Override
+	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
+		return PipeUtil.canImportToTank(packet, this.tank);
+	}
+
+	@Override
+	public boolean canExtract(ForgeDirection direction) {
+		return false;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		return false;
 	}
 	

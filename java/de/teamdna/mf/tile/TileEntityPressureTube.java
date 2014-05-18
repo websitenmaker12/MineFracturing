@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityPressureTube extends TileEntityCore implements IConnectable {
 	
-	public static final int maxPacketStorage = 10;
+	public static final int maxPacketStorage = 1;
 	
 	private List<NBTTagCompound> packets = new ArrayList<NBTTagCompound>();
 	private List<ForgeDirection> adjacentExtractors = new ArrayList<ForgeDirection>();
@@ -146,18 +146,10 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-
-		NBTTagList packetList = new NBTTagList();
-		for(NBTTagCompound packet : this.packets) packetList.appendTag(packet);
-		tag.setTag("packets", packetList);
 		
-		NBTTagList pathTrackMap = new NBTTagList();
-		for(Map.Entry<NBTTagCompound, ForgeDirection> entry : this.pathTracker.entrySet()) {
-			NBTTagCompound path = new NBTTagCompound();
-			path.setTag("packet", entry.getKey());
-			path.setInteger("direction", entry.getValue().ordinal());
-		}
-		tag.setTag("pathTracker", pathTrackMap);
+		NBTTagList packetList = new NBTTagList();
+		for(NBTTagCompound packet : this.packets) if(packet != null) packetList.appendTag(packet);
+		tag.setTag("packets", packetList);
 	}
 	
 	@Override
@@ -167,13 +159,6 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 		this.packets.clear();
 		NBTTagList packetList = tag.getTagList("packets", 10);
 		for(int i = 0; i < packetList.tagCount(); i++) this.packets.add(packetList.getCompoundTagAt(i));
-		
-		this.pathTracker.clear();
-		NBTTagList pathTrackMap = tag.getTagList("pathTracker", 10);
-		for(int i = 0; i < pathTrackMap.tagCount(); i++) {
-			NBTTagCompound entry = pathTrackMap.getCompoundTagAt(i);
-			this.pathTracker.put(entry.getCompoundTag("packet"), ForgeDirection.values()[entry.getInteger("direction")]);
-		}
 	}
 
 	@Override

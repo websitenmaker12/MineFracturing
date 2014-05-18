@@ -15,10 +15,10 @@ import de.teamdna.mf.tile.TileEntityBore;
 public class ContainerBore extends Container {
 
 	private TileEntityBore tile;
-	
+
+	public int fluidAmount = 0;
 	public int prog1 = 0;
 	public int prog2 = 0;
-	public int fluidAmount = 0;
 	
 	public ContainerBore(EntityPlayer player, World world, int x, int y, int z) {
 		this.tile = (TileEntityBore)world.getTileEntity(x, y, z);
@@ -44,7 +44,9 @@ public class ContainerBore extends Container {
 	public void addCraftingToCrafters(ICrafting par1ICrafting) {
         super.addCraftingToCrafters(par1ICrafting);
         FluidStack fluid = this.tile.tank.getFluid();
-        par1ICrafting.sendProgressBarUpdate(this, 0, fluid == null ? -1 : fluid.fluidID);
+        par1ICrafting.sendProgressBarUpdate(this, 0, fluid == null ? 0 : fluid.amount);
+        par1ICrafting.sendProgressBarUpdate(this, 1, this.tile.getScaledAnalysingProgress(117));
+        par1ICrafting.sendProgressBarUpdate(this, 2, this.tile.getScaledFracturingProgress(117));
     }
 
 	@Override
@@ -54,7 +56,9 @@ public class ContainerBore extends Container {
         for(int i = 0; i < this.crafters.size(); i++) {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
             FluidStack fluid = this.tile.tank.getFluid();
-            icrafting.sendProgressBarUpdate(this, 0, fluid == null ? -1 : fluid.fluidID);
+            icrafting.sendProgressBarUpdate(this, 0, fluid == null ? 0 : fluid.amount);
+            icrafting.sendProgressBarUpdate(this, 1, this.tile.getScaledAnalysingProgress(117));
+            icrafting.sendProgressBarUpdate(this, 2, this.tile.getScaledFracturingProgress(117));
         }
     }
 
@@ -62,6 +66,9 @@ public class ContainerBore extends Container {
     public void updateProgressBar(int par1, int par2) {
     	switch(par1) {
     		default: super.updateProgressBar(par1, par2); break;
+    		case 0: this.fluidAmount = par2; break;
+    		case 1: this.prog1 = par2; break;
+    		case 2: this.prog2 = par2; break;
     	}
     }
 	

@@ -16,23 +16,25 @@ public class GuiBore extends GuiContainer {
     private static final ResourceLocation guiBg = new ResourceLocation(Reference.modid, "textures/gui/guiBore.png");
     
     private TileEntityBore tile;
+    private ContainerBore container;
     
 	public GuiBore(EntityPlayer player, World world, int x, int y, int z) {
 		super(new ContainerBore(player, world, x, y, z));
 		this.tile = (TileEntityBore)world.getTileEntity(x, y, z);
+		this.container = (ContainerBore)this.inventorySlots;
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 	    int k = (this.width - this.xSize) / 2;
 	    int l = (this.height - this.ySize) / 2;
-		drawRect(47, 14, 46 + this.tile.getScaledAnalysingProgress(118), 28, 0x9F00DEFF);
-		drawRect(47, 34, 46 + this.tile.getScaledFracturingProgress(118), 48, 0x9F00DEFF);
+		drawRect(47, 14, 46 + this.container.prog1, 28, 0x9F00DEFF);
+		drawRect(47, 34, 46 + this.container.prog2, 48, 0x9F00DEFF);
 		
 		String s = StatCollector.translateToLocal("tile.bore.name");
 		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 4, 4210752);
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.bore.analyzingStatus") + " " + this.tile.getScaledAnalysingProgress(100) + "%", 50, 18, 4210752);
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.bore.frackingStatus") + " " + this.tile.getScaledFracturingProgress(100) + "%", 50, 37, 4210752);
+		this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.bore.analyzingStatus") + " " + (int)((double)this.container.prog1 / 117D * 100D) + "%", 50, 18, 4210752);
+		this.fontRendererObj.drawString(StatCollector.translateToLocal("gui.bore.frackingStatus") + " " + (int)((double)this.container.prog2 / 117D * 100D) + "%", 50, 37, 4210752);
 	}
 	
 	@Override
