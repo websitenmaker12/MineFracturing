@@ -41,17 +41,6 @@ public class GuiTank extends GuiContainer {
 		String s = StatCollector.translateToLocal("tile.tankController.name");
 		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 4, 4210752);
 		
-		// Draw fluid
-		if(this.container.fluidID != -1) {
-			Fluid fluid = FluidRegistry.getFluid(this.container.fluidID);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-			RenderUtil.setIntColor3(fluid.getColor());
-			IIcon icon = fluid.getStillIcon();
-			GL11.glEnable(GL11.GL_BLEND);
-			this.drawTexturedModelRectFromIcon(12, 13, icon != null ? icon : fluid.getBlock().getIcon(0, 0), 124, 65);
-			GL11.glDisable(GL11.GL_BLEND);
-		}
-		
 		// Overlay
 		this.mc.getTextureManager().bindTexture(guiBg);
 		this.drawTexturedModalRect(12, 13, 0, 166, 124, 65);
@@ -60,9 +49,23 @@ public class GuiTank extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
 		 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	     this.mc.getTextureManager().bindTexture(guiBg);
 	     int k = (this.width - this.xSize) / 2;
 	     int l = (this.height - this.ySize) / 2;
+	     drawRect(k + 1, l + 10, k + 150, l + 100, 0xFF8b8b8b);
+	     GL11.glColor4f(1F, 1F, 1F, 1F);
+	     GL11.glColor4f(1F, 1F, 1F, 1F);
+	     //Liquid
+		if (this.container.fluidID != -1) {
+			Fluid fluid = FluidRegistry.getFluid(this.container.fluidID);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+			RenderUtil.setIntColor3(fluid.getColor());
+			IIcon icon = fluid.getStillIcon();
+			GL11.glEnable(GL11.GL_BLEND);
+			this.drawTexturedModelRectFromIcon(k + 12, l + 78 - (this.container.fluidAmount * 65 / this.container.capacity), icon != null ? icon : fluid.getBlock().getIcon(0, 0), 124, 65);
+			GL11.glDisable(GL11.GL_BLEND);
+		}
+		
+	     this.mc.getTextureManager().bindTexture(guiBg);
 	     this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 	}
 	
