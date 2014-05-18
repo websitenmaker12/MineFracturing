@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -13,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
+import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 import de.teamdna.mf.tile.TileEntityTraverse;
@@ -35,20 +37,16 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public final ResourceLocation texture_traverseExLoc;
 	public final IModelCustom model_traverseEx;
 	
-	public final ResourceLocation model_tank_base_01Loc;
-	public final ResourceLocation texture_tank_base_01Loc;
-	public final IModelCustom model_tank_base_01;
-	
 	public final ResourceLocation model_mixerLoc;
 	public final ResourceLocation texture_mixerLoc;
 	public final IModelCustom model_mixer;
 	
-	public final ResourceLocation model_tank_base_02Loc;
-	public final ResourceLocation texture_tank_base_02Loc;
-	public final IModelCustom model_tank_base_02;
+	public final ResourceLocation model_condenserLoc;
+	public final ResourceLocation texture_condenserLoc;
+	public final IModelCustom model_condenser;
+	
 	
 	public final ResourceLocation model_pipe_01_inner_Loc;
-	//public static final ResourceLocation texture_pipe_01_inner_Loc = new ResourceLocation(Reference.modid, "model/texture/map_extracting.png");
 	public final IModelCustom model_pipe_01_inner;
 	
 	public final ResourceLocation model_pipe_01_outer_Loc;
@@ -81,13 +79,9 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		texture_traverseExLoc = new ResourceLocation(Reference.modid, "model/texture/map_extracting.png");
 		model_traverseEx = AdvancedModelLoader.loadModel(model_traverseExLoc);
 		
-		model_tank_base_01Loc = new ResourceLocation(Reference.modid, "model/tank_base_01.obj");
-		texture_tank_base_01Loc = new ResourceLocation(Reference.modid, "model/texture/map_tank_base_01.png");
-		model_tank_base_01 = AdvancedModelLoader.loadModel(model_tank_base_01Loc);
-		
-		model_tank_base_02Loc = new ResourceLocation(Reference.modid, "model/tank_base_02.obj");
-		texture_tank_base_02Loc = new ResourceLocation(Reference.modid, "model/texture/map_tank_base_02.png");
-		model_tank_base_02 = AdvancedModelLoader.loadModel(model_tank_base_02Loc);
+		model_condenserLoc = new ResourceLocation(Reference.modid, "model/condenser.obj");
+		texture_condenserLoc = new ResourceLocation(Reference.modid, "model/texture/map_condenser.png");
+		model_condenser = AdvancedModelLoader.loadModel(model_condenserLoc);
 		
 		model_mixerLoc = new ResourceLocation(Reference.modid, "model/mixer.obj");
 		texture_mixerLoc = new ResourceLocation(Reference.modid, "model/texture/map_mixer.png");
@@ -122,9 +116,22 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		else if (tile instanceof TileEntityExtractor) renderTileEx(x, y, z);
 		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
 		else if (tile instanceof TileEntityChemicalsMixer) renderTileMixer(x, y, z);
+		else if (tile instanceof TileEntityCondenseChamber) renderTileCondenser(x, y, z, tile.getWorldObj());
 		
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
+	}
+	
+	private void renderTileCondenser(double x, double y, double z, World world) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(x + 0.6, y + 0.5, z + 0.5);
+		if (world != null) {
+			GL11.glRotated(world.getBlockMetadata((int)x, (int)y, (int)z)*90, 0, 1, 0);
+	        System.out.println(world.getBlockMetadata((int)x, (int)y, (int)z));
+		}
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_condenserLoc);
+		model_condenser.renderAll();
+		GL11.glPopMatrix();
 	}
 	
 	private void renderTileMixer(double x, double y, double z) {
@@ -133,7 +140,8 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_mixerLoc);
 		model_mixer.renderAll();
 		GL11.glPopMatrix();
-	}	
+	}
+	
 	private void renderTileTraverse(double x, double y, double z) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.9D, y+0.5, z+0.1D);

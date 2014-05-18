@@ -8,6 +8,7 @@ import de.teamdna.mf.render.RenderBlockCore;
 import de.teamdna.mf.render.RenderTiles;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
+import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 import de.teamdna.mf.tile.TileEntityTraverse;
@@ -32,6 +33,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityExtractor.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPressureTube.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalsMixer.class, stdTileRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCondenseChamber.class, stdTileRenderer);
 	}
 
 }
