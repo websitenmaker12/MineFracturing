@@ -36,7 +36,6 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 						this.currentBlockAmount--;
 						ItemStack stack = CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)).copy();
 						stack.stackSize = this.worldObj.rand.nextInt(7) + 4;
-						stack.stackSize = 1; // TODO: remove!
 						this.mergeStackToOutput(stack);
 						this.tank.drain(1000, true);
 						this.idle = 0;

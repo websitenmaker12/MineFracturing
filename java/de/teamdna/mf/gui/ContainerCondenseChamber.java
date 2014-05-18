@@ -4,10 +4,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamdna.mf.gui.slot.OutputSlot;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
 
 public class ContainerCondenseChamber extends Container {
@@ -24,7 +26,7 @@ public class ContainerCondenseChamber extends Container {
 		
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 3; j++) {
-				this.addSlotToContainer(new Slot(this.tile, j + i * 3, 107 + j * 18, 18 + i * 18)); // TODO: output slot
+				this.addSlotToContainer(new OutputSlot(this.tile, j + i * 3, 107 + j * 18, 18 + i * 18));
 			}
 		}
 		
@@ -40,7 +42,6 @@ public class ContainerCondenseChamber extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer var1) {
-		// TODO
 		return true;
 	}
 	
@@ -75,5 +76,26 @@ public class ContainerCondenseChamber extends Container {
     		case 2: this.idle = par2; break;
     	}
     }
+	
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
+		ItemStack itemstack = null;
+        Slot slot = (Slot)this.inventorySlots.get(slotID);
 
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if(slotID < 9) {
+                if(!this.mergeItemStack(itemstack1, 9, 45, true)) return null;
+            }
+
+            if(itemstack1.stackSize == 0) slot.putStack((ItemStack)null);
+            else slot.onSlotChanged();
+
+            if(itemstack1.stackSize == itemstack.stackSize) return null;
+            slot.onPickupFromSlot(player, itemstack1);
+        }
+        return itemstack;
+    }
 }
