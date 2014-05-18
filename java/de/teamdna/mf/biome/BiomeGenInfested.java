@@ -1,7 +1,5 @@
 package de.teamdna.mf.biome;
 
-import net.minecraft.entity.monster.EntityCaveSpider;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -10,11 +8,6 @@ public class BiomeGenInfested extends BiomeGenBase{
 
 	public BiomeGenInfested(int par1) {
 		super(par1);
-		/*this.spawnableMonsterList.clear();
-		this.spawnableMonsterList.add(EntityZombie.class);
-		this.spawnableMonsterList.add(EntityCaveSpider.class);
-		this.spawnableCreatureList.clear();*/
-		
 		this.setTemperatureRainfall(12, 12);
 		this.flowers.clear();
 		this.getSkyColorByTemp(50);
@@ -38,7 +31,6 @@ public class BiomeGenInfested extends BiomeGenBase{
     
     @Override
     public int getWaterColorMultiplier() {
-    	// TODO Auto-generated method stub
     	return 0x005500;
     }
 
