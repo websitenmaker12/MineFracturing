@@ -288,7 +288,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int var1) {
-		return new int[] { 1 };
+		return new int[] { 0 };
 	}
 
 	@Override

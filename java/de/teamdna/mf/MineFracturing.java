@@ -28,6 +28,7 @@ import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
 import de.teamdna.mf.block.BlockChemicalsMixer;
+import de.teamdna.mf.block.BlockCondenseChamber;
 import de.teamdna.mf.block.BlockFluid;
 import de.teamdna.mf.block.BlockGhostLoader;
 import de.teamdna.mf.block.BlockMaterialExtractor;
@@ -40,6 +41,7 @@ import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
+import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityCore;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
@@ -76,6 +78,7 @@ public class MineFracturing {
 	public Block fracFluidBlock;
 	public Block chemicalsMixer;
 	public Block ghostLoader;
+	public Block condenseChamber;
 	
 	public Item bucketOil;
 	public Item bucketFracFluid;
@@ -98,6 +101,7 @@ public class MineFracturing {
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
 		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(tab).setBlockTextureName(Reference.modid + "chemicalsMixer");
 		this.ghostLoader = (new BlockGhostLoader()).setBlockName("ghostLoader");
+		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(tab);
 		
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
 		FluidRegistry.registerFluid(this.oil);
@@ -125,6 +129,7 @@ public class MineFracturing {
 		proxy.registerBlock(this.fracFluidBlock);
 		proxy.registerBlock(this.chemicalsMixer);
 		proxy.registerBlock(this.ghostLoader);
+		proxy.registerBlock(this.condenseChamber);
 		
 		proxy.registerItem(this.bucketOil);
 		proxy.registerItem(bucketFracFluid);
@@ -136,6 +141,7 @@ public class MineFracturing {
 		proxy.registerTile(TileEntityExtractor.class, "extractor");
 		proxy.registerTile(TileEntityTank.class, "tank");
 		proxy.registerTile(TileEntityChemicalsMixer.class, "chemicalsMixer");
+		proxy.registerTile(TileEntityCondenseChamber.class, "condenseChamber");
 	}
 	
 	@EventHandler
