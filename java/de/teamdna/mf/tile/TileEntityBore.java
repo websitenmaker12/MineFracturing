@@ -223,8 +223,8 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 								int x2 = (containerChunk.xPosition + x) * 16;
 								int z2 = (containerChunk.zPosition + z) * 16;
 								
-								if(this.placedBedrocks) this.worldObj.setBlock(x2, 0, z2, Blocks.bedrock);
-								else this.worldObj.setBlockToAir(x2, 0, z2);
+								if(!this.placedBedrocks) this.worldObj.setBlock(x2, 255, z2, MineFracturing.INSTANCE.ghostLoader);
+								else this.worldObj.setBlockToAir(x2, 255, z2);
 							}
 						}
 

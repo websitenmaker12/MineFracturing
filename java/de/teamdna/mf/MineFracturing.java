@@ -28,6 +28,7 @@ import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
 import de.teamdna.mf.block.BlockChemicalsMixer;
 import de.teamdna.mf.block.BlockFluid;
+import de.teamdna.mf.block.BlockGhostLoader;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
 import de.teamdna.mf.block.BlockTank;
@@ -72,6 +73,7 @@ public class MineFracturing {
 	public Block oilBlock;
 	public Block fracFluidBlock;
 	public Block chemicalsMixer;
+	public Block ghostLoader;
 	
 	public Item bucketOil;
 	public Item bucketFracFluid;
@@ -93,6 +95,7 @@ public class MineFracturing {
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
 		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(tab).setBlockTextureName(Reference.modid + "chemicalsMixer");
+		this.ghostLoader = (new BlockGhostLoader()).setBlockName("ghostLoader");
 		
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
 		FluidRegistry.registerFluid(this.oil);
@@ -119,6 +122,7 @@ public class MineFracturing {
 		proxy.registerBlock(this.oilBlock);
 		proxy.registerBlock(this.fracFluidBlock);
 		proxy.registerBlock(this.chemicalsMixer);
+		proxy.registerBlock(this.ghostLoader);
 		
 		proxy.registerItem(this.bucketOil);
 		proxy.registerItem(bucketFracFluid);
