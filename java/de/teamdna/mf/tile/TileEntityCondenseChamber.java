@@ -31,16 +31,43 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 		
 		if(!this.worldObj.isRemote) {
 			if(this.currentBlockID != -1 && this.currentBlockAmount > 0) {
-				if(++this.idle >= maxIdle) {
-					this.currentBlockAmount--;
-					int amount = this.worldObj.rand.nextInt(7) + 4;
-					ItemStack stack = new ItemStack(CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)), amount);
+				if(this.isEnoughSpace()) {
+					if(++this.idle >= maxIdle) {
+						this.currentBlockAmount--;
+						int amount = this.worldObj.rand.nextInt(7) + 4;
+						ItemStack stack = new ItemStack(CoreRegistry.getCondensedItem(Block.getBlockById(this.currentBlockID)), amount);
+						this.mergeStackToOutput(stack);
+						this.tank.drain(1000, true);
+					}
 				}
 			} else {
 				this.currentBlockID = -1;
 				this.currentBlockAmount = 0;
 			}
 		}
+	}
+	
+	private void mergeStackToOutput(ItemStack stack) {
+		for(int i = 0; i < 9; i++) {
+			if(stack == null) break;
+			if(this.inventory[i] == null) this.inventory[i] = stack;
+			else if(this.inventory[i].stackSize < this.inventory[i].getMaxDamage() && this.inventory[i].isItemEqual(stack)) {
+				int newSize = this.inventory[i].stackSize + stack.stackSize;
+				if(newSize <= this.inventory[i].getMaxStackSize()) {
+					this.inventory[i].stackSize = newSize;
+					stack = null;
+				} else {
+					this.inventory[i].stackSize = this.inventory[i].getMaxStackSize();
+					stack.stackSize = newSize - this.inventory[i].getMaxStackSize();
+				}
+			}
+		}
+	}
+	
+	private boolean isEnoughSpace() {
+		for(int i = 0; i < 9; i++) if(this.inventory[i] == null) return true;
+		for(int i = 0; i < 9; i++) if(this.inventory[i] != null && this.inventory[i].stackSize < this.inventory[1].getMaxStackSize()) return true;
+		return false;
 	}
 	
 	@Override
@@ -67,6 +94,7 @@ public class TileEntityCondenseChamber extends TileEntityFluidCore implements IS
 	@Override
 	public void doImport(ForgeDirection direction, NBTTagCompound packet) {
 		this.tank.fill(new FluidStack(MineFracturing.INSTANCE.liquidOre, 1000), true);
+		this.currentBlockID = packet.getInteger("blockID");
 		this.currentBlockAmount++;
 	}
 	
