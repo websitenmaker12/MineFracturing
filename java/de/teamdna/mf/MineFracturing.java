@@ -94,6 +94,7 @@ public class MineFracturing {
 	public Item goldDust;
 	public Item diamondDust;
 	public Item emeraldDust;
+	public Item valve;
 	
 	public Fluid oil;
 	public Fluid fracFluid;
@@ -144,7 +145,7 @@ public class MineFracturing {
 		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":chemicalsMixer");
 		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
 		this.basicMachine = (new BlockCrafting()).setBlockName("basicMachine").setResistance(10F).setBlockTextureName(Reference.modid + ":basicMachine").setCreativeTab(tab);
-		this.combustionGen = (new BlockGenerator()).setBlockName("combusioneGen");
+		this.combustionGen = (new BlockGenerator()).setBlockName("combusioneGen").setCreativeTab(tab);
 		
 		// Items
 		this.coalDust = (new Item()).setUnlocalizedName("coalDust").setTextureName(Reference.modid + ":coalDust").setCreativeTab(this.tab);
@@ -152,6 +153,7 @@ public class MineFracturing {
 		this.goldDust = (new Item()).setUnlocalizedName("goldDust").setTextureName(Reference.modid + ":goldDust").setCreativeTab(this.tab);
 		this.diamondDust = (new Item()).setUnlocalizedName("diamondDust").setTextureName(Reference.modid + ":diamondDust").setCreativeTab(this.tab);
 		this.emeraldDust = (new Item()).setUnlocalizedName("emeraldDust").setTextureName(Reference.modid + ":emeraldDust").setCreativeTab(this.tab);
+		this.valve = (new Item()).setUnlocalizedName("valve").setTextureName(Reference.modid + ":valve").setCreativeTab(tab);
 		
 		// Fluids
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
@@ -201,6 +203,7 @@ public class MineFracturing {
 		proxy.registerItem(this.goldDust);
 		proxy.registerItem(this.diamondDust);
 		proxy.registerItem(this.emeraldDust);
+		proxy.registerItem(this.valve);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
@@ -213,6 +216,33 @@ public class MineFracturing {
 		
 		//////////Crafting///////////////// 	(und so was in der hauptklasse!)
 		GameRegistry.addRecipe(new ItemStack(traverse), "###", "# #", "###", '#', Blocks.iron_bars);
+		GameRegistry.addRecipe(new ItemStack(bore), "#C#", "#A#", "#B#", '#', traverse, 'A', basicMachine, 'B', Items.diamond_pickaxe, 'C', combustionGen);
+		GameRegistry.addRecipe(new ItemStack(extractor), "###", "#A#", "###", '#', traverse, 'A', this.valve);
+		GameRegistry.addRecipe(new ItemStack(valve), "###", "# #", "###", '#', Blocks.iron_bars);
+		GameRegistry.addRecipe(new ItemStack(combustionGen), "#A#", "CBC", "#A#", '#', Items.iron_ingot, 'A', Blocks.iron_bars, 'B', Blocks.furnace, 'C', basicMachine);
+		GameRegistry.addRecipe(new ItemStack(basicMachine), "#A#", "ABA", "#A#", '#', Items.iron_ingot, 'A', Items.gold_ingot, 'B', Blocks.iron_block);
+		GameRegistry.addRecipe(new ItemStack(basicMachine), "#A#", "ABA", "#A#", '#', Items.gold_ingot, 'A', Items.iron_ingot, 'B', Blocks.iron_block);
+		ItemStack output = new ItemStack(pressureTube);
+		output.stackSize = 32;
+		GameRegistry.addRecipe(output, "###", "ABA", "###", '#', Blocks.stone, 'A', Items.iron_ingot, 'B', Items.bucket);
+		output = new ItemStack(tankWall);
+		output.stackSize = 8;
+		GameRegistry.addRecipe(output, "###", "#A#", "###", '#', Items.iron_ingot, 'A', Blocks.iron_bars);
+		GameRegistry.addRecipe(new ItemStack(tankController), "#A#", "ABA", "#A#", '#', tankWall, 'A', Items.iron_ingot, 'B', basicMachine);
+		GameRegistry.addRecipe(new ItemStack(tankController), "#A#", "ABA", "#A#", '#', Items.iron_ingot, 'A', tankWall, 'B', basicMachine);
+		GameRegistry.addRecipe(new ItemStack(chemicalsMixer), "#A#", "ABA", "#A#", '#', Items.glass_bottle, 'A', Blocks.glass, 'B', basicMachine);
+		GameRegistry.addRecipe(new ItemStack(chemicalsMixer), "#A#", "ABA", "#A#", '#', Blocks.glass, 'A', Items.glass_bottle, 'B', basicMachine);
+		GameRegistry.addRecipe(new ItemStack(condenseChamber), "BBB", "C  ", "BAB", 'A', Items.bucket, 'B', Items.iron_ingot, 'C', Items.stick);
+		
+		GameRegistry.addSmelting(ironDust, new ItemStack(Items.iron_ingot), 1F);
+		GameRegistry.addSmelting(coalDust, new ItemStack(Items.coal), 1F);
+		GameRegistry.addSmelting(ironDust, new ItemStack(Items.iron_ingot), 1F);
+		GameRegistry.addSmelting(diamondDust, new ItemStack(Items.diamond), 1F);
+		GameRegistry.addSmelting(emeraldDust, new ItemStack(Items.emerald), 1F);
+		GameRegistry.addSmelting(goldDust, new ItemStack(Items.gold_ingot), 1F);
+		
+		//GameRegistry.addRecipe(new ItemStack());
+		//GameRegistry.addRecipe(recipe);
 	}
 	
 	@EventHandler
