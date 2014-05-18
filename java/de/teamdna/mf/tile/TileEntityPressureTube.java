@@ -146,7 +146,7 @@ public class TileEntityPressureTube extends TileEntityCore implements IConnectab
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		// TODO: error by saving
+
 		NBTTagList packetList = new NBTTagList();
 		for(NBTTagCompound packet : this.packets) packetList.appendTag(packet);
 		tag.setTag("packets", packetList);

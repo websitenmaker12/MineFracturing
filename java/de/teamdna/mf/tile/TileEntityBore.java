@@ -8,6 +8,8 @@ import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
 import de.teamdna.mf.MineFracturing;
@@ -37,6 +39,78 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	
 	public TileEntityBore() {
 		this.inventory = new ItemStack[1];
+	}
+	
+	// TODO: Bore must save it's progress
+	
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		tag.setInteger("state", this.state);
+		tag.setInteger("boreY", this.boreY);
+		tag.setInteger("radius", this.radius);
+		
+		NBTTagList ores = new NBTTagList();
+		for(String s : this.oreBlocks) {
+			NBTTagCompound oreTag = new NBTTagCompound();
+			oreTag.setString("pos", s);
+			ores.appendTag(oreTag);
+		}
+		tag.setTag("oreBlocks", ores);
+		
+		NBTTagList chunks = new NBTTagList();
+		for(ChunkCoordIntPair pair : this.chunkQueue) {
+			NBTTagCompound chunk = new NBTTagCompound();
+			chunk.setInteger("x", pair.chunkXPos);
+			chunk.setInteger("z", pair.chunkZPos);
+			chunks.appendTag(chunk);
+		}
+		tag.setTag("chunkQueue", chunks);
+		
+		tag.setInteger("totalOres", this.totalOres);
+		tag.setInteger("totalChunks", this.totalChunks);
+		
+		if(this.currentScanningChunk == null) tag.setString("currentChunk", "null");
+		else tag.setString("currentChunk", this.currentScanningChunk.xPosition + "/" + this.currentScanningChunk.zPosition);
+		
+		tag.setInteger("scanY", this.scanY);
+		tag.setInteger("lastInfestRadius", this.lastInfestRadius);
+		tag.setBoolean("placedBedrocks", this.placedBedrocks);
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		this.state = tag.getInteger("state");
+		this.boreY = tag.getInteger("boreY");
+		this.radius = tag.getInteger("radius");
+		
+		this.oreBlocks.clear();
+		NBTTagList ores = tag.getTagList("oreBlocks", 10);
+		for(int i = 0; i < ores.tagCount(); i++) {
+			this.oreBlocks.add(ores.getCompoundTagAt(i).getString("pos"));
+		}
+		
+		this.chunkQueue.clear();
+		NBTTagList chunks = tag.getTagList("chunkQueue", 10);
+		for(int i = 0; i < chunks.tagCount(); i++) {
+			NBTTagCompound chunkTag = chunks.getCompoundTagAt(i);
+			this.chunkQueue.add(new ChunkCoordIntPair(chunkTag.getInteger("x"), chunkTag.getInteger("z")));
+		}
+		
+		this.totalOres = tag.getInteger("totalOres");
+		this.totalChunks = tag.getInteger("totalChunks");
+		
+		String currChunk = tag.getString("currentChunk");
+		if(currChunk.equals("null")) this.currentScanningChunk = null;
+		else {
+			String[] parts = currChunk.replace("[", "").replace("]", "").split(", ");
+			this.currentScanningChunk = this.worldObj.getChunkFromChunkCoords(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+		}
+		
+		this.scanY = tag.getInteger("scanY");
+		this.lastInfestRadius = tag.getInteger("lastInfestRadius");
+		this.placedBedrocks = tag.getBoolean("placedBedrocks");
 	}
 	
 	@Override
@@ -125,7 +199,6 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 						}
 					}
 	
-					// TODO: Bedrock doesn't get replaced
 					// Update infested Chunks
 					if(!this.worldObj.isRemote) {
 						int chunkRadius = (int)(r / 16) + 1;
@@ -179,12 +252,11 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	}
 	
 	public int getScaledAnalysingProgress(int pixels) {
-//		return (this.totalChunks - (int)((double)this.chunkQueue.size() / (double)this.totalChunks * (double)pixels)) * pixels / this.totalChunks;
-		return (int)((double)this.chunkQueue.size() * (double)pixels / (double)this.totalChunks);
+		return pixels - (int)((double)this.chunkQueue.size() * (double)pixels / (double)this.totalChunks);
 	}
 	
 	public int getScaledFracturingProgress(int pixels) {
-		return Math.min(Math.abs(this.totalOres - (int)((double)this.oreBlocks.size() / (double)this.totalOres * (double)pixels)), this.totalOres);
+		return pixels - (int)((double)this.oreBlocks.size() * (double)pixels / (double)this.totalOres);
 	}
 
 	@Override

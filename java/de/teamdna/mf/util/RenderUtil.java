@@ -17,7 +17,4 @@ public class RenderUtil {
 		GL11.glColor4f(r * m, g * m, b * m, a * m);
 	}
 	
-	public static void draw3DLine(double b1, double b2, double b3, double b4, double t1, double t2, double t3, double t4) {
-	}
-	
 }
