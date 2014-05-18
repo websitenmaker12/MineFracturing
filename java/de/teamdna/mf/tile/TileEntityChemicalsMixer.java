@@ -33,10 +33,11 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 		this.inventory = new ItemStack[4];
 	}
 	
+	//Updates the entity
 	@Override
 	public void updateEntity() {
-		if (this.burnTime == 0 && canWork()) {
-			if (isItemFuel(inventory[3])) {
+		if (this.burnTime == 0) {
+			if (isItemFuel(inventory[3]) && canWork()) {
 				this.burnTime = getItemBurnTime(inventory[3]);
 				this.decrStackSize(3);
 			}
@@ -51,32 +52,36 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 		}
 	}
 	
+	//Returns if the mixer is working
 	private boolean isWorking() {
 		return this.workProgress > 0;
 	}
 	
+	//For GUI
 	public int getWorkProgressScaled(int pixels) {
 		return this.workProgress * pixels / this.maxWorkProgress;
 	}
 	
+	//Returns the burn time of an item
 	private int getItemBurnTime(ItemStack itemstack) {
 		return Util.getFuelValue(itemstack);
 	}
 	
+	//Returns if the item is a fuel
 	private boolean isItemFuel(ItemStack itemstack) {
 		return getItemBurnTime(itemstack) > 0;
 	}
 	
+	//checks if the machine could work
 	private boolean canWork()
 	{
-//		System.out.println("amount: "+tank.getFluidAmount() + " & capacity: "+tank.getCapacity() + " amount + 1000: " + (tank.getFluidAmount() + 1000));
 		if (this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
 			if(isRecipe(inventory)) return true;
-			System.out.println("hi");
 		}
 		return false;
 	}
 	
+	//Lets the machine finish it´s work (Adds liquid, etc.)
 	private void doWork() {
 		if (canWork()) {
 			tank.fill(new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), !this.worldObj.isRemote);
@@ -86,6 +91,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 		}
 	}
 	
+	//Decreases the stack size of the given index by one
 	private void decrStackSize(int stackID) {
 		if (inventory[stackID] != null) {
 			ItemStack itemstack = inventory[stackID].copy();
@@ -96,6 +102,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements IEx
 		}
 	}
 	
+	//Vailed recipe?
 	private boolean isRecipe(ItemStack[] itemstacks)
 	{
 		if (itemstacks[0] != null && itemstacks[1] != null && itemstacks[2] != null) {
