@@ -22,6 +22,7 @@ import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.IBoreBlock;
+import de.teamdna.mf.packet.PacketChunkUpdate;
 import de.teamdna.mf.util.PipeUtil;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
@@ -152,7 +153,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			if(this.state == -1) {
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
-				this.addChunksToQueue(MineFracturing.boreRadius);
+				this.addChunksToQueue(8); // TODO: MineFracturing.boreRadius
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -211,7 +212,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 					TileEntityExtractor extractor = this.getFirstExtractor();
 					extractor.addFluid(new FluidStack(MineFracturing.INSTANCE.oil, 100));
 					extractor.addOre(block.getBlock());
-					this.drain(ForgeDirection.UNKNOWN, 1, true);
+					this.drain(ForgeDirection.UNKNOWN, 1, !this.worldObj.isRemote);
 					
 					if(!this.worldObj.isRemote) {
 						Block replace = CoreRegistry.getContainer(block.getBlock());
@@ -221,44 +222,47 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 				
 				// Infesting
 				int m = MineFracturing.infestionMultiplier;
-				System.out.println(MineFracturing.infestionMultiplier);
 				int r = (this.radius * m - (int)((double)this.oreBlocks.size() / (double)this.totalOres * ((double)this.radius) * m));
 				int rSq = r * r;
 				
 				if(r != this.lastInfestRadius) {
 					// Infests the world
-					if(!this.placedBedrocks) {
+//					if(!this.placedBedrocks) {
+					List<Chunk> chunks = new ArrayList<Chunk>();
 						for(int i = -r; i <= r; i++) {
 							for(int j = -r; j <= r; j++) {
 								int distance = i * i + j * j;
 								if(distance <= rSq) {
 									Util.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
+									Chunk c = this.worldObj.getChunkFromBlockCoords(this.xCoord + i, this.zCoord + j);
+									if(!chunks.contains(c)) chunks.add(c);
 								}
 							}
 						}
-					}
+						MineFracturing.packetHandler.sendToDimension(new PacketChunkUpdate(this.worldObj, chunks), this.worldObj.provider.dimensionId);
+//					}
 	
 					// Update infested Chunks
-					if(!this.worldObj.isRemote) {
-						int chunkRadius = (int)(r / 16) + 1;
-						for(int x = -chunkRadius; x <= chunkRadius; x++) {
-							for(int z = -chunkRadius; z <= chunkRadius; z++) {
-								Chunk containerChunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
-								int x2 = (containerChunk.xPosition + x) * 16;
-								int z2 = (containerChunk.zPosition + z) * 16;
-								
-								if(!this.placedBedrocks) this.worldObj.setBlock(x2, 255, z2, Blocks.glass);
-								else this.worldObj.setBlockToAir(x2, 255, z2);
-							}
-						}
-
-						if(this.placedBedrocks) {
-							this.lastInfestRadius = r;
-							this.placedBedrocks = false;
-						} else {
-							this.placedBedrocks = true;
-						}
-					}
+//					if(!this.worldObj.isRemote) {
+//						int chunkRadius = (int)(r / 16) + 1;
+//						for(int x = -chunkRadius; x <= chunkRadius; x++) {
+//							for(int z = -chunkRadius; z <= chunkRadius; z++) {
+//								Chunk containerChunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
+//								int x2 = (containerChunk.xPosition + x) * 16;
+//								int z2 = (containerChunk.zPosition + z) * 16;
+//								
+//								if(!this.placedBedrocks) this.worldObj.setBlock(x2, 255, z2, Blocks.glass);
+//								else this.worldObj.setBlockToAir(x2, 255, z2);
+//							}
+//						}
+//
+//						if(this.placedBedrocks) {
+//							this.lastInfestRadius = r;
+//							this.placedBedrocks = false;
+//						} else {
+//							this.placedBedrocks = true;
+//						}
+//					}
 				}
 			}
 		}

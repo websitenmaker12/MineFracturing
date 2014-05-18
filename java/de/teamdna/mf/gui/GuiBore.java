@@ -72,7 +72,7 @@ public class GuiBore extends GuiContainer {
 
 	    // Combustion Generator
 		this.mc.getTextureManager().bindTexture(guiBg);
-		int i1 = this.container.burnTime * 12 + 1 / 100 + 10;
+		int i1 = this.container.burnTime * 12 / Math.max(this.container.maxBurnTime, 1);
 		this.drawTexturedModalRect(k + 203, l + 50 + 12 - i1, 242, 12 - i1 + 1, 14, i1 + 2);
 	}
 
