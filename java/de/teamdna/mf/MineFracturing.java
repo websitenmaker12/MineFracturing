@@ -31,6 +31,7 @@ import de.teamdna.mf.block.BlockChemicalsMixer;
 import de.teamdna.mf.block.BlockCondenseChamber;
 import de.teamdna.mf.block.BlockCrafting;
 import de.teamdna.mf.block.BlockFluid;
+import de.teamdna.mf.block.BlockGenerator;
 import de.teamdna.mf.block.BlockGhostLoader;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPressureTube;
@@ -116,7 +117,7 @@ public class MineFracturing {
 		this.ghostLoader = (new BlockGhostLoader()).setBlockName("ghostLoader");
 		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
 		this.basicMachine = (new BlockCrafting()).setBlockName("basicMachine").setResistance(10F).setBlockTextureName(Reference.modid + ":basicMachine").setCreativeTab(tab);
-		this.combustionGen = (new BlockCrafting()).setBlockName("combusioneGen").setBlockTextureName(Reference.modid + ":combustionGen");
+		this.combustionGen = (new BlockGenerator()).setBlockName("combusioneGen");
 		
 		
 		// Items
