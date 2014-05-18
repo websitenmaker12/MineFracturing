@@ -68,11 +68,14 @@ public class MineFracturing {
 	public Block tankWall;
 	public Block tankController;
 	public Block oilBlock;
+	public Block fracFluidBlock;
 	public Block chemicalsMixer;
 	
 	public Item bucketOil;
+	public Item bucketFracFluid;
 	
 	public Fluid oil;
+	public Fluid fracFluid;
 	
 	// TODO: Resistance, Hardness to blocks; Crafting receipes
 	
@@ -92,9 +95,17 @@ public class MineFracturing {
 		FluidRegistry.registerFluid(this.oil);
 		this.oilBlock = (new BlockFluid(this.oil, Material.water)).setBlockName("oilSource").setLightOpacity(3);
 		
+		this.fracFluid = (new Fluid("fracFluid")).setViscosity(3400).setDensity(1200);
+		FluidRegistry.registerFluid(this.fracFluid);
+		this.fracFluidBlock = (new BlockFluid(this.fracFluid, Material.lava)).setBlockName("fracFluidSource").setLightOpacity(3);
+		
 		this.bucketOil = (new ItemBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_oil").setContainerItem(Items.bucket);
 		FluidContainerRegistry.registerFluidContainer(this.oil, new ItemStack(this.bucketOil), FluidContainerRegistry.EMPTY_BUCKET);
 		BucketHandler.INSTANCE.register(this.oilBlock, this.bucketOil);
+		
+		this.bucketFracFluid = (new ItemBucket(this.fracFluidBlock)).setUnlocalizedName("bucketFracFluid").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_oil").setContainerItem(Items.bucket);
+		FluidContainerRegistry.registerFluidContainer(this.fracFluid, new ItemStack(this.bucketFracFluid), FluidContainerRegistry.EMPTY_BUCKET);
+		BucketHandler.INSTANCE.register(this.fracFluidBlock, this.bucketFracFluid);
 		
 		proxy.registerBlock(this.bore);
 		proxy.registerBlock(this.pressureTube);
