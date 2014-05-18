@@ -37,11 +37,11 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	private int lastInfestRadius = -1;
 	private boolean placedBedrocks = false;
 	
+	private ChunkCoordIntPair currentChunkForLoad = null;
+	
 	public TileEntityBore() {
 		this.inventory = new ItemStack[1];
 	}
-	
-	// TODO: Bore must save it's progress
 	
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
@@ -102,10 +102,10 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 		this.totalChunks = tag.getInteger("totalChunks");
 		
 		String currChunk = tag.getString("currentChunk");
-		if(currChunk.equals("null")) this.currentScanningChunk = null;
+		if(currChunk.equals("null")) this.currentChunkForLoad = null;
 		else {
-			String[] parts = currChunk.replace("[", "").replace("]", "").split(", ");
-			this.currentScanningChunk = this.worldObj.getChunkFromChunkCoords(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+			String[] parts = currChunk.split("/");
+			this.currentChunkForLoad = new ChunkCoordIntPair(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
 		}
 		
 		this.scanY = tag.getInteger("scanY");
@@ -252,10 +252,12 @@ public class TileEntityBore extends TileEntityCore implements ISidedInventory {
 	}
 	
 	public int getScaledAnalysingProgress(int pixels) {
+		if(this.totalChunks == 0) return 0;
 		return pixels - (int)((double)this.chunkQueue.size() * (double)pixels / (double)this.totalChunks);
 	}
 	
 	public int getScaledFracturingProgress(int pixels) {
+		if(this.totalOres == 0) return 0;
 		return pixels - (int)((double)this.oreBlocks.size() * (double)pixels / (double)this.totalOres);
 	}
 
