@@ -55,8 +55,6 @@ public class GuiTank extends GuiContainer {
 	     GL11.glColor4f(1F, 1F, 1F, 1F);
 	     GL11.glColor4f(1F, 1F, 1F, 1F);
 	     
-	     this.container.fluidAmount = this.container.capacity;
-	     
 	     //Liquid
 		if (this.container.fluidID != -1) {
 			Fluid fluid = FluidRegistry.getFluid(this.container.fluidID);

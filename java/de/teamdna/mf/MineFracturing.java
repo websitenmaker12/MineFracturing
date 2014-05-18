@@ -68,6 +68,7 @@ public class MineFracturing {
 	public Block tankWall;
 	public Block tankController;
 	public Block oilBlock;
+	public Block chemicalsMixer;
 	
 	public Item bucketOil;
 	
