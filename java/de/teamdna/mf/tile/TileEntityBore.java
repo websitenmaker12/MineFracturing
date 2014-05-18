@@ -214,7 +214,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 					TileEntityExtractor extractor = this.getFirstExtractor();
 					extractor.addFluid(new FluidStack(MineFracturing.INSTANCE.oil, 100));
 					extractor.addOre(block.getBlock());
-					this.drain(ForgeDirection.UNKNOWN, 10, true);
+					this.drain(ForgeDirection.UNKNOWN, 1, true);
 					
 					if(!this.worldObj.isRemote) {
 						Block replace = CoreRegistry.getContainer(block.getBlock());
