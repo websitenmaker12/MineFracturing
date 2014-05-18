@@ -100,6 +100,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	/* IImporter */
 	@Override
 	public boolean canImport(ForgeDirection direction, NBTTagCompound packet) {
+		if(this.controllerTile == null) return false;
 		return direction != ForgeDirection.DOWN && PipeUtil.canImportToTank(packet, this.controllerTile.tank);
 	}
 

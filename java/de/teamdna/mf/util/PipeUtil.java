@@ -30,7 +30,7 @@ public class PipeUtil {
 	}
 	
 	public static void importToTank(NBTTagCompound packet, FluidTank tank) {
-		if(packet.getCompoundTag("stackTag") != null) tank.fill(FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")), true);
+		if(packet.hasKey("stackTag") && packet.getCompoundTag("stackTag") != null) tank.fill(FluidStack.loadFluidStackFromNBT(packet.getCompoundTag("stackTag")), true);
 		else tank.fill(new FluidStack(FluidRegistry.getFluid(packet.getInteger("fluidID")), packet.getInteger("amount")), true);
 	}
 	
