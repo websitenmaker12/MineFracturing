@@ -8,6 +8,9 @@ public class Reference {
 	public static final String name    = "MineFracturing";
 	public static final String version = "1.0";
 
+	public static final String clientProxy = "de.teamdna.mf.net.ClientProxy";
+	public static final String commonProxy = "de.teamdna.mf.net.CommonProxy";
+	
 	public static void setupMetadata(ModMetadata meta) {
 		meta.modId = modid;
 		meta.name = name;

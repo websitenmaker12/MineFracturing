@@ -65,7 +65,7 @@ public class MineFracturing {
 	@Instance(Reference.modid)
 	public static MineFracturing INSTANCE;
 	
-	@SidedProxy(clientSide = "de.teamdna.mf.net.ClientProxy", serverSide = "de.teamdna.mf.net.CommonProxy")
+	@SidedProxy(clientSide = Reference.clientProxy, serverSide = Reference.commonProxy)
 	public static CommonProxy proxy;
 	
 	public CreativeTabs tab = new CreativeTabs(CreativeTabs.getNextID(), Reference.modid) {

@@ -1,15 +1,24 @@
 package de.teamdna.mf.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.RenderBlockFluid;
 
 import org.lwjgl.opengl.GL11;
 
+import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
@@ -17,6 +26,7 @@ import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityPressureTube;
 import de.teamdna.mf.tile.TileEntityTraverse;
+import de.teamdna.mf.util.RenderUtil;
 
 public class RenderTiles extends TileEntitySpecialRenderer {
 
@@ -128,11 +138,26 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glRotated(l == 3 ? -90F : l == 4 ? 180F : l == 2 ? 90F : 0F, 0, 1, 0);
 		GL11.glTranslatef(0.1F, 0, 0);
 		
-//		Fluid fluid = FluidRegistry.getFluid(MineFracturing.INSTANCE.liquidOre.getID());
-// 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-// 		RenderUtil.setIntColor3(fluid.getColor());
-// 		IIcon icon = fluid.getFlowingIcon() != null ? fluid.getFlowingIcon() : fluid.getBlock().getIcon(0, 0);
+		Fluid fluid = FluidRegistry.getFluid(MineFracturing.INSTANCE.liquidOre.getID());
+ 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+ 		IIcon icon = fluid.getFlowingIcon() != null ? fluid.getFlowingIcon() : fluid.getBlock().getIcon(0, 0);
  		
+ 		GL11.glPushMatrix();
+ 		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		
+		GL11.glTranslatef(-0.5F, -0.35F, -0.4F);
+		GL11.glScalef(0.8F, 0.8F, 0.8F);
+ 		RenderUtil.setIntColor3(fluid.getColor());
+ 		RenderUtil.renderIconCube(0, 0, 0, icon);
+ 		
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glPopMatrix();
+		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_condenserLoc);
 		model_condenser.renderAll();
 		GL11.glPopMatrix();

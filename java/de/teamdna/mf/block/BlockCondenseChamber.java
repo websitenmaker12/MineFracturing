@@ -18,6 +18,7 @@ public class BlockCondenseChamber extends BlockCore {
 
 	public BlockCondenseChamber() {
 		super(Material.iron);
+		this.setBlockTextureName("iron_block");
 	}
 	
 	@Override
