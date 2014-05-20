@@ -6,6 +6,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.entity.EntityEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.damagsource.DamageSourceFracking;
 
@@ -13,10 +14,12 @@ public class EntityHandler {
 	
 	public static final DamageSource fracing = new DamageSourceFracking();
 	
+	@SubscribeEvent
 	public void entityEnteringChunkEvent(EntityEvent.EnteringChunk event) {
+		System.out.println(event.entity);
 		if(!(event.entity instanceof EntityLivingBase)) return;
 		Chunk chunk = event.entity.worldObj.getChunkFromChunkCoords(event.newChunkX, event.newChunkZ);
-		if(chunk == null) return;
+		if(chunk == null || !chunk.isChunkLoaded) return;
 		
 		boolean infested = false;
 		for(byte b : chunk.getBiomeArray()) if(b == (byte)(MineFracturing.INSTANCE.infestedBiome.biomeID & 0xFF)) { infested = true; break; }

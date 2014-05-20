@@ -15,6 +15,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.logging.log4j.Logger;
 
@@ -42,7 +43,6 @@ import de.teamdna.mf.block.BlockPipe;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.event.BucketHandler;
-import de.teamdna.mf.event.EntityHandler;
 import de.teamdna.mf.event.FuelHandler;
 import de.teamdna.mf.event.WorldHandler;
 import de.teamdna.mf.gui.GuiHandler;
@@ -219,6 +219,12 @@ public class MineFracturing {
 		proxy.registerTile(TileEntityTank.class, "tank");
 		proxy.registerTile(TileEntityChemicalsMixer.class, "chemicalsMixer");
 		proxy.registerTile(TileEntityCondenseChamber.class, "condenseChamber");
+		
+		OreDictionary.registerOre("dustCoal", this.coalDust);
+		OreDictionary.registerOre("dustIron", this.ironDust);
+		OreDictionary.registerOre("dustGold", this.goldDust);
+		OreDictionary.registerOre("dustDiamond", this.diamondDust);
+		OreDictionary.registerOre("dustEmerald", this.emeraldDust);
 	}
 	
 	@EventHandler
@@ -233,7 +239,7 @@ public class MineFracturing {
 		// Registrations
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
-		MinecraftForge.EVENT_BUS.register(new EntityHandler());
+//		MinecraftForge.EVENT_BUS.register(new EntityHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldHandler());
 		FMLCommonHandler.instance().bus().register(PipeNetworkController.INSTNACE);
 		GameRegistry.registerFuelHandler(new FuelHandler());
