@@ -8,6 +8,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -31,6 +32,7 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamdna.mf.api.CoreRegistry;
+import de.teamdna.mf.api.PipeRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
 import de.teamdna.mf.block.BlockBore;
 import de.teamdna.mf.block.BlockChemicalsMixer;
@@ -52,6 +54,7 @@ import de.teamdna.mf.item.ItemWoodenPillar;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.packet.PacketChunkUpdate;
 import de.teamdna.mf.packet.PacketHandler;
+import de.teamdna.mf.tile.FurnaceImporter;
 import de.teamdna.mf.tile.PipeNetworkController;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
@@ -286,6 +289,8 @@ public class MineFracturing {
 		
 		CoreRegistry.scanForOres();
 		CoreRegistry.registerOre(Blocks.redstone_ore, new ItemStack(Items.redstone));
+		
+		PipeRegistry.registerCustomTile(TileEntityFurnace.class, new FurnaceImporter());
 	}
 	
 	@EventHandler

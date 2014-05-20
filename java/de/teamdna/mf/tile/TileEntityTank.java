@@ -3,6 +3,7 @@ package de.teamdna.mf.tile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -173,6 +174,26 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		return new FluidTankInfo[] { this.controllerTile.tank.getInfo() };
+	}
+	
+	@Override
+	public World getWorld() {
+		return this.worldObj;
+	}
+
+	@Override
+	public int getX() {
+		return this.xCoord;
+	}
+
+	@Override
+	public int getY() {
+		return this.yCoord;
+	}
+
+	@Override
+	public int getZ() {
+		return this.zCoord;
 	}
 	
 }

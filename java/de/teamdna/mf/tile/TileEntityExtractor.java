@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import de.teamdna.mf.Reference;
@@ -92,6 +93,26 @@ public class TileEntityExtractor extends TileEntityCore implements IExtractor {
 		this.blocksToSend.clear();
 		NBTTagList blocks = tag.getTagList("blocks", 10);
 		for(int i = 0; i < blocks.tagCount(); i++) this.blocksToSend.add(Block.getBlockById(blocks.getCompoundTagAt(i).getInteger("blockID")));
+	}
+
+	@Override
+	public World getWorld() {
+		return this.worldObj;
+	}
+
+	@Override
+	public int getX() {
+		return this.xCoord;
+	}
+
+	@Override
+	public int getY() {
+		return this.yCoord;
+	}
+
+	@Override
+	public int getZ() {
+		return this.zCoord;
 	}
 	
 }
