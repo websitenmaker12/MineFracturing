@@ -38,14 +38,17 @@ import de.teamdna.mf.block.BlockCondenseChamber;
 import de.teamdna.mf.block.BlockCrafting;
 import de.teamdna.mf.block.BlockFluid;
 import de.teamdna.mf.block.BlockGenerator;
+import de.teamdna.mf.block.BlockGrindStone;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPipe;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.event.BucketHandler;
+import de.teamdna.mf.event.EntityHandler;
 import de.teamdna.mf.event.FuelHandler;
 import de.teamdna.mf.event.WorldHandler;
 import de.teamdna.mf.gui.GuiHandler;
+import de.teamdna.mf.item.ItemWoodenPillar;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.packet.PacketChunkUpdate;
 import de.teamdna.mf.packet.PacketHandler;
@@ -55,6 +58,7 @@ import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityCore;
 import de.teamdna.mf.tile.TileEntityExtractor;
+import de.teamdna.mf.tile.TileEntityGrindStone;
 import de.teamdna.mf.tile.TileEntityPipe;
 import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
@@ -93,6 +97,7 @@ public class MineFracturing {
 	public Block liquidOreBlock;
 	public Block basicMachine;
 	public Block combustionGen;
+	public Block grindStone;
 	
 	public Item bucketOil;
 	public Item bucketFracFluid;
@@ -103,6 +108,7 @@ public class MineFracturing {
 	public Item diamondDust;
 	public Item emeraldDust;
 	public Item valve;
+	public Item woodenPillar;
 	
 	public Fluid oil;
 	public Fluid fracFluid;
@@ -140,7 +146,7 @@ public class MineFracturing {
 		oreMultiplierMax = p4.getInt(7);
 		
 		config.save();
-		
+
 		// Blocks
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
 		this.pipe = (new BlockPipe()).setBlockName("pipe").setCreativeTab(this.tab);
@@ -152,6 +158,7 @@ public class MineFracturing {
 		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
 		this.basicMachine = (new BlockCrafting()).setBlockName("basicMachine").setResistance(10F).setBlockTextureName(Reference.modid + ":basicMachine").setCreativeTab(this.tab);
 		this.combustionGen = (new BlockGenerator()).setBlockName("combusioneGen").setCreativeTab(this.tab);
+		this.grindStone = (new BlockGrindStone()).setBlockName("grindStone").setCreativeTab(this.tab);
 		
 		// Items
 		this.coalDust = (new Item()).setUnlocalizedName("coalDust").setTextureName(Reference.modid + ":coalDust").setCreativeTab(this.tab);
@@ -160,6 +167,7 @@ public class MineFracturing {
 		this.diamondDust = (new Item()).setUnlocalizedName("diamondDust").setTextureName(Reference.modid + ":diamondDust").setCreativeTab(this.tab);
 		this.emeraldDust = (new Item()).setUnlocalizedName("emeraldDust").setTextureName(Reference.modid + ":emeraldDust").setCreativeTab(this.tab);
 		this.valve = (new Item()).setUnlocalizedName("valve").setTextureName(Reference.modid + ":valve").setCreativeTab(this.tab);
+		this.woodenPillar = (new ItemWoodenPillar()).setUnlocalizedName("woodenPillar").setCreativeTab(this.tab);
 		
 		// Fluids
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
@@ -200,6 +208,7 @@ public class MineFracturing {
 		proxy.registerBlock(this.liquidOreBlock);
 		proxy.registerBlock(this.combustionGen);
 		proxy.registerBlock(this.basicMachine);
+		proxy.registerBlock(this.grindStone);
 		
 		proxy.registerItem(this.bucketOil);
 		proxy.registerItem(this.bucketFracFluid);
@@ -210,6 +219,7 @@ public class MineFracturing {
 		proxy.registerItem(this.diamondDust);
 		proxy.registerItem(this.emeraldDust);
 		proxy.registerItem(this.valve);
+		proxy.registerItem(this.woodenPillar);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
@@ -219,6 +229,7 @@ public class MineFracturing {
 		proxy.registerTile(TileEntityTank.class, "tank");
 		proxy.registerTile(TileEntityChemicalsMixer.class, "chemicalsMixer");
 		proxy.registerTile(TileEntityCondenseChamber.class, "condenseChamber");
+		proxy.registerTile(TileEntityGrindStone.class, "grindStone");
 		
 		OreDictionary.registerOre("dustCoal", this.coalDust);
 		OreDictionary.registerOre("dustIron", this.ironDust);
@@ -239,7 +250,7 @@ public class MineFracturing {
 		// Registrations
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
-//		MinecraftForge.EVENT_BUS.register(new EntityHandler());
+		MinecraftForge.EVENT_BUS.register(new EntityHandler());
 		MinecraftForge.EVENT_BUS.register(new WorldHandler());
 		FMLCommonHandler.instance().bus().register(PipeNetworkController.INSTNACE);
 		GameRegistry.registerFuelHandler(new FuelHandler());
@@ -259,6 +270,7 @@ public class MineFracturing {
 		GameRegistry.addRecipe(new ItemStack(chemicalsMixer), "#A#", "ABA", "#A#", '#', Items.glass_bottle, 'A', Blocks.glass, 'B', basicMachine);
 		GameRegistry.addRecipe(new ItemStack(chemicalsMixer), "#A#", "ABA", "#A#", '#', Blocks.glass, 'A', Items.glass_bottle, 'B', basicMachine);
 		GameRegistry.addRecipe(new ItemStack(condenseChamber), "BBB", "C  ", "BAB", 'A', Items.bucket, 'B', Items.iron_ingot, 'C', Items.stick);
+		GameRegistry.addRecipe(new ItemStack(this.woodenPillar), "#", "#", '#', Items.stick);
 		
 		GameRegistry.addSmelting(ironDust, new ItemStack(Items.iron_ingot), 1F);
 		GameRegistry.addSmelting(coalDust, new ItemStack(Items.coal), 1F);
