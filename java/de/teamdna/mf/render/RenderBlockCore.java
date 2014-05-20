@@ -15,7 +15,7 @@ import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityExtractor;
-import de.teamdna.mf.tile.TileEntityPressureTube;
+import de.teamdna.mf.tile.TileEntityPipe;
 import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
 
@@ -24,7 +24,7 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 	public TileEntityTraverse dummyTraverse = new TileEntityTraverse();
 	public TileEntityBore dummyBore = new TileEntityBore();
 	public TileEntityExtractor dummyExtractor = new TileEntityExtractor();
-	public TileEntityPressureTube dummyPipe = new TileEntityPressureTube();
+	public TileEntityPipe dummyPipe = new TileEntityPipe();
 	public TileEntityChemicalsMixer dummyMixer = new TileEntityChemicalsMixer();
 	public TileEntityCondenseChamber dummyCondenser = new TileEntityCondenseChamber();
 	
@@ -35,7 +35,7 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 		if(block == MineFracturing.INSTANCE.traverse) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyTraverse, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.bore) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyBore, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.extractor) TileEntityRendererDispatcher.instance.renderTileEntityAt(this.dummyExtractor, 0, 0, 0, 0);
-		else if (block == MineFracturing.INSTANCE.pressureTube) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyPipe, 0, 0, 0, 0);
+		else if (block == MineFracturing.INSTANCE.pipe) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyPipe, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.chemicalsMixer) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyMixer, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.condenseChamber) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyCondenser, 0, 0, 0, 0);
 		

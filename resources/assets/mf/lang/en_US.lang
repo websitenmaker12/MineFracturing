@@ -1,5 +1,5 @@
 tile.bore.name=Bore
-tile.pressureTube.name=Pressure Tube
+tile.pipe.name=Pipe
 tile.traverse.name=Traverse
 tile.materialExtractor.name=Material Extractor
 tile.tankWall.name=Tank Wall

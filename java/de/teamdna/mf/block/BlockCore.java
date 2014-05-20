@@ -9,6 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import de.teamdna.mf.tile.IExtractor;
+import de.teamdna.mf.tile.IImporter;
+import de.teamdna.mf.tile.PipeNetworkController;
 
 public abstract class BlockCore extends BlockContainer {
 
@@ -22,8 +25,14 @@ public abstract class BlockCore extends BlockContainer {
 	@Override
 	public abstract TileEntity createNewTileEntity(World var1, int var2);
 
+	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
 		TileEntity tile = world.getTileEntity(x, y, z);
+		
+		if(tile != null && (tile instanceof IExtractor || tile instanceof IImporter)) {
+        	PipeNetworkController.INSTNACE.handleBlockBreak(tile);
+		}
+		
 		if(tile != null && tile instanceof IInventory) {
 			IInventory inv = (IInventory)tile;
 			
@@ -53,9 +62,18 @@ public abstract class BlockCore extends BlockContainer {
 			
 			world.func_147453_f(x, y, z, block);
 		}
-
+		
 		super.breakBlock(world, x, y, z, block, meta);
     }
 
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z) {
+        super.onBlockAdded(world, x, y, z);
+        
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if(tile != null && (tile instanceof IExtractor || tile instanceof IImporter)) {
+        	PipeNetworkController.INSTNACE.handleBlockAdd(tile);
+		}
+    }
 	
 }

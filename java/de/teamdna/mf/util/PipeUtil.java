@@ -1,7 +1,6 @@
 package de.teamdna.mf.util;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -10,8 +9,8 @@ import de.teamdna.mf.Reference;
 
 public class PipeUtil {
 
-	public static NBTTagCompound extractFromTank(FluidTank tank) {
-		FluidStack stack = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
+	public static NBTTagCompound extractFromTank(FluidTank tank, boolean doExtract) {
+		FluidStack stack = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, doExtract);
 		if(stack != null && stack.amount > 0) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("id", Reference.PipePacketIDs.fluid);

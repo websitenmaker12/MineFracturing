@@ -24,7 +24,7 @@ import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityExtractor;
-import de.teamdna.mf.tile.TileEntityPressureTube;
+import de.teamdna.mf.tile.TileEntityPipe;
 import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.mf.util.RenderUtil;
 
@@ -123,7 +123,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 			renderTileBore(x, y, z, (TileEntityBore)tile);
 		}
 		else if (tile instanceof TileEntityExtractor) renderTileExtractor(x, y, z);
-		else if (tile instanceof TileEntityPressureTube) renderTilePipe((TileEntityPressureTube)tile, x, y, z);
+		else if (tile instanceof TileEntityPipe) renderTilePipe((TileEntityPipe)tile, x, y, z);
 		else if (tile instanceof TileEntityChemicalsMixer) renderTileMixer(x, y, z);
 		else if (tile instanceof TileEntityCondenseChamber) renderTileCondenser(x, y, z, (TileEntityCondenseChamber)tile);
 		
@@ -270,7 +270,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 	
-	public void renderTilePipe(TileEntityPressureTube tubeTile, double x, double y, double z) {
+	public void renderTilePipe(TileEntityPipe tubeTile, double x, double y, double z) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x+0.5, y+0.5, z+0.5D);
 		GL11.glScaled(0.8D, 1.D, 0.8D);

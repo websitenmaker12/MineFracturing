@@ -49,8 +49,8 @@ public abstract class TileEntityFluidCore extends TileEntityCore implements IExt
 	public abstract boolean canExtract(ForgeDirection direction);
 
 	@Override
-	public NBTTagCompound extract(ForgeDirection direction) {
-		return PipeUtil.extractFromTank(this.tank);
+	public NBTTagCompound extract(ForgeDirection direction, boolean doExtract) {
+		return PipeUtil.extractFromTank(this.tank, doExtract);
 	}
 
 	/* IFluidHandler */

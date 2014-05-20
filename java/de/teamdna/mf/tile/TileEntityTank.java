@@ -117,8 +117,8 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 	}
 
 	@Override
-	public NBTTagCompound extract(ForgeDirection direction) {
-		return PipeUtil.extractFromTank(this.controllerTile.tank);
+	public NBTTagCompound extract(ForgeDirection direction, boolean doExtract) {
+		return PipeUtil.extractFromTank(this.controllerTile.tank, doExtract);
 	}
 	
 	public boolean isStructureComplete() {

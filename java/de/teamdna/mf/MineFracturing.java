@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import org.apache.logging.log4j.Logger;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -25,6 +26,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamdna.mf.api.CoreRegistry;
@@ -36,22 +38,24 @@ import de.teamdna.mf.block.BlockCrafting;
 import de.teamdna.mf.block.BlockFluid;
 import de.teamdna.mf.block.BlockGenerator;
 import de.teamdna.mf.block.BlockMaterialExtractor;
-import de.teamdna.mf.block.BlockPressureTube;
+import de.teamdna.mf.block.BlockPipe;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.event.BucketHandler;
 import de.teamdna.mf.event.EntityHandler;
 import de.teamdna.mf.event.FuelHandler;
+import de.teamdna.mf.event.WorldHandler;
 import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.packet.PacketChunkUpdate;
 import de.teamdna.mf.packet.PacketHandler;
+import de.teamdna.mf.tile.PipeNetworkController;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityCore;
 import de.teamdna.mf.tile.TileEntityExtractor;
-import de.teamdna.mf.tile.TileEntityPressureTube;
+import de.teamdna.mf.tile.TileEntityPipe;
 import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.mf.util.Util;
@@ -77,7 +81,7 @@ public class MineFracturing {
 	public BiomeGenBase infestedBiome;
 	
 	public Block bore;
-	public Block pressureTube;
+	public Block pipe;
 	public Block traverse;
 	public Block extractor;
 	public Block tankWall;
@@ -139,7 +143,7 @@ public class MineFracturing {
 		
 		// Blocks
 		this.bore = (new BlockBore()).setBlockName("bore").setCreativeTab(this.tab);
-		this.pressureTube = (new BlockPressureTube()).setBlockName("pressureTube").setCreativeTab(this.tab);
+		this.pipe = (new BlockPipe()).setBlockName("pipe").setCreativeTab(this.tab);
 		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(this.tab);
 		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
 		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");
@@ -184,7 +188,7 @@ public class MineFracturing {
 		BucketHandler.INSTANCE.register(this.liquidOreBlock, this.bucketLiquidOre);
 		
 		proxy.registerBlock(this.bore);
-		proxy.registerBlock(this.pressureTube);
+		proxy.registerBlock(this.pipe);
 		proxy.registerBlock(this.traverse);
 		proxy.registerBlock(this.extractor);
 		proxy.registerBlock(this.tankWall);
@@ -209,7 +213,7 @@ public class MineFracturing {
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
-		proxy.registerTile(TileEntityPressureTube.class, "pressureTube");
+		proxy.registerTile(TileEntityPipe.class, "pressureTube");
 		proxy.registerTile(TileEntityTraverse.class, "traverse");
 		proxy.registerTile(TileEntityExtractor.class, "extractor");
 		proxy.registerTile(TileEntityTank.class, "tank");
@@ -230,6 +234,8 @@ public class MineFracturing {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new EntityHandler());
+		MinecraftForge.EVENT_BUS.register(new WorldHandler());
+		FMLCommonHandler.instance().bus().register(PipeNetworkController.INSTNACE);
 		GameRegistry.registerFuelHandler(new FuelHandler());
 		
 		// Crafting
@@ -240,12 +246,8 @@ public class MineFracturing {
 		GameRegistry.addRecipe(new ItemStack(combustionGen), "#A#", "CBC", "#A#", '#', Items.iron_ingot, 'A', Blocks.iron_bars, 'B', Blocks.furnace, 'C', basicMachine);
 		GameRegistry.addRecipe(new ItemStack(basicMachine), "#A#", "ABA", "#A#", '#', Items.iron_ingot, 'A', Items.gold_ingot, 'B', Blocks.iron_block);
 		GameRegistry.addRecipe(new ItemStack(basicMachine), "#A#", "ABA", "#A#", '#', Items.gold_ingot, 'A', Items.iron_ingot, 'B', Blocks.iron_block);
-		ItemStack output = new ItemStack(pressureTube);
-		output.stackSize = 32;
-		GameRegistry.addRecipe(output, "###", "ABA", "###", '#', Blocks.stone, 'A', Items.iron_ingot, 'B', Items.bucket);
-		output = new ItemStack(tankWall);
-		output.stackSize = 8;
-		GameRegistry.addRecipe(output, "###", "#A#", "###", '#', Items.iron_ingot, 'A', Blocks.iron_bars);
+		GameRegistry.addRecipe(new ItemStack(pipe, 32), "###", "ABA", "###", '#', Blocks.stone, 'A', Items.iron_ingot, 'B', Items.bucket);
+		GameRegistry.addRecipe(new ItemStack(tankWall, 8), "###", "#A#", "###", '#', Items.iron_ingot, 'A', Blocks.iron_bars);
 		GameRegistry.addRecipe(new ItemStack(tankController), "#A#", "ABA", "#A#", '#', tankWall, 'A', Items.iron_ingot, 'B', basicMachine);
 		GameRegistry.addRecipe(new ItemStack(tankController), "#A#", "ABA", "#A#", '#', Items.iron_ingot, 'A', tankWall, 'B', basicMachine);
 		GameRegistry.addRecipe(new ItemStack(chemicalsMixer), "#A#", "ABA", "#A#", '#', Items.glass_bottle, 'A', Blocks.glass, 'B', basicMachine);
@@ -266,6 +268,11 @@ public class MineFracturing {
 		
 		CoreRegistry.scanForOres();
 		CoreRegistry.registerOre(Blocks.redstone_ore, new ItemStack(Items.redstone));
+	}
+	
+	@EventHandler
+	public void serverStopped(FMLServerStoppedEvent event) {
+		PipeNetworkController.INSTNACE.dispose();
 	}
 	
 }

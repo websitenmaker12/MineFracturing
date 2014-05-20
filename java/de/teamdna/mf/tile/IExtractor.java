@@ -6,6 +6,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 public interface IExtractor extends IConnectable {
 
 	boolean canExtract(ForgeDirection direction);
-	NBTTagCompound extract(ForgeDirection direction);
+	NBTTagCompound extract(ForgeDirection direction, boolean doExtract);
 	
 }
