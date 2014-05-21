@@ -5,10 +5,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -48,12 +52,14 @@ import de.teamdna.mf.block.BlockTraverse;
 import de.teamdna.mf.event.BucketHandler;
 import de.teamdna.mf.event.EntityHandler;
 import de.teamdna.mf.event.FuelHandler;
-import de.teamdna.mf.event.WorldHandler;
 import de.teamdna.mf.gui.GuiHandler;
+import de.teamdna.mf.item.ItemJetpack;
 import de.teamdna.mf.item.ItemWoodenPillar;
 import de.teamdna.mf.net.CommonProxy;
+import de.teamdna.mf.net.ServerKeys;
 import de.teamdna.mf.packet.PacketChunkUpdate;
 import de.teamdna.mf.packet.PacketHandler;
+import de.teamdna.mf.packet.PacketKeyUpdate;
 import de.teamdna.mf.tile.FurnaceImporter;
 import de.teamdna.mf.tile.PipeNetworkController;
 import de.teamdna.mf.tile.TileEntityBore;
@@ -79,11 +85,16 @@ public class MineFracturing {
 	@SidedProxy(clientSide = Reference.clientProxy, serverSide = Reference.commonProxy)
 	public static CommonProxy proxy;
 	
+	@SidedProxy(clientSide = "de.teamdna.mf.net.ClientKeys", serverSide = "de.teamdna.mf.net.ServerKeys")
+	public static ServerKeys keys;
+	
 	public CreativeTabs tab = new CreativeTabs(CreativeTabs.getNextID(), Reference.modid) {
 		public Item getTabIconItem() {
 			return (new ItemStack(traverse)).getItem();
 		}
 	};
+	
+	// TODO: Damage in infested bioms + suite to prevent this
 	
 	public BiomeGenBase infestedBiome;
 	
@@ -113,6 +124,7 @@ public class MineFracturing {
 	public Item valve;
 	public Item woodenPillar;
 	public Item flour;
+	public Item jetpack;
 	
 	public Fluid oil;
 	public Fluid fracFluid;
@@ -173,6 +185,7 @@ public class MineFracturing {
 		this.valve = (new Item()).setUnlocalizedName("valve").setTextureName(Reference.modid + ":valve").setCreativeTab(this.tab);
 		this.woodenPillar = (new ItemWoodenPillar()).setUnlocalizedName("woodenPillar").setCreativeTab(this.tab);
 		this.flour = (new Item()).setUnlocalizedName("flour").setCreativeTab(this.tab);
+		this.jetpack = (new ItemJetpack()).setUnlocalizedName("jetpack").setCreativeTab(this.tab);
 		
 		// Fluids
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
@@ -226,6 +239,7 @@ public class MineFracturing {
 		proxy.registerItem(this.valve);
 		proxy.registerItem(this.woodenPillar);
 		proxy.registerItem(this.flour);
+		proxy.registerItem(this.jetpack);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
@@ -248,6 +262,7 @@ public class MineFracturing {
 	public void init(FMLInitializationEvent event) {
 		packetHandler.init();
 		packetHandler.registerPacket(PacketChunkUpdate.class);
+		packetHandler.registerPacket(PacketKeyUpdate.class);
 		proxy.registerRenderer();
 		
 		// Bioms
@@ -256,9 +271,12 @@ public class MineFracturing {
 		// Registrations
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
-		MinecraftForge.EVENT_BUS.register(new EntityHandler());
-		MinecraftForge.EVENT_BUS.register(new WorldHandler());
 		FMLCommonHandler.instance().bus().register(PipeNetworkController.INSTNACE);
+		
+		EntityHandler entityHandler = new EntityHandler();
+		MinecraftForge.EVENT_BUS.register(entityHandler);
+		FMLCommonHandler.instance().bus().register(entityHandler);
+		
 		GameRegistry.registerFuelHandler(new FuelHandler());
 		
 		// Crafting
@@ -277,6 +295,8 @@ public class MineFracturing {
 		GameRegistry.addRecipe(new ItemStack(chemicalsMixer), "#A#", "ABA", "#A#", '#', Blocks.glass, 'A', Items.glass_bottle, 'B', basicMachine);
 		GameRegistry.addRecipe(new ItemStack(condenseChamber), "BBB", "C  ", "BAB", 'A', Items.bucket, 'B', Items.iron_ingot, 'C', Items.stick);
 		GameRegistry.addRecipe(new ItemStack(this.woodenPillar), "#", "#", '#', Items.stick);
+		GameRegistry.addRecipe(new ItemStack(this.jetpack), "IBI", "ILI", "F F", 'I', Items.iron_ingot, 'B', this.bucketOil, 'L', Items.leather, 'F', Items.flint_and_steel);
+		GameRegistry.addRecipe(new JetpackRecipe());
 		
 		GameRegistry.addSmelting(ironDust, new ItemStack(Items.iron_ingot), 1F);
 		GameRegistry.addSmelting(coalDust, new ItemStack(Items.coal), 1F);

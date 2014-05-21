@@ -2,8 +2,10 @@ package de.teamdna.mf.net;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import de.teamdna.mf.event.RenderHandler;
 import de.teamdna.mf.render.RenderBlockCore;
 import de.teamdna.mf.render.RenderTiles;
 import de.teamdna.mf.tile.TileEntityBore;
@@ -34,6 +36,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalsMixer.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCondenseChamber.class, stdTileRenderer);
+		
+		MinecraftForge.EVENT_BUS.register(new RenderHandler());
 	}
 
 }

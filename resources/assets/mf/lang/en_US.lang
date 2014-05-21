@@ -20,6 +20,7 @@ item.emeraldDust.name=Emerald Dust
 item.valve.name=Valve
 item.woodenPillar.name=Wooden Pillar
 item.flour.name=Flour
+item.jetpack.name=Jetpack
 
 itemGroup.mf=MineFracturing
 

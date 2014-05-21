@@ -1,7 +1,11 @@
 package de.teamdna.mf.util;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -10,12 +14,15 @@ import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Util {
@@ -93,6 +100,43 @@ public class Util {
 		byte[] chunkArray = chunk.getBiomeArray();
 		chunkArray[((z & 0xF) << 4 | x & 0xF)] = ((byte)(biomeID & 0xFF));
 		chunk.setBiomeArray(chunkArray);
+	}
+	
+	public static float getBodyRotation(EntityLivingBase entity) {
+		float f2 = interpolateRotation(entity.prevRenderYawOffset, entity.renderYawOffset, 0.5F);
+        float f3 = interpolateRotation(entity.prevRotationYawHead, entity.rotationYawHead, 0.5F);
+		float f4 = MathHelper.wrapAngleTo180_float(f3 - f2);
+        
+        if (f4 < -85.0F) f4 = -85.0F;
+        if (f4 >= 85.0F) f4 = 85.0F;
+        f2 = f3 - f4;
+        if (f4 * f4 > 2500.0F) f2 += f4 * 0.2F;
+        
+        return f2;
+	}
+	
+	public static float interpolateRotation(float par1, float par2, float par3) {
+        float f3;
+        for (f3 = par2 - par1; f3 < -180.0F; f3 += 360.0F) ;
+        while (f3 >= 180.0F) f3 -= 360.0F;
+        return par1 + par3 * f3;
+    }
+	
+	public static void resetPlayerFlyTicks(EntityPlayer player) {
+		if(player instanceof EntityPlayerMP) {
+			EntityPlayerMP mp = (EntityPlayerMP)player;
+			ObfuscationReflectionHelper.setPrivateValue(NetHandlerPlayServer.class, mp.playerNetServerHandler, Integer.valueOf(0), new String[] { "field_147365_f", "floatingTickCount" });
+		}
+	}
+	
+	public static void writeString(ByteBuf buffer, String string) {
+		buffer.writeInt(string.getBytes().length);
+		buffer.writeBytes(string.getBytes());
+	}
+	
+	public static String readString(ByteBuf buffer) {
+		int size = buffer.readInt();
+		return new String(buffer.readBytes(size).array());
 	}
 	
 }
