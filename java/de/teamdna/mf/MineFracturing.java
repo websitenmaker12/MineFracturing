@@ -112,6 +112,7 @@ public class MineFracturing {
 	public Item emeraldDust;
 	public Item valve;
 	public Item woodenPillar;
+	public Item flour;
 	
 	public Fluid oil;
 	public Fluid fracFluid;
@@ -171,6 +172,7 @@ public class MineFracturing {
 		this.emeraldDust = (new Item()).setUnlocalizedName("emeraldDust").setTextureName(Reference.modid + ":emeraldDust").setCreativeTab(this.tab);
 		this.valve = (new Item()).setUnlocalizedName("valve").setTextureName(Reference.modid + ":valve").setCreativeTab(this.tab);
 		this.woodenPillar = (new ItemWoodenPillar()).setUnlocalizedName("woodenPillar").setCreativeTab(this.tab);
+		this.flour = (new Item()).setUnlocalizedName("flour").setCreativeTab(this.tab);
 		
 		// Fluids
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
@@ -223,6 +225,7 @@ public class MineFracturing {
 		proxy.registerItem(this.emeraldDust);
 		proxy.registerItem(this.valve);
 		proxy.registerItem(this.woodenPillar);
+		proxy.registerItem(this.flour);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
@@ -281,6 +284,7 @@ public class MineFracturing {
 		GameRegistry.addSmelting(diamondDust, new ItemStack(Items.diamond), 1F);
 		GameRegistry.addSmelting(emeraldDust, new ItemStack(Items.emerald), 1F);
 		GameRegistry.addSmelting(goldDust, new ItemStack(Items.gold_ingot), 1F);
+		GameRegistry.addSmelting(this.flour, new ItemStack(Items.bread), 0F);
 	}
 	
 	@EventHandler

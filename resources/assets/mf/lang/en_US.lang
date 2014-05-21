@@ -19,6 +19,7 @@ item.diamondDust.name=Diamond Dust
 item.emeraldDust.name=Emerald Dust
 item.valve.name=Valve
 item.woodenPillar.name=Wooden Pillar
+item.flour.name=Flour
 
 itemGroup.mf=MineFracturing
 
