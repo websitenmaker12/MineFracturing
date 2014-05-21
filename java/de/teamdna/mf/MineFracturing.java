@@ -5,14 +5,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -53,6 +49,7 @@ import de.teamdna.mf.event.BucketHandler;
 import de.teamdna.mf.event.EntityHandler;
 import de.teamdna.mf.event.FuelHandler;
 import de.teamdna.mf.gui.GuiHandler;
+import de.teamdna.mf.item.ItemAcidProofArmor;
 import de.teamdna.mf.item.ItemJetpack;
 import de.teamdna.mf.item.ItemWoodenPillar;
 import de.teamdna.mf.net.CommonProxy;
@@ -94,8 +91,6 @@ public class MineFracturing {
 		}
 	};
 	
-	// TODO: Damage in infested bioms + suite to prevent this
-	
 	public BiomeGenBase infestedBiome;
 	
 	public Block bore;
@@ -125,6 +120,10 @@ public class MineFracturing {
 	public Item woodenPillar;
 	public Item flour;
 	public Item jetpack;
+	public Item acidProofBoots;
+	public Item acidProofLegs;
+	public Item acidProofChestplate;
+	public Item acidProofHelmet;
 	
 	public Fluid oil;
 	public Fluid fracFluid;
@@ -186,6 +185,10 @@ public class MineFracturing {
 		this.woodenPillar = (new ItemWoodenPillar()).setUnlocalizedName("woodenPillar").setCreativeTab(this.tab);
 		this.flour = (new Item()).setUnlocalizedName("flour").setCreativeTab(this.tab);
 		this.jetpack = (new ItemJetpack()).setUnlocalizedName("jetpack").setCreativeTab(this.tab);
+		this.acidProofBoots = (new ItemAcidProofArmor(3)).setUnlocalizedName("acidProofBoots").setCreativeTab(this.tab);
+		this.acidProofLegs = (new ItemAcidProofArmor(2)).setUnlocalizedName("acidProofLegs").setCreativeTab(this.tab);
+		this.acidProofChestplate = (new ItemAcidProofArmor(1)).setUnlocalizedName("acidProofChestplate").setCreativeTab(this.tab);
+		this.acidProofHelmet = (new ItemAcidProofArmor(0)).setUnlocalizedName("acidProofHelmet").setCreativeTab(this.tab);
 		
 		// Fluids
 		this.oil = (new Fluid("oil")).setViscosity(3400).setDensity(1200);
@@ -240,6 +243,10 @@ public class MineFracturing {
 		proxy.registerItem(this.woodenPillar);
 		proxy.registerItem(this.flour);
 		proxy.registerItem(this.jetpack);
+		proxy.registerItem(this.acidProofBoots);
+		proxy.registerItem(this.acidProofLegs);
+		proxy.registerItem(this.acidProofChestplate);
+		proxy.registerItem(this.acidProofHelmet);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");

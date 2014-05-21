@@ -1,34 +1,35 @@
 package de.teamdna.mf.event;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.damagsource.DamageSourceFracking;
+import de.teamdna.mf.item.ItemAcidProofArmor;
 import de.teamdna.mf.util.Util;
 
 public class EntityHandler {
 	
 	public static final DamageSource fracing = new DamageSourceFracking();
 	
-//	@SubscribeEvent
-//	public void entityEnteringChunkEvent(EntityEvent.EnteringChunk event) {
-//		System.out.println(event.entity);
-//		if(!(event.entity instanceof EntityLivingBase)) return;
-//		Chunk chunk = event.entity.worldObj.getChunkFromChunkCoords(event.newChunkX, event.newChunkZ);
-//		if(chunk == null || !chunk.isChunkLoaded) return;
-//		
-//		boolean infested = false;
-//		for(byte b : chunk.getBiomeArray()) if(b == (byte)(MineFracturing.INSTANCE.infestedBiome.biomeID & 0xFF)) { infested = true; break; }
-//		
-//		if(infested) {
-//        	((EntityLivingBase)event.entity).addPotionEffect(new PotionEffect(Potion.poison.id, 8000));
-//			((EntityLivingBase)event.entity).attackEntityFrom(fracing, 0.2F);
-//		}
-//	}
+	@SubscribeEvent
+	public void livingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
+		EntityLivingBase e = event.entityLiving;
+		if(e instanceof EntityPlayer && this.wearsAcidProofSuite((EntityPlayer)e)) return;
+		
+		if(e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posZ)).biomeID == MineFracturing.INSTANCE.infestedBiome.biomeID) {
+			e.addPotionEffect(new PotionEffect(Potion.poison.id, 500));
+			e.attackEntityFrom(fracing, 0.5F);
+		}
+	}
 	
 	@SubscribeEvent
 	public void tickEvent(PlayerTickEvent event) {
@@ -52,6 +53,12 @@ public class EntityHandler {
             
             jetpack.damageItem(1, p);
 		}
+	}
+	
+	private boolean wearsAcidProofSuite(EntityPlayer player) {
+		int founds = 0;
+		for(int i = 0; i < 4; i++) if(player.inventory.armorInventory[i] != null && player.inventory.armorInventory[i].getItem() instanceof ItemAcidProofArmor) founds++;
+		return founds == 4;
 	}
 	
 }
