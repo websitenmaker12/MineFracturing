@@ -9,12 +9,14 @@ import java.util.Random;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import de.teamdna.mf.api.PipeRegistry;
+import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
 
 public class PipeNetworkController {
@@ -30,10 +32,9 @@ public class PipeNetworkController {
 	public Map<Long, Integer> iterationCounts = new HashMap<Long, Integer>();
 	public Map<Long, List<TileEntity>> customTilesMap = new HashMap<Long, List<TileEntity>>();
 	public Map<String, List<Long>> tileIDMap = new HashMap<String, List<Long>>();
+	public Map<String, CustomImporter> customTileImporterMap = new HashMap<String, CustomImporter>();
 	
 	public boolean isScanning = false;
-	
-	// TODO: Implement custom IImporter to network
 	
 	public long createNetwork() {
 		long id;
@@ -81,34 +82,28 @@ public class PipeNetworkController {
 		this.tileIDMap.clear();
 		this.iterationCounts.clear();
 		this.customTilesMap.clear();
+		this.customTileImporterMap.clear();
 		this.isScanning = false;
 	}
 
-	public boolean canNetworkProcessPacket(long network, NBTTagCompound packet, ForgeDirection dir) {
+	public boolean canNetworkProcessPacket(long network, NBTTagCompound packet, ForgeDirection dir, IExtractor extractor) {
 		if(this.importerMap.get(Long.valueOf(network)) == null) return false;
 		for(IImporter importer : this.importerMap.get(Long.valueOf(network))) {
-			if(importer.canImport(dir, packet)) return true;
+			if(importer.canImport(dir, packet) && !importer.equals(extractor)) return true;
 		}
 		return false;
 	}
 	
 	public void processPacket(long network, NBTTagCompound packet, ForgeDirection dir, IExtractor extractor) {
-		for(IImporter importer : this.importerMap.get(Long.valueOf(network))) {
-			if(importer instanceof ICustomImporter) {
-				ICustomImporter custom = (ICustomImporter)importer;
-				TileEntity orig = extractor.getWorld().getTileEntity(extractor.getX(), extractor.getY(), extractor.getZ());
-				if(custom.canImport(dir, packet, orig)) {
-					custom.doImport(dir, packet, orig);
-				}
-			}
-			if(importer.canImport(dir, packet)) {
-				importer.doImport(dir, packet);
-			}
-		}
+		IImporter importer = null;
+		List<IImporter> importers = this.importerMap.get(Long.valueOf(network));
+		if(importers == null) return;
+		while(!(importer = importers.get(this.rand.nextInt(importers.size()))).canImport(dir, packet)) ;
+		if(importer != null) importer.doImport(dir, packet);
 	}
 	
 	@SubscribeEvent
-	public void worldTickEvent(WorldTickEvent event) {
+	public void worldTickEvent(WorldTickEvent event) throws Exception {
 		if(event.side == Side.SERVER && event.phase == Phase.END) {
 			
 			Map<Long, Integer> copy = new HashMap<Long, Integer>(this.iterationCounts);
@@ -125,7 +120,10 @@ public class PipeNetworkController {
 								if(tile instanceof IExtractor) this.extractorMap.get(pipe.networkID).add((IExtractor)tile);
 								if(tile instanceof IImporter) this.importerMap.get(pipe.networkID).add((IImporter)tile);
 								if(PipeRegistry.isCustomTile(tile.getClass())) {
-									this.importerMap.get(pipe.networkID).add(PipeRegistry.getCustomImporter(tile.getClass()));
+									CustomImporter clazz = PipeRegistry.getCustomImporter(tile.getClass())
+											.getDeclaredConstructor(World.class, int.class, int.class, int.class).newInstance(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
+									this.customTileImporterMap.put(Util.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord), clazz);
+									this.importerMap.get(pipe.networkID).add(clazz);
 									this.customTilesMap.get(entry.getKey()).add(tile);
 								}
 								
@@ -151,7 +149,7 @@ public class PipeNetworkController {
 		}
 	}
 
-	public void handleBlockAdd(TileEntity tile) {
+	public void handleBlockAdd(TileEntity tile) throws Exception {
 		String uid = (new WorldBlock(tile)).getBlockUID();
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			TileEntity tile2 = tile.getWorldObj().getTileEntity(tile.xCoord + dir.offsetX, tile.yCoord + dir.offsetY, tile.zCoord + dir.offsetZ);
@@ -161,7 +159,10 @@ public class PipeNetworkController {
 					if(tile instanceof IExtractor) this.extractorMap.get(pipe.networkID).add((IExtractor)tile);
 					if(tile instanceof IImporter) this.importerMap.get(pipe.networkID).add((IImporter)tile);
 					if(PipeRegistry.isCustomTile(tile.getClass())) {
-						this.importerMap.get(pipe.networkID).add(PipeRegistry.getCustomImporter(tile.getClass()));
+						CustomImporter clazz = PipeRegistry.getCustomImporter(tile.getClass())
+								.getDeclaredConstructor(World.class, int.class, int.class, int.class).newInstance(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
+						this.customTileImporterMap.put(Util.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord), clazz);
+						this.importerMap.get(pipe.networkID).add(clazz);
 						this.customTilesMap.get(pipe.networkID).add(tile);
 					}
 					
@@ -181,7 +182,11 @@ public class PipeNetworkController {
 			for(Long id : ids) {
 				if(tile instanceof IExtractor && this.extractorMap.get(id) != null) this.extractorMap.get(id).remove((IExtractor)tile);
 				if(tile instanceof IImporter && this.importerMap.get(id) != null) this.importerMap.get(id).remove((IImporter)tile);
-				if(PipeRegistry.isCustomTile(tile.getClass()) && this.importerMap.get(id) != null) this.importerMap.get(id).remove(PipeRegistry.getCustomImporter(tile.getClass()));
+				if(PipeRegistry.isCustomTile(tile.getClass()) && this.importerMap.get(id) != null) {
+					String uid2 = Util.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord);
+					this.importerMap.get(id).remove(this.customTileImporterMap.get(uid2));
+					this.customTileImporterMap.remove(uid2);
+				}
 			}
 		}
 	}

@@ -94,25 +94,5 @@ public class TileEntityExtractor extends TileEntityCore implements IExtractor {
 		NBTTagList blocks = tag.getTagList("blocks", 10);
 		for(int i = 0; i < blocks.tagCount(); i++) this.blocksToSend.add(Block.getBlockById(blocks.getCompoundTagAt(i).getInteger("blockID")));
 	}
-
-	@Override
-	public World getWorld() {
-		return this.worldObj;
-	}
-
-	@Override
-	public int getX() {
-		return this.xCoord;
-	}
-
-	@Override
-	public int getY() {
-		return this.yCoord;
-	}
-
-	@Override
-	public int getZ() {
-		return this.zCoord;
-	}
 	
 }

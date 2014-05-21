@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import de.teamdna.mf.api.PipeRegistry;
 import de.teamdna.mf.util.Util;
@@ -56,7 +55,7 @@ public class TileEntityPipe extends TileEntityCore implements IConnectable {
 			if(extractor != null && extractor.canExtract(dir.getOpposite())) {
 				NBTTagCompound packet = extractor.extract(dir.getOpposite(), false);
 				if(packet == null) continue;
-				if(this.network.canNetworkProcessPacket(this.networkID, packet, dir)) {
+				if(this.network.canNetworkProcessPacket(this.networkID, packet, dir, extractor)) {
 					extractor.extract(dir.getOpposite(), true);
 					this.network.processPacket(this.networkID, packet, dir, extractor);
 				}
@@ -104,8 +103,12 @@ public class TileEntityPipe extends TileEntityCore implements IConnectable {
 		
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			TileEntity tile = this.worldObj.getTileEntity(this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ);
-			if(tile != null && PipeRegistry.isCustomTile(tile.getClass()) && !this.adjacentCustoms.contains(dir)) {
-				this.network.handleBlockAdd(tile);
+			if(tile != null && PipeRegistry.isCustomTile(tile.getClass()) && !this.adjacentCustoms.contains(dir) && !tile.isInvalid()) {
+				try {
+					this.network.handleBlockAdd(tile);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				this.adjacentCustoms.add(dir);
 			}
 		}
@@ -126,28 +129,7 @@ public class TileEntityPipe extends TileEntityCore implements IConnectable {
 		if(this.worldObj == null) return dir == ForgeDirection.UP || dir == ForgeDirection.DOWN;
 		TileEntity tile = this.worldObj.getTileEntity(this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ);
 		if(tile == null) return false;
-		return (tile instanceof IConnectable && ((IConnectable)tile).canConnect(dir))
-				|| (PipeRegistry.isCustomTile(tile.getClass()) && PipeRegistry.getCustomImporter(tile.getClass()).canConnect(dir));
-	}
-	
-	@Override
-	public World getWorld() {
-		return this.worldObj;
-	}
-
-	@Override
-	public int getX() {
-		return this.xCoord;
-	}
-
-	@Override
-	public int getY() {
-		return this.yCoord;
-	}
-
-	@Override
-	public int getZ() {
-		return this.zCoord;
+		return (tile instanceof IConnectable && ((IConnectable)tile).canConnect(dir)) || PipeRegistry.isCustomTile(tile.getClass());
 	}
 	
 }

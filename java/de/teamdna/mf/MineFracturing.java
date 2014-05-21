@@ -290,7 +290,7 @@ public class MineFracturing {
 		CoreRegistry.scanForOres();
 		CoreRegistry.registerOre(Blocks.redstone_ore, new ItemStack(Items.redstone));
 		
-		PipeRegistry.registerCustomTile(TileEntityFurnace.class, new FurnaceImporter());
+		PipeRegistry.registerCustomTile(TileEntityFurnace.class, FurnaceImporter.class);
 	}
 	
 	@EventHandler

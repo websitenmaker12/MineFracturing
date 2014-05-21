@@ -72,7 +72,11 @@ public abstract class BlockCore extends BlockContainer {
         
         TileEntity tile = world.getTileEntity(x, y, z);
         if(tile != null && (tile instanceof IExtractor || tile instanceof IImporter)) {
-        	PipeNetworkController.INSTNACE.handleBlockAdd(tile);
+        	try {
+				PipeNetworkController.INSTNACE.handleBlockAdd(tile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
     }
 	
