@@ -52,6 +52,7 @@ public class TileEntityGrindStone extends TileEntityCore {
 			this.spinAmount = 0;
 			ItemStack stack = new ItemStack(CoreRegistry.getCondensedItem(Block.getBlockFromItem(this.inventory[0].getItem())).getItem(), this.inventory[0].stackSize);
 			this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5D, this.yCoord + 1.5D, this.zCoord + 0.5D, stack));
+			this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5D, this.yCoord + 1.5D, this.zCoord + 0.5D, stack.copy()));
 			this.inventory[0] = null;
 		}
 	}
