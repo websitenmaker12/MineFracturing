@@ -21,41 +21,50 @@ public class RenderUtil {
 
 	public static void renderIconCube(float x, float y, float z, IIcon icon) {
 		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glTexCoord2f(icon.getMinU(), icon.getMaxV());
-			GL11.glVertex3f(x + 0, y + 0, z + 0);
-			GL11.glTexCoord2f(icon.getMaxU(), icon.getMaxV());
-			GL11.glVertex3f(x + 0, y + 1, z + 0);
-			GL11.glTexCoord2f(icon.getMaxU(), icon.getMinV());
-			GL11.glVertex3f(x + 1, y + 1, z + 0);
 			GL11.glTexCoord2f(icon.getMinU(), icon.getMinV());
+			GL11.glVertex3f(x + 0, y + 0, z + 0);
+			GL11.glTexCoord2f(icon.getMinU(), icon.getMaxV());
+			GL11.glVertex3f(x + 0, y + 1, z + 0);
+			GL11.glTexCoord2f(icon.getMaxU(), icon.getMaxV());
+			GL11.glVertex3f(x + 1, y + 1, z + 0);
+			GL11.glTexCoord2f(icon.getMaxU(), icon.getMinV());
 			GL11.glVertex3f(x + 1, y + 0, z + 0);
 			
 			GL11.glTexCoord2f(icon.getMinU(), icon.getMaxV());
 			GL11.glVertex3f(x + 0, y + 0, z + 1);
 			GL11.glTexCoord2f(icon.getMaxU(), icon.getMaxV());
-			GL11.glVertex3f(x + 0, y + 1, z + 1);
+			GL11.glVertex3f(x + 1, y + 0, z + 1);
 			GL11.glTexCoord2f(icon.getMaxU(), icon.getMinV());
 			GL11.glVertex3f(x + 1, y + 1, z + 1);
 			GL11.glTexCoord2f(icon.getMinU(), icon.getMinV());
-			GL11.glVertex3f(x + 1, y + 0, z + 1);
+			GL11.glVertex3f(x + 0, y + 1, z + 1);
 			
 			GL11.glTexCoord2f(icon.getMinU(), icon.getMaxV());
 			GL11.glVertex3f(x + 0, y + 0, z + 0);
 			GL11.glTexCoord2f(icon.getMaxU(), icon.getMaxV());
-			GL11.glVertex3f(x + 0, y + 1, z + 0);
+			GL11.glVertex3f(x + 0, y + 0, z + 1);
 			GL11.glTexCoord2f(icon.getMaxU(), icon.getMinV());
 			GL11.glVertex3f(x + 0, y + 1, z + 1);
 			GL11.glTexCoord2f(icon.getMinU(), icon.getMinV());
-			GL11.glVertex3f(x + 0, y + 0, z + 1);
+			GL11.glVertex3f(x + 0, y + 1, z + 0);
+
+			GL11.glTexCoord2f(icon.getMinU(), icon.getMinV());
+			GL11.glVertex3f(x + 1, y + 0, z + 0);
+			GL11.glTexCoord2f(icon.getMinU(), icon.getMaxV());
+			GL11.glVertex3f(x + 1, y + 1, z + 0);
+			GL11.glTexCoord2f(icon.getMaxU(), icon.getMaxV());
+			GL11.glVertex3f(x + 1, y + 1, z + 1);
+			GL11.glTexCoord2f(icon.getMaxU(), icon.getMinV());
+			GL11.glVertex3f(x + 1, y + 0, z + 1);
 			
 			GL11.glTexCoord2f(icon.getMinU(), icon.getMaxV());
-			GL11.glVertex3f(x + 1, y + 0, z + 0);
+			GL11.glVertex3f(x + 0, y + 1, z + 0);
 			GL11.glTexCoord2f(icon.getMaxU(), icon.getMaxV());
-			GL11.glVertex3f(x + 1, y + 1, z + 0);
+			GL11.glVertex3f(x + 0, y + 1, z + 1);
 			GL11.glTexCoord2f(icon.getMaxU(), icon.getMinV());
 			GL11.glVertex3f(x + 1, y + 1, z + 1);
 			GL11.glTexCoord2f(icon.getMinU(), icon.getMinV());
-			GL11.glVertex3f(x + 1, y + 0, z + 1);
+			GL11.glVertex3f(x + 1, y + 1, z + 0);
 		GL11.glEnd();
 	}
 	

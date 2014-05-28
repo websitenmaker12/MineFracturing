@@ -12,6 +12,7 @@ import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityExtractor;
+import de.teamdna.mf.tile.TileEntityGrindStone;
 import de.teamdna.mf.tile.TileEntityPipe;
 import de.teamdna.mf.tile.TileEntityTraverse;
 
@@ -36,6 +37,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalsMixer.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCondenseChamber.class, stdTileRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGrindStone.class, stdTileRenderer);
 		
 		MinecraftForge.EVENT_BUS.register(new RenderHandler());
 	}

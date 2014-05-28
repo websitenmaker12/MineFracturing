@@ -6,8 +6,9 @@ tile.tankWall.name=Tank Wall
 tile.tankController.name=Tank Controller
 tile.chemicalsMixer.name=Chemicals Mixer
 tile.condenseChamber.name=Condense Chamber
-tile.basicMachine.name=Basic Name
+tile.basicMachine.name=Basic Machine
 tile.grindStone.name=Grind Stone
+tile.combustionGen.name=Combustion Generator
 
 item.bucketOil.name=Oil Bucket
 item.bucketFracFluid.name=Frac Fluid Bucket

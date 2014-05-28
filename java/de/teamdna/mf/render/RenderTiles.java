@@ -1,9 +1,6 @@
 package de.teamdna.mf.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -14,7 +11,6 @@ import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.RenderBlockFluid;
 
 import org.lwjgl.opengl.GL11;
 
@@ -24,6 +20,7 @@ import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityExtractor;
+import de.teamdna.mf.tile.TileEntityGrindStone;
 import de.teamdna.mf.tile.TileEntityPipe;
 import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.mf.util.RenderUtil;
@@ -118,19 +115,25 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		if (tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
-		else if (tile instanceof TileEntityBore) {
-			renderTileBore(x, y, z, (TileEntityBore)tile);
-		}
-		else if (tile instanceof TileEntityExtractor) renderTileExtractor(x, y, z);
-		else if (tile instanceof TileEntityPipe) renderTilePipe((TileEntityPipe)tile, x, y, z);
-		else if (tile instanceof TileEntityChemicalsMixer) renderTileMixer(x, y, z);
-		else if (tile instanceof TileEntityCondenseChamber) renderTileCondenser(x, y, z, (TileEntityCondenseChamber)tile);
+		if(tile instanceof TileEntityTraverse) renderTileTraverse(x, y, z);
+		else if(tile instanceof TileEntityBore) renderTileBore(x, y, z, (TileEntityBore)tile);
+		else if(tile instanceof TileEntityExtractor) renderTileExtractor(x, y, z);
+		else if(tile instanceof TileEntityPipe) renderTilePipe((TileEntityPipe)tile, x, y, z);
+		else if(tile instanceof TileEntityChemicalsMixer) renderTileMixer(x, y, z);
+		else if(tile instanceof TileEntityCondenseChamber) renderTileCondenser(x, y, z, (TileEntityCondenseChamber)tile);
+		else if(tile instanceof TileEntityGrindStone) renderTileGrindStone(x, y, z, (TileEntityGrindStone)tile);
 		
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
+	private void renderTileGrindStone(double x, double y, double z, TileEntityGrindStone tile) {
+		GL11.glPushMatrix();
+		GL11.glTranslated(x, y, z);
+
+		GL11.glPopMatrix();
+	}
+
 	private void renderTileCondenser(double x, double y, double z, TileEntityCondenseChamber tile) {
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
@@ -143,7 +146,6 @@ public class RenderTiles extends TileEntitySpecialRenderer {
  		IIcon icon = fluid.getFlowingIcon() != null ? fluid.getFlowingIcon() : fluid.getBlock().getIcon(0, 0);
  		
  		GL11.glPushMatrix();
- 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		
@@ -155,7 +157,6 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture_condenserLoc);
@@ -235,7 +236,7 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glTranslated(x, y, z);
 		
-		if(tile.isMultiblockComplete()) {
+		if(tile.isMultiblockCompleted()) {
 			int centerOffset = 8;
 			GL11.glBegin(GL11.GL_LINE_LOOP);
 				GL11.glVertex3f(0.5F, 0F, 0.9F);

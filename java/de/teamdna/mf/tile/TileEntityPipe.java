@@ -29,6 +29,7 @@ public class TileEntityPipe extends TileEntityCore implements IConnectable {
 		// Triggers Network creation
 		if(this.networkID == -1L && !this.network.isScanning) {
 			this.networkID = this.network.createNetwork();
+			this.network.addPipe(this, this.networkID);
 			this.addNeighbors(Util.createUID(this.xCoord, this.yCoord, this.zCoord));
 			this.network.isScanning = this.blocks.size() > 0;
 		}

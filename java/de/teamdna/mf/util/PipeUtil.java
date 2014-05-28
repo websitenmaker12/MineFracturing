@@ -25,7 +25,7 @@ public class PipeUtil {
 	public static boolean canImportToTank(NBTTagCompound packet, FluidTank tank) {
 		return packet.getInteger("id") == Reference.PipePacketIDs.fluid
 				&& (tank.getFluid() == null || tank.getFluid().fluidID == packet.getInteger("fluidID"))
-				&& tank.getFluidAmount() < tank.getInfo().capacity;
+				&& tank.getFluidAmount() + packet.getInteger("amount") <= tank.getInfo().capacity;
 	}
 	
 	public static void importToTank(NBTTagCompound packet, FluidTank tank) {

@@ -22,17 +22,19 @@ import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.IBoreBlock;
-import de.teamdna.mf.packet.PacketChunkUpdate;
+import de.teamdna.mf.packet.PacketBoreUpdate;
 import de.teamdna.mf.util.PipeUtil;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
 
 public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
 
+	// TODO: Something causes massive lags. Probably an array is too big or something like this
+	
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
 	
-	public int state = -1; // Inactive: -1 ; Boring: 0 ; Scanning Chunks: 1; Infesting: 2
+	public int state = -1; // Inactive: -1 ; Boring: 0 ; Scanning Chunks: 1; Infesting: 2; Finished: 3
 	public int boreY;
 	public int radius;
 	
@@ -50,6 +52,10 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	
 	public int burnTime = 0;
 	public int maxBurnTime = 1;
+	
+	public boolean pauseClientDummy = true;
+	public int clientOreBlocksSize = 0;
+	private int lastClientState = -1;
 	
 	public TileEntityBore() {
 		super(8);
@@ -146,7 +152,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			if(this.inventory[0] == null && container != null) this.inventory[0] = new ItemStack(container);
 		}
 		
-		if(this.isMultiblockComplete() && this.burnTime > 0 && this.tank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME * 4) {
+		if((this.isMultiblockCompleted() && this.burnTime > 0 && this.tank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME * 4) || !this.pauseClientDummy) {
 			if(this.state != 3) this.burnTime = Math.max(this.burnTime - 5, 0);
 			
 			// Setups the bore
@@ -157,7 +163,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
-			if(this.state == 0 && this.worldObj.getWorldTime() % 40L == 0L) {
+			if(this.state == 0 && this.worldObj.getWorldTime() % 10L == 0L) {
 				if(--this.boreY < this.maxBoreY) {
 					this.state = 1;
 					return;
@@ -203,28 +209,35 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
+				if(this.lastClientState != 2 && !this.worldObj.isRemote) {
+					MineFracturing.packetHandler.sendToDimension(new PacketBoreUpdate(this, 1), this.worldObj.provider.dimensionId);
+					this.lastClientState = 2;
+				}
+				
 				// Ore replacing
-				if(this.oreBlocks.size() == 0) this.state = 3;
-				else if(this.worldObj.getWorldTime() % 10L == 0L) {
-					WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
-					this.oreBlocks.remove(0);
-					TileEntityExtractor extractor = this.getFirstExtractor();
-					extractor.addFluid(new FluidStack(MineFracturing.INSTANCE.oil, 100));
-					extractor.addOre(block.getBlock());
-					this.drain(ForgeDirection.UNKNOWN, 1, !this.worldObj.isRemote);
-					
-					if(!this.worldObj.isRemote) {
+				if(!this.worldObj.isRemote) {
+					if(this.oreBlocks.size() == 0) this.state = 3;
+					else if(this.worldObj.getWorldTime() % 1L == 0L) { // 10
+						WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
+						this.oreBlocks.remove(0);
+						TileEntityExtractor extractor = this.getFirstExtractor();
+						extractor.addFluid(new FluidStack(MineFracturing.INSTANCE.oil, 5));
+						extractor.addOre(block.getBlock());
 						Block replace = CoreRegistry.getContainer(block.getBlock());
 						if(replace != null) this.worldObj.setBlock(block.x, block.y, block.z, replace);
 					}
+				} else {
+					if(--this.clientOreBlocksSize == 0) this.state = 3;
 				}
 				
 				// Infesting
 				int m = MineFracturing.infestionMultiplier;
-				int r = (this.radius * m - (int)((double)this.oreBlocks.size() / (double)this.totalOres * ((double)this.radius) * m));
+				int r = (this.radius * m - (int)((double)(this.pauseClientDummy ? this.oreBlocks.size() : this.clientOreBlocksSize) / (double)this.totalOres * ((double)this.radius) * m));
 				int rSq = r * r;
 				
 				if(r != this.lastInfestRadius) {
+					this.drain(ForgeDirection.UNKNOWN, 1, !this.worldObj.isRemote);
+					
 					// Infests the world
 //					if(!this.placedBedrocks) {
 					List<Chunk> chunks = new ArrayList<Chunk>();
@@ -238,7 +251,6 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 								}
 							}
 						}
-						MineFracturing.packetHandler.sendToDimension(new PacketChunkUpdate(this.worldObj, chunks), this.worldObj.provider.dimensionId);
 //					}
 	
 					// Update infested Chunks
@@ -264,6 +276,11 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 //					}
 				}
 			}
+		} else if(this.pauseClientDummy) {
+			if(this.lastClientState != -1 && !this.worldObj.isRemote) {
+				MineFracturing.packetHandler.sendToDimension(new PacketBoreUpdate(this, 0), this.worldObj.provider.dimensionId);
+				this.lastClientState = -1;
+			}
 		}
 	}
 	
@@ -283,7 +300,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 		this.totalChunks = this.chunkQueue.size();
 	}
 	
-	public boolean isMultiblockComplete() {
+	public boolean isMultiblockCompleted() {
 		int i;
 		int extractors = 0;
 		for(i = 1; i <= this.structureHeight; i++) {

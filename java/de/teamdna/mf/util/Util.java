@@ -24,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
+import de.teamdna.mf.MineFracturing;
 
 public class Util {
 
@@ -137,6 +138,13 @@ public class Util {
 	public static String readString(ByteBuf buffer) {
 		int size = buffer.readInt();
 		return new String(buffer.readBytes(size).array());
+	}
+	
+	public static boolean isChunkInfested(Chunk chunk) {
+		return chunk.worldObj.getBiomeGenForCoords(chunk.xPosition * 16, chunk.zPosition * 16).biomeID == MineFracturing.INSTANCE.infestedBiome.biomeID
+				&& chunk.worldObj.getBiomeGenForCoords(chunk.xPosition * 16, chunk.zPosition * 16 + 15).biomeID == MineFracturing.INSTANCE.infestedBiome.biomeID
+				&& chunk.worldObj.getBiomeGenForCoords(chunk.xPosition * 16 + 15, chunk.zPosition * 16 + 15).biomeID == MineFracturing.INSTANCE.infestedBiome.biomeID
+				&& chunk.worldObj.getBiomeGenForCoords(chunk.xPosition * 16 + 15, chunk.zPosition * 16).biomeID == MineFracturing.INSTANCE.infestedBiome.biomeID;
 	}
 	
 }

@@ -49,7 +49,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements ISi
 			if(this.inventory[3] == null && container != null) this.inventory[3] = new ItemStack(container);
 		}
 		
-		if(this.burnTime > 0 && this.inventory[0] != null && this.inventory[1] != null && this.inventory[2] != null && this.tank.getFluidAmount() + 1000 <= this.tank.getCapacity()) {
+		if(this.burnTime > 0 && this.inventory[0] != null && this.inventory[1] != null && this.inventory[2] != null && this.tank.getFluidAmount() + 3000 <= this.tank.getCapacity()) {
 			boolean flag1 = this.inventory[0].getItem() == Items.blaze_powder || this.inventory[1].getItem() == Items.blaze_powder || this.inventory[2].getItem() == Items.blaze_powder;
 			boolean flag2 = this.inventory[0].getItem() == Items.redstone || this.inventory[1].getItem() == Items.redstone || this.inventory[2].getItem() == Items.redstone;
 			boolean flag3 = this.inventory[0].getItem() == Items.slime_ball || this.inventory[1].getItem() == Items.slime_ball || this.inventory[2].getItem() == Items.slime_ball;
@@ -61,7 +61,7 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements ISi
 					if(--this.inventory[1].stackSize == 0) this.inventory[1] = null;
 					if(--this.inventory[2].stackSize == 0) this.inventory[2] = null;
 					
-					this.fill(ForgeDirection.UNKNOWN, new FluidStack(MineFracturing.INSTANCE.fracFluid, 1000), true);
+					this.fill(ForgeDirection.UNKNOWN, new FluidStack(MineFracturing.INSTANCE.fracFluid, 3000), true);
 					this.idle = 0;
 				}
 			}

@@ -23,7 +23,7 @@ public class EntityHandler {
 	@SubscribeEvent
 	public void livingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
 		EntityLivingBase e = event.entityLiving;
-		if(e instanceof EntityPlayer && this.wearsAcidProofSuite((EntityPlayer)e)) return;
+		if(e instanceof EntityPlayer && (this.wearsAcidProofSuite((EntityPlayer)e) || ((EntityPlayer)e).capabilities.isCreativeMode)) return;
 		
 		if(e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posZ)).biomeID == MineFracturing.INSTANCE.infestedBiome.biomeID) {
 			e.addPotionEffect(new PotionEffect(Potion.poison.id, 500));

@@ -3,7 +3,11 @@ package de.teamdna.mf.block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamdna.mf.net.ClientProxy;
 import de.teamdna.mf.tile.TileEntityGrindStone;
 
 public class BlockGrindStone extends BlockCore {
@@ -22,5 +26,26 @@ public class BlockGrindStone extends BlockCore {
 		if(!world.isRemote) ((TileEntityGrindStone)world.getTileEntity(x, y, z)).spin();
         return true;
     }
+	
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+	
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+	
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess par1BlockAccess, int par2, int par3, int par4, int par5) {
+		return true;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType() {
+		return ClientProxy.coreRenderID;
+	}
 
 }

@@ -64,6 +64,7 @@ public class PipeNetworkController {
 		for(TileEntityPipe pipe : this.networkPipeMap.get(network)) {
 			if(!pipe.isInvalid()) pipe.networkID = -1L;
 		}
+		this.networkPipeMap.get(network).clear();
 		this.networkIDs.remove(Long.valueOf(network));
 		this.extractorMap.remove(Long.valueOf(network));
 		this.importerMap.remove(Long.valueOf(network));
@@ -105,6 +106,10 @@ public class PipeNetworkController {
 	@SubscribeEvent
 	public void worldTickEvent(WorldTickEvent event) throws Exception {
 		if(event.side == Side.SERVER && event.phase == Phase.END) {
+			List<Long> copy0 = new ArrayList<>(this.networkIDs);
+			for(Long id : copy0) {
+				if(!this.networkPipeMap.containsKey(id) || this.networkPipeMap.get(id).size() == 0) this.networkIDs.remove(id);
+			}
 			
 			Map<Long, Integer> copy = new HashMap<Long, Integer>(this.iterationCounts);
 			for(Map.Entry<Long, Integer> entry : copy.entrySet()) {

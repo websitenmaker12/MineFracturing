@@ -54,7 +54,7 @@ import de.teamdna.mf.item.ItemJetpack;
 import de.teamdna.mf.item.ItemWoodenPillar;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.net.ServerKeys;
-import de.teamdna.mf.packet.PacketChunkUpdate;
+import de.teamdna.mf.packet.PacketBoreUpdate;
 import de.teamdna.mf.packet.PacketHandler;
 import de.teamdna.mf.packet.PacketKeyUpdate;
 import de.teamdna.mf.tile.FurnaceImporter;
@@ -172,7 +172,7 @@ public class MineFracturing {
 		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":chemicalsMixer");
 		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
 		this.basicMachine = (new BlockCrafting()).setBlockName("basicMachine").setResistance(10F).setBlockTextureName(Reference.modid + ":basicMachine").setCreativeTab(this.tab);
-		this.combustionGen = (new BlockGenerator()).setBlockName("combusioneGen").setCreativeTab(this.tab);
+		this.combustionGen = (new BlockGenerator()).setBlockName("combustionGen").setCreativeTab(this.tab);
 		this.grindStone = (new BlockGrindStone()).setBlockName("grindStone").setCreativeTab(this.tab);
 		
 		// Items
@@ -268,7 +268,7 @@ public class MineFracturing {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		packetHandler.init();
-		packetHandler.registerPacket(PacketChunkUpdate.class);
+		packetHandler.registerPacket(PacketBoreUpdate.class);
 		packetHandler.registerPacket(PacketKeyUpdate.class);
 		proxy.registerRenderer();
 		
