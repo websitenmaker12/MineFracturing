@@ -133,6 +133,7 @@ public class MineFracturing {
 	public static int infestionMultiplier;
 	public static int oreMultiplierMin;
 	public static int oreMultiplierMax;
+	public static int infestedBiomeID;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -144,21 +145,26 @@ public class MineFracturing {
 		config.load();
 		config.addCustomCategoryComment(Configuration.CATEGORY_GENERAL, "NOTICE: This values should be the same on client and server. Otherwise it'll crash or look really ugly.");
 		
-		Property p1 = config.get(Configuration.CATEGORY_GENERAL, "INT.BoreRadius", 64);
-		p1.comment = "This is the radius (in blocks) that the Bore will analyse (Standart: 64)";
-		boreRadius = p1.getInt(64);
+		Property p = config.get(Configuration.CATEGORY_GENERAL, "INT.BoreRadius", 64);
+		p.comment = "This is the radius (in blocks) that the Bore will analyse (Standart: 64)";
+		boreRadius = p.getInt(64);
 		
-		Property p2 = config.get(Configuration.CATEGORY_GENERAL, "INT.InfestionMultiplier", 4);
-		p2.comment = "The multiplier calculates the infection radius. INT.BoreRadius * INT.InfestionMultiplier (Standart: 4)";
-		infestionMultiplier = p2.getInt(4);
+		p = config.get(Configuration.CATEGORY_GENERAL, "INT.InfestionMultiplier", 4);
+		p.comment = "The multiplier calculates the infection radius. INT.BoreRadius * INT.InfestionMultiplier (Standart: 4)";
+		infestionMultiplier = p.getInt(4);
 		
-		Property p3 = config.get(Configuration.CATEGORY_GENERAL, "INT.OreMultiplierMin", 4);
-		p3.comment = "The minimum multiplier of the ores (Standart: 4)";
-		oreMultiplierMin = p3.getInt(4);
+		p = config.get(Configuration.CATEGORY_GENERAL, "INT.OreMultiplierMin", 4);
+		p.comment = "The minimum multiplier of the ores (Standart: 4)";
+		oreMultiplierMin = p.getInt(4);
 		
-		Property p4 = config.get(Configuration.CATEGORY_GENERAL, "INT.OreMultiplierMax", 7);
-		p4.comment = "The maximum multiplier of the ores (Standart: 7)";
-		oreMultiplierMax = p4.getInt(7);
+		p = config.get(Configuration.CATEGORY_GENERAL, "INT.OreMultiplierMax", 7);
+		p.comment = "The maximum multiplier of the ores (Standart: 7)";
+		oreMultiplierMax = p.getInt(7);
+		
+		int standartID = Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray());
+		p = config.get(Configuration.CATEGORY_GENERAL, "INT.InfestedBiomeID", standartID);
+		p.comment = "The ID of the Infested Biome (Standart: The first empty ID in the Biome Registry)";
+		infestedBiomeID = p.getInt(standartID);
 		
 		config.save();
 
@@ -274,7 +280,8 @@ public class MineFracturing {
 		
 		// Bioms
 		// TODO: Add config integer for biomID
-		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
+//		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
+		this.infestedBiome = (new BiomeGenInfested(infestedBiomeID)).setBiomeName("Infested");
 		
 		// Registrations
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
