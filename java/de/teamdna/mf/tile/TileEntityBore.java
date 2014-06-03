@@ -22,15 +22,13 @@ import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.IBoreBlock;
-import de.teamdna.mf.packet.PacketBoreUpdate;
+import de.teamdna.mf.packet.PacketBiomUpdate;
 import de.teamdna.mf.util.PipeUtil;
 import de.teamdna.mf.util.Util;
 import de.teamdna.mf.util.WorldBlock;
 
 public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
 
-	// TODO: Something causes massive lags. Probably an array is too big or something like this
-	
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
 	
@@ -45,17 +43,12 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	public Chunk currentScanningChunk;
 	private int scanY = 0;
 	private int lastInfestRadius = -1;
-	private boolean placedBedrocks = false;
 	
 	private ChunkCoordIntPair currentChunkForLoad = null;
 	private boolean isFirstTick = true;
 	
 	public int burnTime = 0;
 	public int maxBurnTime = 1;
-	
-	public boolean pauseClientDummy = true;
-	public int clientOreBlocksSize = 0;
-	private int lastClientState = -1;
 	
 	public TileEntityBore() {
 		super(8);
@@ -96,7 +89,6 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 		
 		tag.setInteger("scanY", this.scanY);
 		tag.setInteger("lastInfestRadius", this.lastInfestRadius);
-		tag.setBoolean("placedBedrocks", this.placedBedrocks);
 	}
 	
 	@Override
@@ -133,7 +125,6 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 		
 		this.scanY = tag.getInteger("scanY");
 		this.lastInfestRadius = tag.getInteger("lastInfestRadius");
-		this.placedBedrocks = tag.getBoolean("placedBedrocks");
 	}
 	
 	@Override
@@ -152,7 +143,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			if(this.inventory[0] == null && container != null) this.inventory[0] = new ItemStack(container);
 		}
 		
-		if((this.isMultiblockCompleted() && this.burnTime > 0 && this.tank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME * 4) || !this.pauseClientDummy) {
+		if(this.isMultiblockCompleted() && this.burnTime > 0 && this.tank.getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME * 4) {
 			if(this.state != 3) this.burnTime = Math.max(this.burnTime - 5, 0);
 			
 			// Setups the bore
@@ -209,15 +200,10 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			
 			// Starts infesting the world and earning resources
 			if(this.state == 2) {
-				if(this.lastClientState != 2 && !this.worldObj.isRemote) {
-					MineFracturing.packetHandler.sendToDimension(new PacketBoreUpdate(this, 1), this.worldObj.provider.dimensionId);
-					this.lastClientState = 2;
-				}
-				
 				// Ore replacing
 				if(!this.worldObj.isRemote) {
 					if(this.oreBlocks.size() == 0) this.state = 3;
-					else if(this.worldObj.getWorldTime() % 1L == 0L) { // 10
+					else if(this.worldObj.getWorldTime() % 1L == 0L) {
 						WorldBlock block = new WorldBlock(this.oreBlocks.get(0));
 						this.oreBlocks.remove(0);
 						TileEntityExtractor extractor = this.getFirstExtractor();
@@ -226,60 +212,27 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 						Block replace = CoreRegistry.getContainer(block.getBlock());
 						if(replace != null) this.worldObj.setBlock(block.x, block.y, block.z, replace);
 					}
-				} else {
-					if(--this.clientOreBlocksSize == 0) this.state = 3;
 				}
 				
 				// Infesting
 				int m = MineFracturing.infestionMultiplier;
-				int r = (this.radius * m - (int)((double)(this.pauseClientDummy ? this.oreBlocks.size() : this.clientOreBlocksSize) / (double)this.totalOres * ((double)this.radius) * m));
+				int r = (this.radius * m - (int)((double)(this.oreBlocks.size()) / (double)this.totalOres * ((double)this.radius) * m));
 				int rSq = r * r;
 				
 				if(r != this.lastInfestRadius) {
 					this.drain(ForgeDirection.UNKNOWN, 1, !this.worldObj.isRemote);
 					
 					// Infests the world
-//					if(!this.placedBedrocks) {
-					List<Chunk> chunks = new ArrayList<Chunk>();
-						for(int i = -r; i <= r; i++) {
-							for(int j = -r; j <= r; j++) {
-								int distance = i * i + j * j;
-								if(distance <= rSq) {
-									Util.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
-									Chunk c = this.worldObj.getChunkFromBlockCoords(this.xCoord + i, this.zCoord + j);
-									if(!chunks.contains(c)) chunks.add(c);
-								}
+					for(int i = -r; i <= r; i++) {
+						for(int j = -r; j <= r; j++) {
+							int distance = i * i + j * j;
+							if(distance <= rSq && this.worldObj.getBiomeGenForCoords(this.xCoord + i, this.zCoord + j).biomeID != MineFracturing.INSTANCE.infestedBiome.biomeID) {
+								MineFracturing.packetHandler.sendToDimension(new PacketBiomUpdate(this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID), this.worldObj.provider.dimensionId);
+								Util.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
 							}
 						}
-//					}
-	
-					// Update infested Chunks
-//					if(!this.worldObj.isRemote) {
-//						int chunkRadius = (int)(r / 16) + 1;
-//						for(int x = -chunkRadius; x <= chunkRadius; x++) {
-//							for(int z = -chunkRadius; z <= chunkRadius; z++) {
-//								Chunk containerChunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
-//								int x2 = (containerChunk.xPosition + x) * 16;
-//								int z2 = (containerChunk.zPosition + z) * 16;
-//								
-//								if(!this.placedBedrocks) this.worldObj.setBlock(x2, 255, z2, Blocks.glass);
-//								else this.worldObj.setBlockToAir(x2, 255, z2);
-//							}
-//						}
-//
-//						if(this.placedBedrocks) {
-//							this.lastInfestRadius = r;
-//							this.placedBedrocks = false;
-//						} else {
-//							this.placedBedrocks = true;
-//						}
-//					}
+					}
 				}
-			}
-		} else if(this.pauseClientDummy) {
-			if(this.lastClientState != -1 && !this.worldObj.isRemote) {
-				MineFracturing.packetHandler.sendToDimension(new PacketBoreUpdate(this, 0), this.worldObj.provider.dimensionId);
-				this.lastClientState = -1;
 			}
 		}
 	}

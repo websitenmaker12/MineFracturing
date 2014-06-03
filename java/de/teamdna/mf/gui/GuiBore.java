@@ -36,8 +36,8 @@ public class GuiBore extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 	    int k = (this.width - this.xSize) / 2;
 	    int l = (this.height - this.ySize) / 2;
-		drawRect(47, 26, 46 + this.container.prog1, 40, 0x9F00DEFF);
-		drawRect(47, 46, 46 + this.container.prog2, 60, 0x9F00DEFF);
+	    if(this.container.prog1 > 0) drawRect(47, 26, 46 + this.container.prog1, 40, 0x9F00DEFF);
+		if(this.container.prog2 > 0) drawRect(47, 46, 46 + this.container.prog2, 60, 0x9F00DEFF);
 		
 		String s = StatCollector.translateToLocal("tile.bore.name");
 		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2 - 30, 8, 4210752);

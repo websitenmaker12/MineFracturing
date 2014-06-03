@@ -54,7 +54,7 @@ import de.teamdna.mf.item.ItemJetpack;
 import de.teamdna.mf.item.ItemWoodenPillar;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.net.ServerKeys;
-import de.teamdna.mf.packet.PacketBoreUpdate;
+import de.teamdna.mf.packet.PacketBiomUpdate;
 import de.teamdna.mf.packet.PacketHandler;
 import de.teamdna.mf.packet.PacketKeyUpdate;
 import de.teamdna.mf.tile.FurnaceImporter;
@@ -268,11 +268,12 @@ public class MineFracturing {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		packetHandler.init();
-		packetHandler.registerPacket(PacketBoreUpdate.class);
 		packetHandler.registerPacket(PacketKeyUpdate.class);
+		packetHandler.registerPacket(PacketBiomUpdate.class);
 		proxy.registerRenderer();
 		
 		// Bioms
+		// TODO: Add config integer for biomID
 		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
 		
 		// Registrations
