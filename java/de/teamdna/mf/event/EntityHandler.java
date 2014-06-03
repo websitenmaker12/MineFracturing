@@ -12,7 +12,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import de.teamdna.mf.MineFracturing;
-import de.teamdna.mf.damagsource.DamageSourceFracking;
 import de.teamdna.mf.item.ItemAcidProofArmor;
 import de.teamdna.mf.util.Util;
 
@@ -23,7 +22,7 @@ public class EntityHandler {
 	@SubscribeEvent
 	public void livingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
 		EntityLivingBase e = event.entityLiving;
-		if(e instanceof EntityPlayer && (this.wearsAcidProofSuite((EntityPlayer)e) || ((EntityPlayer)e).capabilities.isCreativeMode)) return;
+		if(e instanceof EntityPlayer && isAcidResistant((EntityPlayer)e)) return;
 		
 		if(e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posZ)).biomeID == MineFracturing.INSTANCE.infestedBiome.biomeID) {
 			e.addPotionEffect(new PotionEffect(Potion.poison.id, 500));
@@ -55,10 +54,14 @@ public class EntityHandler {
 		}
 	}
 	
-	private boolean wearsAcidProofSuite(EntityPlayer player) {
+	public static boolean wearsAcidProofSuite(EntityPlayer player) {
 		int founds = 0;
 		for(int i = 0; i < 4; i++) if(player.inventory.armorInventory[i] != null && player.inventory.armorInventory[i].getItem() instanceof ItemAcidProofArmor) founds++;
 		return founds == 4;
+	}
+	
+	public static boolean isAcidResistant(EntityPlayer player) {
+		return wearsAcidProofSuite(player) || player.capabilities.isCreativeMode;
 	}
 	
 }

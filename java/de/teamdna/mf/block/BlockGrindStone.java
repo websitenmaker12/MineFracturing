@@ -53,8 +53,7 @@ public class BlockGrindStone extends BlockCore {
 //	}
 	
 	@SideOnly(Side.CLIENT)
-    public IIcon getIcon(int par1, int par2)
-    {
+    public IIcon getIcon(int par1, int par2) {
         return par1 == 0 ? this.topIcon : (par1 == 1 ? this.topIcon : this.blockIcon);
     }
 	

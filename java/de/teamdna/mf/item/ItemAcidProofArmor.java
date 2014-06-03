@@ -13,11 +13,18 @@ public class ItemAcidProofArmor extends ItemArmor {
 	public ItemAcidProofArmor(int type) {
 		super(material, 0, type);
 		this.setMaxStackSize(1);
+		
+		switch(type) {
+			case 0: this.setTextureName(Reference.modid + ":acidProof_helmet"); break;
+			case 1: this.setTextureName(Reference.modid + ":acidProof_chestplate"); break;
+			case 2: this.setTextureName(Reference.modid + ":acidProof_leggins"); break;
+			case 3: this.setTextureName(Reference.modid + ":acidProof_boots"); break;
+		}
 	}
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-        return Reference.modid + ":textures/items/jetpack.png";
+        return Reference.modid + ":textures/armor/acidProof.png";
     }
 
 }

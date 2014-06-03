@@ -29,6 +29,8 @@ import de.teamdna.mf.util.WorldBlock;
 
 public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
 
+	// TODO: Add chunkloading
+	
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
 	

@@ -18,7 +18,7 @@ public class ItemJetpack extends ItemArmor {
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-        return Reference.modid + ":textures/items/jetpack.png";
+        return Reference.modid + ":textures/armor/jetpack.png";
     }
 
 }

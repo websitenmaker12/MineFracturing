@@ -6,7 +6,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -51,6 +50,7 @@ import de.teamdna.mf.event.FuelHandler;
 import de.teamdna.mf.gui.GuiHandler;
 import de.teamdna.mf.item.ItemAcidProofArmor;
 import de.teamdna.mf.item.ItemJetpack;
+import de.teamdna.mf.item.ItemMFBucket;
 import de.teamdna.mf.item.ItemWoodenPillar;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.net.ServerKeys;
@@ -121,7 +121,7 @@ public class MineFracturing {
 	public Item flour;
 	public Item jetpack;
 	public Item acidProofBoots;
-	public Item acidProofLegs;
+	public Item acidProofLeggins;
 	public Item acidProofChestplate;
 	public Item acidProofHelmet;
 	
@@ -192,7 +192,7 @@ public class MineFracturing {
 		this.flour = (new Item()).setUnlocalizedName("flour").setCreativeTab(this.tab);
 		this.jetpack = (new ItemJetpack()).setUnlocalizedName("jetpack").setCreativeTab(this.tab);
 		this.acidProofBoots = (new ItemAcidProofArmor(3)).setUnlocalizedName("acidProofBoots").setCreativeTab(this.tab);
-		this.acidProofLegs = (new ItemAcidProofArmor(2)).setUnlocalizedName("acidProofLegs").setCreativeTab(this.tab);
+		this.acidProofLeggins = (new ItemAcidProofArmor(2)).setUnlocalizedName("acidProofLegs").setCreativeTab(this.tab);
 		this.acidProofChestplate = (new ItemAcidProofArmor(1)).setUnlocalizedName("acidProofChestplate").setCreativeTab(this.tab);
 		this.acidProofHelmet = (new ItemAcidProofArmor(0)).setUnlocalizedName("acidProofHelmet").setCreativeTab(this.tab);
 		
@@ -210,15 +210,15 @@ public class MineFracturing {
 		this.liquidOreBlock = (new BlockFluid(this.liquidOre, Material.water)).setBlockName("liquidOreSource").setLightOpacity(3);
 		
 		// Buckets
-		this.bucketOil = (new ItemBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_oil").setContainerItem(Items.bucket);
+		this.bucketOil = (new ItemMFBucket(this.oilBlock)).setUnlocalizedName("bucketOil").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_oil");
 		FluidContainerRegistry.registerFluidContainer(this.oil, new ItemStack(this.bucketOil), FluidContainerRegistry.EMPTY_BUCKET);
 		BucketHandler.INSTANCE.register(this.oilBlock, this.bucketOil);
 		
-		this.bucketFracFluid = (new ItemBucket(this.fracFluidBlock)).setUnlocalizedName("bucketFracFluid").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_fracFluid").setContainerItem(Items.bucket);
+		this.bucketFracFluid = (new ItemMFBucket(this.fracFluidBlock)).setUnlocalizedName("bucketFracFluid").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_fracFluid");
 		FluidContainerRegistry.registerFluidContainer(this.fracFluid, new ItemStack(this.bucketFracFluid), FluidContainerRegistry.EMPTY_BUCKET);
 		BucketHandler.INSTANCE.register(this.fracFluidBlock, this.bucketFracFluid);
 		
-		this.bucketLiquidOre = (new ItemBucket(this.liquidOreBlock)).setUnlocalizedName("bucketLiquidOre").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_liquidOre").setContainerItem(Items.bucket);
+		this.bucketLiquidOre = (new ItemMFBucket(this.liquidOreBlock)).setUnlocalizedName("bucketLiquidOre").setCreativeTab(this.tab).setTextureName(Reference.modid + ":bucket_liquidOre");
 		FluidContainerRegistry.registerFluidContainer(this.liquidOre, new ItemStack(this.bucketLiquidOre), FluidContainerRegistry.EMPTY_BUCKET);
 		BucketHandler.INSTANCE.register(this.liquidOreBlock, this.bucketLiquidOre);
 		
@@ -249,10 +249,10 @@ public class MineFracturing {
 		proxy.registerItem(this.woodenPillar);
 		proxy.registerItem(this.flour);
 		proxy.registerItem(this.jetpack);
-		proxy.registerItem(this.acidProofBoots);
-		proxy.registerItem(this.acidProofLegs);
-		proxy.registerItem(this.acidProofChestplate);
 		proxy.registerItem(this.acidProofHelmet);
+		proxy.registerItem(this.acidProofChestplate);
+		proxy.registerItem(this.acidProofLeggins);
+		proxy.registerItem(this.acidProofBoots);
 		
 		proxy.registerTile(TileEntityCore.class, "core");
 		proxy.registerTile(TileEntityBore.class, "bore");
@@ -279,8 +279,6 @@ public class MineFracturing {
 		proxy.registerRenderer();
 		
 		// Bioms
-		// TODO: Add config integer for biomID
-//		this.infestedBiome = (new BiomeGenInfested(Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray()))).setBiomeName("Infested");
 		this.infestedBiome = (new BiomeGenInfested(infestedBiomeID)).setBiomeName("Infested");
 		
 		// Registrations
@@ -312,6 +310,10 @@ public class MineFracturing {
 		GameRegistry.addRecipe(new ItemStack(this.woodenPillar), "#", "#", '#', Items.stick);
 		GameRegistry.addRecipe(new ItemStack(this.jetpack), "IBI", "ILI", "F F", 'I', Items.iron_ingot, 'B', this.bucketOil, 'L', Items.leather, 'F', Items.flint_and_steel);
 		GameRegistry.addRecipe(new JetpackRecipe());
+		GameRegistry.addShapelessRecipe(new ItemStack(this.acidProofBoots), Items.iron_boots, this.bucketFracFluid);
+		GameRegistry.addShapelessRecipe(new ItemStack(this.acidProofChestplate), Items.iron_chestplate, this.bucketFracFluid);
+		GameRegistry.addShapelessRecipe(new ItemStack(this.acidProofHelmet), Items.iron_helmet, this.bucketFracFluid);
+		GameRegistry.addShapelessRecipe(new ItemStack(this.acidProofLeggins), Items.iron_leggings, this.bucketFracFluid);
 		
 		GameRegistry.addSmelting(ironDust, new ItemStack(Items.iron_ingot), 1F);
 		GameRegistry.addSmelting(coalDust, new ItemStack(Items.coal), 1F);

@@ -1,4 +1,4 @@
-package de.teamdna.mf.damagsource;
+package de.teamdna.mf.event;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
