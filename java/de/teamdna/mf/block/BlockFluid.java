@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IIcon;
@@ -16,6 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.Reference;
+import de.teamdna.mf.event.EntityHandler;
 
 public class BlockFluid extends BlockFluidClassic {
 
@@ -57,6 +59,7 @@ public class BlockFluid extends BlockFluidClassic {
 	public void onEntityWalking(World world, int x, int y, int z, Entity entity) {
         super.onEntityWalking(world, x, y, z, entity);
         if(!(entity instanceof EntityLivingBase)) return;
+        if(entity instanceof EntityPlayer && EntityHandler.isAcidResistant((EntityPlayer)entity)) return;
         
         int id = Block.getIdFromBlock(world.getBlock(x, y, z));
         if(id == Block.getIdFromBlock(MineFracturing.INSTANCE.oilBlock)) {
@@ -64,6 +67,7 @@ public class BlockFluid extends BlockFluidClassic {
         	((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.digSlowdown.id, 8000));
         } else if(id == Block.getIdFromBlock(MineFracturing.INSTANCE.fracFluidBlock)) {
         	((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.poison.id, 8000));
+        	((EntityLivingBase)entity).attackEntityFrom(EntityHandler.fracing, 0.5F);
         }
     }
 	

@@ -106,7 +106,7 @@ public class PipeNetworkController {
 	@SubscribeEvent
 	public void worldTickEvent(WorldTickEvent event) throws Exception {
 		if(event.side == Side.SERVER && event.phase == Phase.END) {
-			List<Long> copy0 = new ArrayList<>(this.networkIDs);
+			List<Long> copy0 = new ArrayList<Long>(this.networkIDs);
 			for(Long id : copy0) {
 				if(!this.networkPipeMap.containsKey(id) || this.networkPipeMap.get(id).size() == 0) this.networkIDs.remove(id);
 			}
