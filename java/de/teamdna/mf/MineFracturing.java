@@ -30,6 +30,9 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import de.teamdna.core.Mods;
+import de.teamdna.core.event.BucketHandler;
+import de.teamdna.core.packethandling.Packets;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.api.PipeRegistry;
 import de.teamdna.mf.biome.BiomeGenInfested;
@@ -44,7 +47,6 @@ import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.BlockPipe;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.block.BlockTraverse;
-import de.teamdna.mf.event.BucketHandler;
 import de.teamdna.mf.event.EntityHandler;
 import de.teamdna.mf.event.FuelHandler;
 import de.teamdna.mf.gui.GuiHandler;
@@ -55,7 +57,6 @@ import de.teamdna.mf.item.ItemWoodenPillar;
 import de.teamdna.mf.net.CommonProxy;
 import de.teamdna.mf.net.ServerKeys;
 import de.teamdna.mf.packet.PacketBiomUpdate;
-import de.teamdna.mf.packet.PacketHandler;
 import de.teamdna.mf.packet.PacketKeyUpdate;
 import de.teamdna.mf.tile.FurnaceImporter;
 import de.teamdna.mf.tile.PipeNetworkController;
@@ -68,13 +69,14 @@ import de.teamdna.mf.tile.TileEntityGrindStone;
 import de.teamdna.mf.tile.TileEntityPipe;
 import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
-import de.teamdna.mf.util.Util;
+import de.teamdna.util.ArrayUtil;
 
-@Mod(modid = Reference.modid, name = Reference.name, version = Reference.version)
+@Mod(modid = Reference.modid, name = Reference.name, version = Reference.version, dependencies = "required-after:TeamDNACore")
 public class MineFracturing {
 
+	// TODO: Overwork tank design
+	
 	public static Logger logger;
-	public static final PacketHandler packetHandler = new PacketHandler();
 	
 	@Instance(Reference.modid)
 	public static MineFracturing INSTANCE;
@@ -137,6 +139,7 @@ public class MineFracturing {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		Mods.registerMod(this);
 		Reference.setupMetadata(event.getModMetadata());
 		logger = event.getModLog();
 		
@@ -161,7 +164,7 @@ public class MineFracturing {
 		p.comment = "The maximum multiplier of the ores (Standart: 7)";
 		oreMultiplierMax = p.getInt(7);
 		
-		int standartID = Util.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray());
+		int standartID = ArrayUtil.getFirstEmptyIndex(BiomeGenBase.getBiomeGenArray());
 		p = config.get(Configuration.CATEGORY_GENERAL, "INT.InfestedBiomeID", standartID);
 		p.comment = "The ID of the Infested Biome (Standart: The first empty ID in the Biome Registry)";
 		infestedBiomeID = p.getInt(standartID);
@@ -273,9 +276,6 @@ public class MineFracturing {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		packetHandler.init();
-		packetHandler.registerPacket(PacketKeyUpdate.class);
-		packetHandler.registerPacket(PacketBiomUpdate.class);
 		proxy.registerRenderer();
 		
 		// Bioms
@@ -283,7 +283,6 @@ public class MineFracturing {
 		
 		// Registrations
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-		MinecraftForge.EVENT_BUS.register(BucketHandler.INSTANCE);
 		FMLCommonHandler.instance().bus().register(PipeNetworkController.INSTNACE);
 		
 		EntityHandler entityHandler = new EntityHandler();
@@ -322,12 +321,13 @@ public class MineFracturing {
 		GameRegistry.addSmelting(emeraldDust, new ItemStack(Items.emerald), 1F);
 		GameRegistry.addSmelting(goldDust, new ItemStack(Items.gold_ingot), 1F);
 		GameRegistry.addSmelting(this.flour, new ItemStack(Items.bread), 0F);
+
+		Packets.registerPacket(PacketKeyUpdate.class, this);
+		Packets.registerPacket(PacketBiomUpdate.class, this);
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		packetHandler.postInit();
-		
 		CoreRegistry.scanForOres();
 		CoreRegistry.registerOre(Blocks.redstone_ore, new ItemStack(Items.redstone));
 		

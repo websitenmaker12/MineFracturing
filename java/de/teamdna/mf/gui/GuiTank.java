@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityTank;
-import de.teamdna.mf.util.RenderUtil;
+import de.teamdna.util.RenderUtil;
 
 public class GuiTank extends GuiContainer {
 

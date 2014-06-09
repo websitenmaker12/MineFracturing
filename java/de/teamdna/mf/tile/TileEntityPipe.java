@@ -7,8 +7,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import de.teamdna.mf.api.PipeRegistry;
-import de.teamdna.mf.util.Util;
-import de.teamdna.mf.util.WorldBlock;
+import de.teamdna.util.StringUtil;
+import de.teamdna.util.WorldBlock;
 
 public class TileEntityPipe extends TileEntityCore implements IConnectable {
 	
@@ -30,7 +30,7 @@ public class TileEntityPipe extends TileEntityCore implements IConnectable {
 		if(this.networkID == -1L && !this.network.isScanning) {
 			this.networkID = this.network.createNetwork();
 			this.network.addPipe(this, this.networkID);
-			this.addNeighbors(Util.createUID(this.xCoord, this.yCoord, this.zCoord));
+			this.addNeighbors(StringUtil.createUID(this.xCoord, this.yCoord, this.zCoord));
 			this.network.isScanning = this.blocks.size() > 0;
 		}
 		
@@ -40,7 +40,7 @@ public class TileEntityPipe extends TileEntityCore implements IConnectable {
 			this.blocks.remove(0);
 			this.addNeighbors(uid);
 			WorldBlock block = new WorldBlock(this.worldObj, uid);
-			TileEntityPipe pipe = (TileEntityPipe)block.tile;
+			TileEntityPipe pipe = (TileEntityPipe)block.getTile();
 			
 			if(pipe != null && !pipe.isInvalid()) {
 				pipe.networkID = this.networkID;
@@ -75,8 +75,8 @@ public class TileEntityPipe extends TileEntityCore implements IConnectable {
 			block.x += dir.offsetX;
 			block.y += dir.offsetY;
 			block.z += dir.offsetZ;
-			if(block.hasTile() && block.tile instanceof TileEntityPipe) {
-				String id = Util.createUID(block.x, block.y, block.z);
+			if(block.hasTile() && block.getTile() instanceof TileEntityPipe) {
+				String id = StringUtil.createUID(block.x, block.y, block.z);
 				if(!this.checkedBlocks.contains(id)) {
 					this.blocks.add(id);
 					this.checkedBlocks.add(id);

@@ -16,8 +16,8 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import de.teamdna.mf.api.PipeRegistry;
-import de.teamdna.mf.util.Util;
-import de.teamdna.mf.util.WorldBlock;
+import de.teamdna.util.StringUtil;
+import de.teamdna.util.WorldBlock;
 
 public class PipeNetworkController {
 	
@@ -127,7 +127,7 @@ public class PipeNetworkController {
 								if(PipeRegistry.isCustomTile(tile.getClass())) {
 									CustomImporter clazz = PipeRegistry.getCustomImporter(tile.getClass())
 											.getDeclaredConstructor(World.class, int.class, int.class, int.class).newInstance(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
-									this.customTileImporterMap.put(Util.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord), clazz);
+									this.customTileImporterMap.put(StringUtil.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord), clazz);
 									this.importerMap.get(pipe.networkID).add(clazz);
 									this.customTilesMap.get(entry.getKey()).add(tile);
 								}
@@ -166,7 +166,7 @@ public class PipeNetworkController {
 					if(PipeRegistry.isCustomTile(tile.getClass())) {
 						CustomImporter clazz = PipeRegistry.getCustomImporter(tile.getClass())
 								.getDeclaredConstructor(World.class, int.class, int.class, int.class).newInstance(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
-						this.customTileImporterMap.put(Util.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord), clazz);
+						this.customTileImporterMap.put(StringUtil.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord), clazz);
 						this.importerMap.get(pipe.networkID).add(clazz);
 						this.customTilesMap.get(pipe.networkID).add(tile);
 					}
@@ -188,7 +188,7 @@ public class PipeNetworkController {
 				if(tile instanceof IExtractor && this.extractorMap.get(id) != null) this.extractorMap.get(id).remove((IExtractor)tile);
 				if(tile instanceof IImporter && this.importerMap.get(id) != null) this.importerMap.get(id).remove((IImporter)tile);
 				if(PipeRegistry.isCustomTile(tile.getClass()) && this.importerMap.get(id) != null) {
-					String uid2 = Util.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord);
+					String uid2 = StringUtil.createUID(tile.getWorldObj().provider.dimensionId, tile.xCoord, tile.yCoord, tile.zCoord);
 					this.importerMap.get(id).remove(this.customTileImporterMap.get(uid2));
 					this.customTileImporterMap.remove(uid2);
 				}

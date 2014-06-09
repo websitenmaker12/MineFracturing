@@ -15,8 +15,8 @@ import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
 import de.teamdna.mf.tile.TileEntityCondenseChamber;
 import de.teamdna.mf.tile.TileEntityExtractor;
+import de.teamdna.mf.tile.TileEntityGrindStone;
 import de.teamdna.mf.tile.TileEntityPipe;
-import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
 
 public class RenderBlockCore implements ISimpleBlockRenderingHandler {
@@ -27,6 +27,7 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 	public TileEntityPipe dummyPipe = new TileEntityPipe();
 	public TileEntityChemicalsMixer dummyMixer = new TileEntityChemicalsMixer();
 	public TileEntityCondenseChamber dummyCondenser = new TileEntityCondenseChamber();
+	public TileEntityGrindStone dummyGrindStone = new TileEntityGrindStone();
 	
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
@@ -38,6 +39,7 @@ public class RenderBlockCore implements ISimpleBlockRenderingHandler {
 		else if (block == MineFracturing.INSTANCE.pipe) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyPipe, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.chemicalsMixer) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyMixer, 0, 0, 0, 0);
 		else if (block == MineFracturing.INSTANCE.condenseChamber) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyCondenser, 0, 0, 0, 0);
+		else if (block == MineFracturing.INSTANCE.grindStone) TileEntityRendererDispatcher.instance.renderTileEntityAt(dummyGrindStone, 0, 0, 0, 0);
 		
 		GL11.glPopMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);

@@ -13,24 +13,29 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import de.teamdna.core.chunkloading.ChunkLoaderEvent.ChunkLoaderInvalidateEvent;
+import de.teamdna.core.chunkloading.ChunkLoaderEvent.ChunkLoaderValidateEvent;
+import de.teamdna.core.chunkloading.IChunkLoader;
+import de.teamdna.core.packethandling.Packets;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.api.CoreRegistry;
 import de.teamdna.mf.block.BlockMaterialExtractor;
 import de.teamdna.mf.block.IBoreBlock;
 import de.teamdna.mf.packet.PacketBiomUpdate;
 import de.teamdna.mf.util.PipeUtil;
-import de.teamdna.mf.util.Util;
-import de.teamdna.mf.util.WorldBlock;
+import de.teamdna.util.CoreUtil;
+import de.teamdna.util.StringUtil;
+import de.teamdna.util.WorldBlock;
 
-public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory {
+public class TileEntityBore extends TileEntityFluidCore implements ISidedInventory, IChunkLoader {
 
-	// TODO: Add chunkloading
-	
 	public final int maxBoreY = 1;
 	public final int structureHeight = 15;
 	
@@ -138,8 +143,8 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 			}
 		}
 		
-		if(this.inventory[0] != null && this.burnTime == 0 && Util.getFuelValue(this.inventory[0]) > 0) {
-			this.burnTime = this.maxBurnTime = Util.getFuelValue(this.inventory[0]);
+		if(this.inventory[0] != null && this.burnTime == 0 && CoreUtil.getFuelValue(this.inventory[0]) > 0) {
+			this.burnTime = this.maxBurnTime = CoreUtil.getFuelValue(this.inventory[0]);
 			Item container = this.inventory[0].getItem().getContainerItem();
 			if(--this.inventory[0].stackSize == 0) this.inventory[0] = null;
 			if(this.inventory[0] == null && container != null) this.inventory[0] = new ItemStack(container);
@@ -153,6 +158,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 				this.state = 0;
 				this.boreY = this.yCoord - this.structureHeight + 1;
 				this.addChunksToQueue(MineFracturing.boreRadius);
+				if(!this.worldObj.isRemote) MinecraftForge.EVENT_BUS.post(new ChunkLoaderValidateEvent(this));
 			}
 			
 			// Bores to a hole until it reaches maxBoreY
@@ -191,7 +197,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 						for(int z = 0; z < 16; z++) {
 							Block block = this.currentScanningChunk.getBlock(x, this.scanY, z);
 							if(block != null && block != Blocks.air && CoreRegistry.isOre(block)) {
-								String uid = Util.createUID(this.worldObj.provider.dimensionId, this.currentScanningChunk.xPosition * 16 + x, this.scanY, this.currentScanningChunk.zPosition * 16 + z);
+								String uid = StringUtil.createUID(this.worldObj.provider.dimensionId, this.currentScanningChunk.xPosition * 16 + x, this.scanY, this.currentScanningChunk.zPosition * 16 + z);
 								if(!this.oreBlocks.contains(uid)) this.oreBlocks.add(uid);
 							}
 						}
@@ -229,8 +235,8 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 						for(int j = -r; j <= r; j++) {
 							int distance = i * i + j * j;
 							if(distance <= rSq && this.worldObj.getBiomeGenForCoords(this.xCoord + i, this.zCoord + j).biomeID != MineFracturing.INSTANCE.infestedBiome.biomeID) {
-								MineFracturing.packetHandler.sendToDimension(new PacketBiomUpdate(this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID), this.worldObj.provider.dimensionId);
-								Util.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
+								Packets.toDimension(new PacketBiomUpdate(this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID), this.worldObj.provider.dimensionId);
+								CoreUtil.setBiomeForCoords(this.worldObj, this.xCoord + i, this.zCoord + j, MineFracturing.INSTANCE.infestedBiome.biomeID);
 							}
 						}
 					}
@@ -297,7 +303,7 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 
 	@Override
 	public boolean canInsertItem(int var1, ItemStack var2, int var3) {
-		return Util.getFuelValue(var2) > 0;
+		return CoreUtil.getFuelValue(var2) > 0;
 	}
 
 	@Override
@@ -323,6 +329,36 @@ public class TileEntityBore extends TileEntityFluidCore implements ISidedInvento
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		return false;
+	}
+
+	@Override
+	public TileEntity getTile() {
+		return this;
+	}
+
+	@Override
+	public World getWorld() {
+		return this.worldObj;
+	}
+
+	@Override
+	public List<ChunkCoordIntPair> getChunksToLoad() {
+		List<ChunkCoordIntPair> chunks = new ArrayList<ChunkCoordIntPair>();
+		
+		if(!this.isMultiblockCompleted()) return chunks;
+		int r = (int)(MineFracturing.boreRadius / 16) + 1;
+		for(int x = -r; x <= r; x++) {
+			for(int z = -r; z <= r; z++) {
+				chunks.add(new ChunkCoordIntPair(x, z));
+			}
+		}
+		return chunks;
+	}
+	
+	@Override
+	public void invalidate() {
+		MinecraftForge.EVENT_BUS.post(new ChunkLoaderInvalidateEvent(this));
+		super.invalidate();
 	}
 	
 }

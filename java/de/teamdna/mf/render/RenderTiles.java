@@ -23,7 +23,7 @@ import de.teamdna.mf.tile.TileEntityExtractor;
 import de.teamdna.mf.tile.TileEntityGrindStone;
 import de.teamdna.mf.tile.TileEntityPipe;
 import de.teamdna.mf.tile.TileEntityTraverse;
-import de.teamdna.mf.util.RenderUtil;
+import de.teamdna.util.RenderUtil;
 
 public class RenderTiles extends TileEntitySpecialRenderer {
 
@@ -51,22 +51,21 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	public final ResourceLocation texture_condenserLoc;
 	public final IModelCustom model_condenser;
 	
+	public final IModelCustom model_grinder_static;
+	public final IModelCustom model_grinder_gear;
+	public final ResourceLocation texture_grinder_static;
+	public final ResourceLocation texture_grinder_gear;
 	
 	public final ResourceLocation model_pipe_01_inner_Loc;
 	public final IModelCustom model_pipe_01_inner;
-	
 	public final ResourceLocation model_pipe_01_outer_Loc;
 	public final IModelCustom model_pipe_01_outer;
-	
 	public final ResourceLocation model_pipe_02_inner_Loc;
 	public final IModelCustom model_pipe_02_inner;
-	
 	public final ResourceLocation model_pipe_02_outer_Loc;
 	public final IModelCustom model_pipe_02_outer;
 	
 	public final ResourceLocation ironTexture;
-	
-	public final ResourceLocation textureIron = new ResourceLocation("/textures/blocks/iron_block.png");
 	
 	public RenderTiles() {
 		model_traverseLoc = new ResourceLocation(Reference.modid, "model/tower_traverse.obj");
@@ -93,15 +92,17 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 		texture_mixerLoc = new ResourceLocation(Reference.modid, "model/texture/map_mixer.png");
 		model_mixer = AdvancedModelLoader.loadModel(model_mixerLoc);
 		
+		model_grinder_static = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modid, "model/grinder_static.obj"));
+		model_grinder_gear = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modid, "model/grinder_gear.obj"));
+		texture_grinder_static = new ResourceLocation(Reference.modid, "model/texture/map_grinder_static.png");
+		texture_grinder_gear = new ResourceLocation(Reference.modid, "model/texture/map_grinder_gear.png");
+		
 		model_pipe_01_inner_Loc = new ResourceLocation(Reference.modid, "model/pipe_01_inner.obj");
 		model_pipe_01_inner = AdvancedModelLoader.loadModel(model_pipe_01_inner_Loc);
-		
 		model_pipe_01_outer_Loc = new ResourceLocation(Reference.modid, "model/pipe_01_outer.obj");
 		model_pipe_01_outer = AdvancedModelLoader.loadModel(model_pipe_01_outer_Loc);
-		
 		model_pipe_02_inner_Loc = new ResourceLocation(Reference.modid, "model/pipe_02_inner.obj");
 		model_pipe_02_inner = AdvancedModelLoader.loadModel(model_pipe_02_inner_Loc);
-		
 		model_pipe_02_outer_Loc = new ResourceLocation(Reference.modid, "model/pipe_02_outer.obj");
 		model_pipe_02_outer = AdvancedModelLoader.loadModel(model_pipe_02_outer_Loc);
 		
@@ -129,8 +130,12 @@ public class RenderTiles extends TileEntitySpecialRenderer {
 	
 	private void renderTileGrindStone(double x, double y, double z, TileEntityGrindStone tile) {
 		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
-
+		GL11.glTranslated(x + 0.5, y + 0.3, z + 0.5);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_grinder_static);
+		model_grinder_static.renderAll();
+		GL11.glRotated(tile.clientSpin, 0, 1, 0);
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture_grinder_gear);
+		model_grinder_gear.renderAll();
 		GL11.glPopMatrix();
 	}
 

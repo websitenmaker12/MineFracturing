@@ -3,10 +3,12 @@ package de.teamdna.mf.packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
+import de.teamdna.core.packethandling.IPacket;
 import de.teamdna.mf.MineFracturing;
-import de.teamdna.mf.util.Util;
+import de.teamdna.mf.Reference;
+import de.teamdna.util.BufferUtil;
 
-public class PacketKeyUpdate extends Packet {
+public class PacketKeyUpdate implements IPacket {
 
 	public PacketKeyUpdate() {
 	}
@@ -22,25 +24,30 @@ public class PacketKeyUpdate extends Packet {
 	}
 	
 	@Override
+	public String getModID() {
+		return Reference.modid;
+	}
+	
+	@Override
 	public void encode(ChannelHandlerContext ctx, ByteBuf buffer) {
 		buffer.writeInt(this.id);
-		Util.writeString(buffer, this.username);
+		BufferUtil.writeString(buffer, this.username);
 		buffer.writeBoolean(this.pressed);
 	}
 
 	@Override
 	public void decode(ChannelHandlerContext ctx, ByteBuf buffer) {
 		this.id = buffer.readInt();
-		this.username = Util.readString(buffer);
+		this.username = BufferUtil.readString(buffer);
 		this.pressed = buffer.readBoolean();
 	}
 
 	@Override
-	public void handleClientSide(ByteBuf stream, Packet packet, EntityPlayer player) {
+	public void handleClientSide(ByteBuf stream, IPacket packet, EntityPlayer player) {
 	}
 
 	@Override
-	public void handleServerSide(ByteBuf stream, Packet packet, EntityPlayer player) {
+	public void handleServerSide(ByteBuf stream, IPacket packet, EntityPlayer player) {
 		MineFracturing.keys.onReceivePacket(this);
 	}
 

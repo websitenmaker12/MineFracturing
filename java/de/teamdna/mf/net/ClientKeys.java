@@ -2,7 +2,7 @@ package de.teamdna.mf.net;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import de.teamdna.mf.MineFracturing;
+import de.teamdna.core.packethandling.Packets;
 import de.teamdna.mf.packet.PacketKeyUpdate;
 
 public class ClientKeys extends ServerKeys {
@@ -25,7 +25,7 @@ public class ClientKeys extends ServerKeys {
 		}
 		
 		if(hasChanged) {
-			MineFracturing.packetHandler.sendToServer(new PacketKeyUpdate(0, username, pressed));
+			Packets.toServer(new PacketKeyUpdate(0, username, pressed));
 		}
 		
 		return this.jumpKeyDown.contains(username);

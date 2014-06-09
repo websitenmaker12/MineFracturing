@@ -37,7 +37,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalsMixer.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCondenseChamber.class, stdTileRenderer);
-//		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGrindStone.class, stdTileRenderer); TODO
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGrindStone.class, stdTileRenderer);
 		
 		MinecraftForge.EVENT_BUS.register(new RenderHandler());
 	}

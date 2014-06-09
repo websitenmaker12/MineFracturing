@@ -9,8 +9,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamdna.mf.gui.slot.FluidSlot;
-import de.teamdna.mf.gui.slot.OutputSlot;
+import de.teamdna.core.slot.FluidSlot;
+import de.teamdna.core.slot.OutputSlot;
 import de.teamdna.mf.tile.TileEntityTank;
 
 public class ContainerTank extends Container {

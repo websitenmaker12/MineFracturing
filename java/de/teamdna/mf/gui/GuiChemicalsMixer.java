@@ -1,7 +1,5 @@
 package de.teamdna.mf.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -12,11 +10,13 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+
+import org.lwjgl.opengl.GL11;
+
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.Reference;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
-import de.teamdna.mf.tile.TileEntityTank;
-import de.teamdna.mf.util.RenderUtil;
+import de.teamdna.util.RenderUtil;
 
 public class GuiChemicalsMixer extends GuiContainer {
 

@@ -25,7 +25,7 @@ public class BlockGrindStone extends BlockCore {
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int meta, float hx, float hy, float hz) {
-		if(!world.isRemote) ((TileEntityGrindStone)world.getTileEntity(x, y, z)).spin();
+		((TileEntityGrindStone)world.getTileEntity(x, y, z)).spin();
         return true;
     }
 	
@@ -43,11 +43,16 @@ public class BlockGrindStone extends BlockCore {
 	public boolean shouldSideBeRendered(IBlockAccess par1BlockAccess, int par2, int par3, int par4, int par5) {
 		return true;
 	}
-	
-	@SideOnly(Side.CLIENT)
+
 	@Override
+	@SideOnly(Side.CLIENT)
 	public int getRenderType() {
 		return ClientProxy.coreRenderID;
 	}
+	
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
+		this.setBlockBounds(0, 0, 0, 1, 0.6F, 1);
+    }
 	
 }

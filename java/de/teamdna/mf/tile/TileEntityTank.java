@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import de.teamdna.mf.block.BlockTank;
 import de.teamdna.mf.util.PipeUtil;
-import de.teamdna.mf.util.Util;
+import de.teamdna.util.CoreUtil;
 
 public class TileEntityTank extends TileEntityCore implements IExtractor, IImporter, IFluidHandler {
 
@@ -57,7 +57,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 				if(FluidContainerRegistry.isFilledContainer(this.inventory[0])) {
 					FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(this.inventory[0]);
 					if((this.tank.getFluid() == null || this.tank.getFluid().isFluidEqual(fluid)) && this.tank.getFluidAmount() + fluid.amount <= this.tank.getCapacity()) {
-						ItemStack output = Util.getEmptyForFilledContainer(this.inventory[0]);
+						ItemStack output = CoreUtil.getEmptyForFilledContainer(this.inventory[0]);
 						if(this.inventory[1] == null || (this.inventory[1].stackSize + 1 <= this.inventory[1].getMaxStackSize() && this.inventory[1].isItemEqual(output))) {
 							this.fill(ForgeDirection.UNKNOWN, fluid, true);
 							if(--this.inventory[0].stackSize == 0) this.inventory[0] = null;
@@ -67,7 +67,7 @@ public class TileEntityTank extends TileEntityCore implements IExtractor, IImpor
 					}
 				} else if(FluidContainerRegistry.isEmptyContainer(this.inventory[0])) {
 					if(this.tank.getFluid() != null && this.tank.getFluidAmount() - 1000 >= 0) {
-						ItemStack output = Util.getFilledForEmptyContainer(this.inventory[0], this.tank.getFluid());
+						ItemStack output = CoreUtil.getFilledForEmptyContainer(this.inventory[0], this.tank.getFluid());
 						if(output != null && (this.inventory[1] == null || (this.inventory[1].stackSize + 1 <= this.inventory[1].getMaxStackSize() && this.inventory[1].isItemEqual(output)))) {
 							this.drain(ForgeDirection.UNKNOWN, 1000, true);
 							if(--this.inventory[0].stackSize == 0) this.inventory[0] = null;

@@ -5,12 +5,11 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import de.teamdna.mf.MineFracturing;
-import de.teamdna.mf.util.Util;
+import de.teamdna.util.CoreUtil;
 
 public class TileEntityChemicalsMixer extends TileEntityFluidCore implements ISidedInventory {
 	
@@ -42,8 +41,8 @@ public class TileEntityChemicalsMixer extends TileEntityFluidCore implements ISi
 	public void updateEntity() {
 		if(this.worldObj.isRemote) return;
 		
-		if(this.inventory[3] != null && this.burnTime == 0 && Util.getFuelValue(this.inventory[3]) > 0) {
-			this.burnTime = this.maxBurnTime = Util.getFuelValue(this.inventory[3]);
+		if(this.inventory[3] != null && this.burnTime == 0 && CoreUtil.getFuelValue(this.inventory[3]) > 0) {
+			this.burnTime = this.maxBurnTime = CoreUtil.getFuelValue(this.inventory[3]);
 			Item container = this.inventory[3].getItem().getContainerItem();
 			if(--this.inventory[3].stackSize == 0) this.inventory[3] = null;
 			if(this.inventory[3] == null && container != null) this.inventory[3] = new ItemStack(container);

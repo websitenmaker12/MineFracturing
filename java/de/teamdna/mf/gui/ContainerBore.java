@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamdna.mf.gui.slot.FuelSlot;
+import de.teamdna.core.slot.FuelSlot;
 import de.teamdna.mf.tile.TileEntityBore;
 
 public class ContainerBore extends Container {

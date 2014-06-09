@@ -17,6 +17,7 @@ public class TileEntityGrindStone extends TileEntityCore {
 
 	private int spinAmount = 0;
 	private final int maxSpinAmount = 12;
+	public float clientSpin = 0F;
 	
 	public TileEntityGrindStone() {
 		this.inventory = new ItemStack[1];
@@ -25,6 +26,10 @@ public class TileEntityGrindStone extends TileEntityCore {
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
+		
+		if(this.clientSpin > 8F) this.clientSpin -= 8F;
+		else this.clientSpin = 0F;
+		
 		if(this.worldObj.isRemote) return;
 		
 		AxisAlignedBB aabb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord + 1D, this.zCoord, this.xCoord + 1D, this.yCoord + 2D, this.zCoord + 1D);
@@ -51,19 +56,22 @@ public class TileEntityGrindStone extends TileEntityCore {
 	}
 
 	public void spin() {
-		if(this.inventory[0] == null) return;
-		if(++this.spinAmount > this.maxSpinAmount) {
-			this.spinAmount = 0;
-			if(Item.getIdFromItem(this.inventory[0].getItem()) == Item.getIdFromItem(Items.wheat)) {
-				this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5D, this.yCoord + 1.5D, this.zCoord + 0.5D, new ItemStack(MineFracturing.INSTANCE.flour, this.inventory[0].stackSize)));
-				this.inventory[0] = null;
-			} else {
-				ItemStack stack = new ItemStack(CoreRegistry.getCondensedItem(Block.getBlockFromItem(this.inventory[0].getItem())).getItem(), this.inventory[0].stackSize);
-				this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5D, this.yCoord + 1.5D, this.zCoord + 0.5D, stack));
-				this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5D, this.yCoord + 1.5D, this.zCoord + 0.5D, stack.copy()));
-				this.inventory[0] = null;
+		if(!this.worldObj.isRemote && this.clientSpin == 0 && this.inventory[0] != null) {
+			if(++this.spinAmount > this.maxSpinAmount) {
+				this.spinAmount = 0;
+				if(Item.getIdFromItem(this.inventory[0].getItem()) == Item.getIdFromItem(Items.wheat)) {
+					this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5D, this.yCoord + 1.5D, this.zCoord + 0.5D, new ItemStack(MineFracturing.INSTANCE.flour, this.inventory[0].stackSize)));
+					this.inventory[0] = null;
+				} else {
+					ItemStack stack = new ItemStack(CoreRegistry.getCondensedItem(Block.getBlockFromItem(this.inventory[0].getItem())).getItem(), this.inventory[0].stackSize);
+					this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5D, this.yCoord + 1.5D, this.zCoord + 0.5D, stack));
+					this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5D, this.yCoord + 1.5D, this.zCoord + 0.5D, stack.copy()));
+					this.inventory[0] = null;
+				}
 			}
 		}
+
+		if(this.clientSpin == 0F) this.clientSpin += 90F;
 	}
 	
 }

@@ -13,7 +13,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.item.ItemAcidProofArmor;
-import de.teamdna.mf.util.Util;
+import de.teamdna.util.CoreUtil;
 
 public class EntityHandler {
 	
@@ -48,7 +48,7 @@ public class EntityHandler {
             p.worldObj.spawnParticle("explode", p.posX - vec.xCoord * 1.2D, p.posY - 1.4D, p.posZ - vec.zCoord * 1.2D, 0, -1, 0);
             p.fallDistance = 0F;
             p.distanceWalkedModified = 0F;
-            Util.resetPlayerFlyTicks(p);
+            CoreUtil.resetPlayerFlyTicks(p);
             
             jetpack.damageItem(1, p);
 		}
