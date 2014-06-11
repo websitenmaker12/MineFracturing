@@ -14,6 +14,7 @@ public class ItemJetpack extends ItemArmor {
 		super(material, 0, 1);
 		this.setMaxStackSize(1);
 		this.setMaxDamage(3400);
+		this.setTextureName("flint_and_steel");
 	}
 
 	@Override

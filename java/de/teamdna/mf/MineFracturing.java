@@ -74,8 +74,6 @@ import de.teamdna.util.ArrayUtil;
 @Mod(modid = Reference.modid, name = Reference.name, version = Reference.version, dependencies = "required-after:TeamDNACore")
 public class MineFracturing {
 
-	// TODO: Overwork tank design
-	
 	public static Logger logger;
 	
 	@Instance(Reference.modid)
@@ -176,7 +174,7 @@ public class MineFracturing {
 		this.pipe = (new BlockPipe()).setBlockName("pipe").setCreativeTab(this.tab);
 		this.traverse = (new BlockTraverse()).setBlockName("traverse").setCreativeTab(this.tab);
 		this.extractor = (new BlockMaterialExtractor()).setBlockName("materialExtractor").setCreativeTab(this.tab);
-		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_Wall");
+		this.tankWall = (new BlockTank(0)).setBlockName("tankWall").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank");
 		this.tankController = (new BlockTank(1)).setBlockName("tankController").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":tank_controller");
 		this.chemicalsMixer = (new BlockChemicalsMixer()).setBlockName("chemicalsMixer").setCreativeTab(this.tab).setBlockTextureName(Reference.modid + ":chemicalsMixer");
 		this.condenseChamber = (new BlockCondenseChamber()).setBlockName("condenseChamber").setCreativeTab(this.tab);
@@ -191,8 +189,8 @@ public class MineFracturing {
 		this.diamondDust = (new Item()).setUnlocalizedName("diamondDust").setTextureName(Reference.modid + ":diamondDust").setCreativeTab(this.tab);
 		this.emeraldDust = (new Item()).setUnlocalizedName("emeraldDust").setTextureName(Reference.modid + ":emeraldDust").setCreativeTab(this.tab);
 		this.valve = (new Item()).setUnlocalizedName("valve").setTextureName(Reference.modid + ":valve").setCreativeTab(this.tab);
-		this.woodenPillar = (new ItemWoodenPillar()).setUnlocalizedName("woodenPillar").setCreativeTab(this.tab);
-		this.flour = (new Item()).setUnlocalizedName("flour").setCreativeTab(this.tab);
+		this.woodenPillar = (new ItemWoodenPillar()).setUnlocalizedName("woodenPillar").setCreativeTab(this.tab).setTextureName(Reference.modid + ":woodenPillar");
+		this.flour = (new Item()).setUnlocalizedName("flour").setCreativeTab(this.tab).setTextureName(Reference.modid + ":flour");
 		this.jetpack = (new ItemJetpack()).setUnlocalizedName("jetpack").setCreativeTab(this.tab);
 		this.acidProofBoots = (new ItemAcidProofArmor(3)).setUnlocalizedName("acidProofBoots").setCreativeTab(this.tab);
 		this.acidProofLeggins = (new ItemAcidProofArmor(2)).setUnlocalizedName("acidProofLegs").setCreativeTab(this.tab);

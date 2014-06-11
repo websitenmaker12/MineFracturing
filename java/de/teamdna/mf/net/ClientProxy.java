@@ -2,11 +2,14 @@ package de.teamdna.mf.net;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.event.RenderHandler;
 import de.teamdna.mf.render.RenderBlockCore;
+import de.teamdna.mf.render.RenderItemJetpack;
 import de.teamdna.mf.render.RenderTiles;
 import de.teamdna.mf.tile.TileEntityBore;
 import de.teamdna.mf.tile.TileEntityChemicalsMixer;
@@ -38,6 +41,8 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChemicalsMixer.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCondenseChamber.class, stdTileRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGrindStone.class, stdTileRenderer);
+		
+		MinecraftForgeClient.registerItemRenderer(MineFracturing.INSTANCE.jetpack, new RenderItemJetpack());
 		
 		MinecraftForge.EVENT_BUS.register(new RenderHandler());
 	}

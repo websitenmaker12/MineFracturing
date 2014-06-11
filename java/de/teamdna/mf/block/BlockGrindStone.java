@@ -15,7 +15,7 @@ public class BlockGrindStone extends BlockCore {
 
 	public BlockGrindStone() {
 		super(Material.rock);
-		this.setBlockTextureName(Reference.modid + ":grinder");
+		this.setBlockTextureName(Reference.modid + ":tank");
 	}
 
 	@Override

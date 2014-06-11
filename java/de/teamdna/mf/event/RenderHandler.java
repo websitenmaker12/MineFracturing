@@ -1,15 +1,28 @@
 package de.teamdna.mf.event;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamdna.mf.Reference;
+import de.teamdna.util.CoreUtil;
+import de.teamdna.util.RenderUtil;
 
+@SideOnly(Side.CLIENT)
 public class RenderHandler {
 
+	private IModelCustom modelJetpack = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.modid, "model/jetpack.obj"));
+	private ResourceLocation texJetpack = new ResourceLocation(Reference.modid, "model/texture/map_jetpack.png");
+	
 	@SubscribeEvent
 	public void renderLivingPostEvent(RenderLivingEvent.Specials.Post event) {
 		if(!(event.entity instanceof EntityPlayer)) return;
@@ -19,59 +32,16 @@ public class RenderHandler {
 		
 		if(jetpack != null) {
 			GL11.glPushMatrix();
-			GL11.glDisable(GL11.GL_LIGHTING);
-	        GL11.glEnable(GL11.GL_BLEND);
-	        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	        GL11.glDisable(GL11.GL_TEXTURE_2D);
-	        GL11.glDisable(GL11.GL_CULL_FACE);
 	        
-//	        float w = 0.8F;
-//			
-//			GL11.glRotated(-Util.getBodyRotation(player) + 90F, 0, 1, 0);
-//			GL11.glTranslatef(0.3F + (player instanceof EntityPlayer && ((EntityPlayer)player).isSneaking() ? 0.4F : 0),
-//					-1.27F + (player instanceof EntityPlayer && ((EntityPlayer)player).isSneaking() ? 0.2F : 0), -0.5F);
-//			GL11.glRotatef(25F + (player instanceof EntityPlayer && ((EntityPlayer)player).isSneaking() ? 18F : 0), 0, 0, 1);
-//			
-//			Tessellator tessellator = Tessellator.instance;
-//			tessellator.startDrawingQuads();
-//			tessellator.setColorRGBA(255, 255, 255, 64);
-//			
-//			tessellator.addVertexWithUV(0, 0.45F, 0.45F, 0, 0);
-//			tessellator.addVertexWithUV(0, 0.55F, 0.45F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.55F, 0.45F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.45F, 0.45F, 0, 0);
-//			
-//			tessellator.addVertexWithUV(0, 0.45F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(0, 0.55F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.55F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.45F, 0.55F, 0, 0);
-//			
-//			tessellator.addVertexWithUV(0, 0.45F, 0.45F, 0, 0);
-//			tessellator.addVertexWithUV(0, 0.45F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(0, 0.55F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(0, 0.55F, 0.45F, 0, 0);
-//			
-//			tessellator.addVertexWithUV(w, 0.45F, 0.45F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.45F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.55F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.55F, 0.45F, 0, 0);
-//			
-//			tessellator.addVertexWithUV(0, 0.45F, 0.45F, 0, 0);
-//			tessellator.addVertexWithUV(0, 0.45F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.45F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.45F, 0.45F, 0, 0);
-//			
-//			tessellator.addVertexWithUV(0, 0.55F, 0.45F, 0, 0);
-//			tessellator.addVertexWithUV(0, 0.55F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.55F, 0.55F, 0, 0);
-//			tessellator.addVertexWithUV(w, 0.55F, 0.45F, 0, 0);
-//			
-//			tessellator.draw();
-	        
-	        GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-	        GL11.glEnable(GL11.GL_LIGHTING);
-	        GL11.glDisable(GL11.GL_BLEND);
+			GL11.glRotated(-CoreUtil.getBodyRotation(player), 0, 1, 0);
+			if(player.isSneaking()) GL11.glRotatef(27F, 1, 0, 0);
+			GL11.glTranslatef(0.14F, -0.5F, -0.25F + (player.isSneaking() ? 0.08F : 0F));
+			GL11.glScalef(0.6F, 0.6F, 0.6F);
+			
+			RenderUtil.clearColor();
+			Minecraft.getMinecraft().getTextureManager().bindTexture(this.texJetpack);
+			this.modelJetpack.renderAll();
+			
 			GL11.glPopMatrix();
 		}
 	}
