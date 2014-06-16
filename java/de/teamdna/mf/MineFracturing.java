@@ -31,6 +31,7 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamdna.core.Mods;
+import de.teamdna.core.TeamDNACore;
 import de.teamdna.core.event.BucketHandler;
 import de.teamdna.core.packethandling.Packets;
 import de.teamdna.mf.api.CoreRegistry;
@@ -71,7 +72,7 @@ import de.teamdna.mf.tile.TileEntityTank;
 import de.teamdna.mf.tile.TileEntityTraverse;
 import de.teamdna.util.ArrayUtil;
 
-@Mod(modid = Reference.modid, name = Reference.name, version = Reference.version, dependencies = "required-after:TeamDNACore")
+@Mod(modid = Reference.modid, name = Reference.name, version = Reference.version, dependencies = TeamDNACore.dependenciesString)
 public class MineFracturing {
 
 	public static Logger logger;
@@ -320,8 +321,9 @@ public class MineFracturing {
 		GameRegistry.addSmelting(goldDust, new ItemStack(Items.gold_ingot), 1F);
 		GameRegistry.addSmelting(this.flour, new ItemStack(Items.bread), 0F);
 
-		Packets.registerPacket(PacketKeyUpdate.class, this);
-		Packets.registerPacket(PacketBiomUpdate.class, this);
+		Packets.createChannel(this);
+		Packets.registerPacket(PacketKeyUpdate.class);
+		Packets.registerPacket(PacketBiomUpdate.class);
 	}
 	
 	@EventHandler

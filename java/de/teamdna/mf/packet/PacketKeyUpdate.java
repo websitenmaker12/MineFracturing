@@ -3,10 +3,11 @@ package de.teamdna.mf.packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
+import cpw.mods.fml.relauncher.Side;
 import de.teamdna.core.packethandling.IPacket;
 import de.teamdna.mf.MineFracturing;
 import de.teamdna.mf.Reference;
-import de.teamdna.util.BufferUtil;
+import de.teamdna.util.IOUtil;
 
 public class PacketKeyUpdate implements IPacket {
 
@@ -22,33 +23,29 @@ public class PacketKeyUpdate implements IPacket {
 		this.username = username;
 		this.pressed = pressed;
 	}
-	
+
 	@Override
-	public String getModID() {
-		return Reference.modid;
-	}
-	
-	@Override
-	public void encode(ChannelHandlerContext ctx, ByteBuf buffer) {
-		buffer.writeInt(this.id);
-		BufferUtil.writeString(buffer, this.username);
-		buffer.writeBoolean(this.pressed);
+	public void toBytes(ByteBuf buf, ChannelHandlerContext ctx) {
+		buf.writeInt(this.id);
+		IOUtil.writeString(buf, this.username);
+		buf.writeBoolean(this.pressed);
 	}
 
 	@Override
-	public void decode(ChannelHandlerContext ctx, ByteBuf buffer) {
-		this.id = buffer.readInt();
-		this.username = BufferUtil.readString(buffer);
-		this.pressed = buffer.readBoolean();
+	public void fromBytes(ByteBuf buf, ChannelHandlerContext ctx) {
+		this.id = buf.readInt();
+		this.username = IOUtil.readString(buf);
+		this.pressed = buf.readBoolean();
 	}
 
 	@Override
-	public void handleClientSide(ByteBuf stream, IPacket packet, EntityPlayer player) {
-	}
-
-	@Override
-	public void handleServerSide(ByteBuf stream, IPacket packet, EntityPlayer player) {
+	public void handle(Side side, IPacket packet, ChannelHandlerContext ctx, EntityPlayer player) {
 		MineFracturing.keys.onReceivePacket(this);
+	}
+
+	@Override
+	public String modid() {
+		return Reference.modid;
 	}
 
 }
